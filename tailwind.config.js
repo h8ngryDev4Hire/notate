@@ -14,10 +14,12 @@ module.exports = {
         '75': '.75',
       },
 	fontFamily: {
-		'sans': ['Inter', 'ui-sans-serif', 'system-ui']
+		'sans': ['Inter', 'ui-sans-serif']
 	},
     },
   },
-  plugins: [],
+  plugins: [
+	require('tailwind-scrollbar')
+  ],
 }
 

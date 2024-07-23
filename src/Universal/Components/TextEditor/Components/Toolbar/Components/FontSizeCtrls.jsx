@@ -19,11 +19,12 @@ export default function FontSizeCtrls() {
         className="px-2 py-1 text-[.7rem] h-6 text-center rounded bg-inherit backdrop-filter backdrop-brightness-[.80] outline-none cursor-pointer"
         onChange={(e) => handleFontSizeChange(e.target.value)}
       >
-        {fontSizes.map((size) => (
+        {fontSizes.map((size) => {
+		return (
           <option key={size} value={size} className="h-6">
             {size}
           </option>
-        ))}
+        )})}
       </select>
     </div>
   );

@@ -1,12 +1,17 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const postcssConfig = require('./postcss.config');
+const { config } = require('process');
 
 
 module.exports = {
 	mode: 'development',
 	devtool: 'inline-source-map',
+	stats: {
+		errorDetails: true	
+	},
 	entry: {
-		index: path.resolve(__dirname, 'src', 'Notate', 'index.jsx'),
+		notate: path.resolve(__dirname, 'src', 'Notate', 'Notate.jsx'),
 		background: path.resolve(__dirname, 'src', 'Background', 'background.js'),
 		content: path.resolve(__dirname, 'src', 'Content', 'content.jsx'),
 		
@@ -19,13 +24,17 @@ module.exports = {
 			},{
 				from: path.resolve(__dirname, 'src', 'Notate', 'index.html'),
 				to: path.resolve(__dirname, 'prod')
-			},
+			},{
+				from: path.resolve(__dirname, 'src', 'Assets'),
+				to: path.resolve(__dirname, 'prod')
+			}
 			]
 		})
 	],
 	output: {
 		filename: '[name].pack.js',
 		path: path.resolve(__dirname, "prod"),
+		publicPath: "",
 		clean: true
 	},
 	module: {
@@ -43,7 +52,18 @@ module.exports = {
        				type: 'asset/resource'
 			},{
         			test: /\.(scss|css)$/,
-	        		use: ['style-loader', 'css-loader', 'postcss-loader'],
+	        		use: [
+					
+					'css-loader',
+					{
+						loader: 'postcss-loader',
+						options: {
+							postcssOptions: {
+								config: path.resolve(__dirname, 'postcss.config.js')
+							}
+						}
+					}
+				],
 				exclude: /\.module\.css$/,
 			},{
 				test: /\.svg$/i,
@@ -55,7 +75,9 @@ module.exports = {
 	resolve: {
 		alias: {
 			'@assets': path.resolve(__dirname, 'src', 'Assets'),
-			'@universal': path.resolve(__dirname, 'src', 'Universal')
+			'@universal': path.resolve(__dirname, 'src', 'Universal'),
+			'@notate': path.resolve(__dirname, 'src', 'Notate'),
+			'@content': path.resolve(__dirname, 'src', 'Content')
 		}
 	}
 }

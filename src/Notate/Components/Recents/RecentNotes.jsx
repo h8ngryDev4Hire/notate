@@ -1,106 +1,122 @@
 import React from 'react';
-import NoteCard from '@universal/Components/NoteCard.jsx';
-import NewNoteBtn from './NewNoteBtn.jsx';
-import NotebookCard from '@universal/Components/NotebookCard.jsx';
-import NoteModal from '../Modals/NoteModal/NoteModal.jsx';
-import NotebookModal from '../Modals/NotebookModal/NotebookModal.jsx';
-import StorageHandler from '@universal/Handlers/StorageHandler';
-import NotebookHandler from '@universal/Handlers/NotebookHandler';
-import { NoteModalContext } from '../../index.jsx';
+import DisplayMode from './DisplayMode.jsx';
+
+import { NotateContext } from '@notate/Notate.jsx';
 import { NotificationContext } from '@universal/Components/NotificationMessenger.jsx';
 
 
-export const RecentNotesUpdateStateContext = React.createContext()
+
+export const RecentNotesContext = React.createContext()
+
 
 
 export default function RecentNotes({ searchTerm }) {
-  const [notes, setNotes] = React.useState([]);
-  const [notebooks, setNotebooks] = React.useState([]);
-  const [selectedNote, setSelectedNote] = React.useContext(NoteModalContext);
-  const [selectedNotebook, setSelectedNotebook] = React.useState(null);
-  const [ updateState, setUpdateState ] = React.useContext(RecentNotesUpdateStateContext)
+  const { 
+	  NOTE_CONTEXT, 
+	  NOTEBOOK_CONTEXT, 
+	  RECENT_NOTES_STATE_CONTEXT, 
+	  DATABASE_CONTEXT, 
+	  REQUEST_CONTEXT,
+	  THEME_CONTEXT
+  } = React.useContext(NotateContext)
+
+  const [selectedNote, setSelectedNote] = NOTE_CONTEXT
+  const [selectedNotebook, setSelectedNotebook] = NOTEBOOK_CONTEXT
+  const [database, setDatabase] = DATABASE_CONTEXT
+  const [ request, makeRequest ] = REQUEST_CONTEXT 
+	const theme = THEME_CONTEXT
+
+
+  const [ updateState, setUpdateState ] = RECENT_NOTES_STATE_CONTEXT
   const [notification, setNotification] = React.useContext(NotificationContext)
 
 
+	const RECENT_NOTES_CONTEXT = {
+		NOTE_LIST_CONTEXT: React.useState([]),
+		NOTEBOOK_LIST_CONTEXT: React.useState([]),
+		FUNCTIONS: {},
+		SEARCH_TERM_CONTEXT: React.useState(searchTerm || ''),
+		SORTED_ITEMS_CONTEXT: React.useState(false),
+		ACTIVE_SEARCH_CONTEXT: React.useState(false)
+	}
+
+	const [ notes, setNotes ] = RECENT_NOTES_CONTEXT.NOTE_LIST_CONTEXT
+	const [ notebooks, setNotebooks ] = RECENT_NOTES_CONTEXT.NOTEBOOK_LIST_CONTEXT
+	const [ search, setSearch ] = RECENT_NOTES_CONTEXT.SEARCH_TERM_CONTEXT
 
 
-    const fetchStorageData = async () => {
-      const fetchedNotes = await StorageHandler.getNotes();
-      const fetchedNotebooks = await StorageHandler.getNotebooks();
-      setNotes(fetchedNotes);
-      setNotebooks(fetchedNotebooks);
+    const readStorageData = async () => {
+      const NOTES = database?.inventory?.NOTES
+      const NOTEBOOKS = database?.inventory?.NOTEBOOKS
+
+      if (NOTES && NOTEBOOKS) {
+	      setNotes(NOTES);
+	      setNotebooks(NOTEBOOKS);
+      }
     };
 
-	const notebookUpdatedViaDragDrop = async (notebook, note) => {
+
+  	const handleNoteClick = (note) => { if (!selectedNotebook) setSelectedNote(note) };
+
+ 	const handleNotebookClick = (notebook) => { if (!selectedNote) setSelectedNotebook(notebook); };
+
+  	const handleModalClose = () => {
+    		setSelectedNote(null);
+    		setSelectedNotebook(null);
+  	};
+
+
+	const notebookDragDropListener = async (notebook, note) => {
 		try {
-			await notebook.assignNoteToCollection(note)
+			notebook.collection.push(note.id)
+			makeRequest({ type: 'POST_DATABASE', data: notebook, store: 'NOTEBOOKS' })	
 			setUpdateState(true)
 		} catch (e) {
 			console.error(`Error making changes: ${e}`)
-			setNotification(notification.showError(`Error saving changes to notebook: ${e.message}`))
+			setNotification(notification.showError())
 		}
 	}
 
-  React.useEffect(() => { 
-	fetchStorageData()
-  	setUpdateState(false)
-  	}, [updateState]);
+	RECENT_NOTES_CONTEXT.FUNCTIONS = {
+		HANDLE_NOTE_CLICK: handleNoteClick,
+		HANDLE_NOTEBOOK_CLICK: handleNotebookClick,
+		HANDLE_MODAL_CLOSE: handleModalClose,
+		NOTEBOOK_DRAGDROP_LISTENER: notebookDragDropListener 
+	}
 
-  const handleNoteClick = (note) => {
-    setSelectedNote(note)
-  };
 
-  const handleNotebookClick = (notebook) => {
-    setSelectedNotebook(notebook);
-  };
 
-  const handleModalClose = () => {
-    setSelectedNote(null);
-    setSelectedNotebook(null);
-  };
 
-  const filteredNotes = notes.filter((note) => note.title.toLowerCase().includes(searchTerm.toLowerCase()));
+  	React.useEffect(() => { 	
+		if (!request) {
+			setSelectedNote(null) 
+			setSelectedNotebook(null)
+		}	
 
-	const sortedNotes = filteredNotes.sort((noteA, noteB) => {
-		const dateA = new Date(noteA.modified)
-		const dateB = new Date(noteB.modified)
-		return dateB - dateA
-	})
+		readStorageData()
+  		setUpdateState(false)
 
-  const filteredNotebooks = notebooks.filter((notebook) =>
-    notebook.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  	}, [updateState, database]);
 
-	const sortedNotebooks = null
 
+	React.useEffect(()=>{ setSearch(searchTerm) },[searchTerm])
 
 
   return (
-	<div id="recent-notes" className="mt-10 w-full flex flex-col items-center justify-center">
-	  <header id="recent-notes-header"
-	  	className="flex flex-row w-full justify-between mb-5">
-		<h2 id="recent-notes-title" className="text-2xl font-semibold text-gray-200 mb-5">Your Recent Notes...</h2>
-	  	<NewNoteBtn/>
-	  </header>
-	
-    	<div id="recent-notes-container" className="grid grid-cols-4 gap-10 w-[85%]">
- 		{sortedNotes.map((note, index) => {
-			return <NoteCard key={index} 
-	      			note={note} 
-	      			onClick={() => handleNoteClick(note)}/>
-      		})}
-      		{filteredNotebooks.map((notebook, index) => {
-	      		return (
-        			<NotebookCard 	      
-	      				key={index} 
-	      				notebook={notebook} 
-	      				onNotebookClick={() => handleNotebookClick(notebook)}
-	      				onNoteClick={handleNoteClick}
-	      				updatesDispatcher={notebookUpdatedViaDragDrop}/>
-      		)})}
+	<RecentNotesContext.Provider value={RECENT_NOTES_CONTEXT}>
+		<div id="recent-notes" 
+	  	className="mt-10 w-full flex-grow  mx-auto flex flex-col items-center ">
+	  		<header id="recent-notes-header"
+	  		className="flex flex-row w-full max-h-[3rem] justify-between mb-5">
+				<h2 id="recent-notes-title" 
+	  			className={`text-2xl font-semibold ${theme.text.h2 || ""} mb-5`}>
+	  				Your Recent Notes...
+	  			</h2>
+	  		</header>
+			
+	  		<DisplayMode/>
 
-      		{selectedNotebook && <NotebookModal notebook={selectedNotebook} onClose={handleModalClose} />}
-    	</div>
-</div>
+		</div>
+	</RecentNotesContext.Provider>
   );
 }

@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind utilities;
+@tailwind components;
+
+
+@layer components {
+	.trans-ease {
+		@apply transition duration-300 ease-in-out; 
+	}
+
+	.trans-ease-all {
+		@apply transition-all duration-300 ease-in-out;
+	}
+
+	.banner {
+		@apply fixed  mt-[35%] inset-0 flex items-center justify-center;
+	}
+
+	.btn-sm-text {
+		@apply h-10 w-20 rounded text-center;
+	}
+
+	.btn-sm-icon {
+		@apply h-10 w-20 rounded flex items-center justify-center; 
+	}
+
+	.btn-round-icon {
+		@apply size-[3.5rem]  rounded-[3rem];
+	}
+
+
+	.z-modal {
+		@apply z-[200]
+	}
+
+	.z-shader {
+		@apply z-[100]
+	}
+
+	.z-component {
+		@apply z-[50]	
+	}
+
+	.dark-wood-bg {
+		@apply bg-[url(./Backgrounds/wood-bg.jpg)] bg-repeat 
+	}
+
+	.cork-board-bg {
+		@apply bg-[url(./Backgrounds/note-board-bg.jpg)] bg-repeat 
+	}
+
+	.marble-chess-board-bg {
+		@apply bg-[url(./Backgrounds/marble-chess-bg.jpeg)] bg-repeat 
+	}
+}
+
+

@@ -4,9 +4,10 @@ import Toolbar from './Components/Toolbar//Toolbar.jsx';
 
 
 export const TextInputContext = React.createContext()
+export const ShadowRootContext = React.createContext()
 
 
-export default function TextEditor({ToolbarComponents, TailwindClassNames}) {
+export default function TextEditor({ToolbarComponents, TailwindClassNames, ShadowRootElement}) {
   const [text, setText] = React.useContext(TextInputContext);
 
   const handleTextChange = (newText) => {
@@ -15,11 +16,6 @@ export default function TextEditor({ToolbarComponents, TailwindClassNames}) {
 
 
 
-  const formatLinks = (text) => {
-    const urlRegex = /(https?:\/\/[^\s<]+)/g; 
-    return text.replace(urlRegex, '<a href="$1">$1</a>');
-  };
-
   return (
 	  <div id="text-editor"
 	  	className={`${TailwindClassNames} flex flex-col flex-grow overflow-auto`}>
@@ -27,7 +23,9 @@ export default function TextEditor({ToolbarComponents, TailwindClassNames}) {
 	  	
 	  	<div id="text-input-container"
 	  		className="flex-grow overflow-auto">
-			<TextInput/>
+	  		<ShadowRootContext.Provider value={[ShadowRootElement]}>
+				<TextInput/>
+	  		</ShadowRootContext.Provider>
 	  	</div>
 	  </div>
   );

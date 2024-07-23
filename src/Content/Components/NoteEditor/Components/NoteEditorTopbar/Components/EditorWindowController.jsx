@@ -1,5 +1,6 @@
 import React from 'react';
-import { NoteEditorContext } from '../../../NoteEditor.jsx';
+import { WebContentContext } from '@content/content.jsx'
+
 import CloseBtn from '@assets/Designs/Window-Controls/close-icon.svg';
 import MaximizeBtn from '@assets/Designs/Window-Controls/maximize-icon.svg';
 import MinimizeBtn from '@assets/Designs/Window-Controls/minimize-icon.svg';
@@ -12,7 +13,9 @@ export default function EditorWindowController() {
 	const MAXIMIZED = true
 	const MINIMIZED = false
 
-	const [ noteWindowState, updateNoteWindowState ] = React.useContext(NoteEditorContext) 
+	const { NOTE_WINDOW_CONTEXT } = React.useContext(WebContentContext)
+	const [ noteWindowState, updateNoteWindowState ] = NOTE_WINDOW_CONTEXT
+
 	const [ displayState, updateDisplayState ] = React.useContext(NoteEditorWindowDisplayContext)
 
 	const runCloseWindow = () => {

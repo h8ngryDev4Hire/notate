@@ -1,10 +1,12 @@
 import React from 'react';
-import SearchEngineSelector from './SearchEngineSelector.jsx';
+import SearchEngineSelector, { SelectedEngineIndexContext } from './SearchEngineSelector.jsx';
 import { searchEngineProviders } from './searchEngineProviders.js';
 
+export const BarStatusContext = React.createContext()
+
 export default function SearchBar({ onSearch }) {
-  const [searchTerm, setSearchTerm] = React.useState('');
-  const [selectedEngineIndex, setSelectedEngineIndex] = React.useState(0);
+	const [selectedEngineIndex, setSelectedEngineIndex] = React.useState('google'); 
+  	const [searchTerm, setSearchTerm] = React.useState('');
 	const [barActiveStatus, setStatus] = React.useState(false)
 
   const handleInputChange = (event) => {
@@ -28,9 +30,6 @@ export default function SearchBar({ onSearch }) {
     }
   };
 
-  const handleEngineIndexChange = (index) => {
-    setSelectedEngineIndex(index);
-  };
 
 	const handleSearchBarActiveState = () => {
 		setStatus(!barActiveStatus)
@@ -43,30 +42,45 @@ export default function SearchBar({ onSearch }) {
 	        !event.target.closest('#search-bar-container')
 	      ) {
 	        setStatus(false);
-	      }
+	      } else setStatus(true)
 	    };
 	
 	    document.addEventListener('click', handleClickOutside);
 	
-	    return () => {
-	      document.removeEventListener('click', handleClickOutside);
-	    };
+
 	  }, []);
+
 
   return (
     <div id="search-bar-container" 
-	  className={`flex justify-center mb-7 rounded-full border  ${barActiveStatus ? 'border-red-300' : 'border-transparent' }`}
+	  className="relative max-w-[50rem] w-[50rem] self-center"
 	  onClick={handleSearchBarActiveState}>
-      <input
-        type="text"
-        id="searchInput"
-	className="flex-grow px-4 py-3 text-base rounded-l-full bg-[#2f2f2f] text-[#e0e0e0] focus:outline-none"
-        placeholder="Your Conquest for Knowledge begins here..."
-        value={searchTerm}
-        onChange={handleInputChange}
-        onKeyPress={handleKeyPress}
-      />
-      <SearchEngineSelector onEngineIndexChange={handleEngineIndexChange} />
+	<div id="external"
+		className={`absolute blur-xl rounded-xl inset-0 ${ barActiveStatus ? "bg-red-300" : "bg-transparent" }`}>
+
+	</div>
+
+	<div id="internal"
+	className={`relative trans-ease flex max-w-[50rem] mx-auto justify-center rounded-full border  ${barActiveStatus ? 'border-red-400' : 'border-transparent' }`}>
+		<input
+		type="text"
+	        id="searchInput"
+		className={`trans-ease flex-grow px-4 py-3 text-base rounded-l-full  ${barActiveStatus ? "bg-[#333333]" : "bg-[#595959]" } text-[#e0e0e0] focus:outline-none`}
+	        placeholder="Your Conquest for Knowledge begins here..."
+	        value={searchTerm}
+	        onChange={handleInputChange}
+	        onKeyPress={handleKeyPress}/>
+
+		  <BarStatusContext.Provider value={[ barActiveStatus ]}>
+			<SelectedEngineIndexContext.Provider value={[selectedEngineIndex, setSelectedEngineIndex]}>
+	      		<SearchEngineSelector/>
+	  		</SelectedEngineIndexContext.Provider>
+		  </BarStatusContext.Provider>
+
+	</div>
     </div>
   );
 }
+
+
+

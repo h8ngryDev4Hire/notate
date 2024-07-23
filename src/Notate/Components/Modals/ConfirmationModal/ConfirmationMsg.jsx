@@ -1,12 +1,14 @@
 import React from 'react';
-import { ScrollStateContext } from '../../../index.jsx';
+import { NotateContext } from '@notate/Notate.jsx';
 
 
 export const ConfirmationMsgContext = React.createContext()
 
 
 export default function ConfirmationMsg() {
-	const [ scrollState, setScrollState ] = React.useContext(ScrollStateContext)
+	const { SCROLL_STATE_CONTEXT } = React.useContext(NotateContext)
+	const [ scrollState, setScrollState ] = SCROLL_STATE_CONTEXT 
+
 	const [ confMsgState, setConfMsgState ] = React.useContext(ConfirmationMsgContext)
 
 	const performAction = () => {
@@ -17,6 +19,7 @@ export default function ConfirmationMsg() {
 
 	const performCancel = () => {
 		confMsgState?.action?.handleScroll ? setScrollState(true) : setScrollState(false)
+		typeof confMsgState?.action?.cancelCallback === 'function' ? confMsgState.action.cancelCallback() : ''
 		setConfMsgState(false)
 	}
 
@@ -27,7 +30,7 @@ export default function ConfirmationMsg() {
 
 	return (
 		<div id="confirmation-modal-wrapper"
-			className="fixed z-10 left-0 top-0 w-full h-screen  bg-black bg-opacity-50 flex items-center justify-center">
+			className="fixed z-modal left-0 top-0 w-full h-screen  bg-black bg-opacity-50 flex items-center justify-center">
 
 			<div id="confirmation-modal"
 				className="flex flex-col h-[10rem] w-[35rem] bg-[#2f2f2f] rounded-lg inset-0 p-3">

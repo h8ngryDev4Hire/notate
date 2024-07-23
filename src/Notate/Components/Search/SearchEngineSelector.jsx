@@ -1,22 +1,61 @@
 import React from 'react';
 import { searchEngineProviders } from './searchEngineProviders';
+import { BarStatusContext } from './SearchBar.jsx'
+import { NotateContext } from '@notate/Notate.jsx'
 
-export default function SearchEngineSelector({ onEngineIndexChange }) {
-  const [selectedEngineIndex, setSelectedEngineIndex] = React.useState(0);
+export const SelectedEngineIndexContext = React.createContext()
 
-  const handleClick = () => {
-    const nextIndex = (selectedEngineIndex + 1) % searchEngineProviders.length;
-    setSelectedEngineIndex(nextIndex);
-    onEngineIndexChange(nextIndex);
-  };
+export default function SearchEngineSelector({  }) {
+	const { DATABASE_CONTEXT, REQUEST_CONTEXT } = React.useContext(NotateContext)
+	const [ request, makeRequest ] = REQUEST_CONTEXT
+	const [database] = DATABASE_CONTEXT
 
-  const selectedEngine = searchEngineProviders[selectedEngineIndex];
+  	const [ searchBarStatus ] = React.useContext(BarStatusContext)
+  	const [selectedEngineIndex, setSelectedEngineIndex] = React.useContext(SelectedEngineIndexContext)
 
-  return (
-    <div id="search-engine-selector" className="flex items-center bg-[#2f2f2f] rounded-r-full px-2">
-      <button id="search-engine-btn" className="flex items-center bg-transparent border-none cursor-pointer" onClick={handleClick}>
-        <img id="search-engine-favicon" className="w-6 h-6" src={selectedEngine.favicon} alt={selectedEngine.name} />
-      </button>
-    </div>
+	const config = database?.inventory?.USER_CONFIGURATION[0]
+
+	const providerList = Object.keys(searchEngineProviders)
+
+
+  	const handleClick = () => {
+		const currentIndex = providerList.indexOf(selectedEngineIndex)
+    		const nextIndex = (currentIndex + 1) % providerList.length;
+    		setSelectedEngineIndex(providerList[nextIndex]);
+
+
+		
+  	};
+
+ 
+  	const selectedEngine = searchEngineProviders[selectedEngineIndex];
+
+	React.useEffect(()=>{
+		if (config) {
+			const preferredSearchEngine = config?.Notate?.search?.preferredEngine?.value
+			if (preferredSearchEngine) setSelectedEngineIndex(preferredSearchEngine)				
+		}
+	},[database])
+
+	React.useEffect(()=>{
+		if (config?.Notate?.search) {
+			config.Notate.search.preferredEngine.value = selectedEngineIndex
+
+			makeRequest({ type: "POST_DATABASE", data: config, store: 'USER_CONFIGURATION' })
+		}
+	},[selectedEngineIndex])
+ 
+  	return (
+    		<div id="search-engine-selector" 
+		className={`trans-ease flex items-center ${ searchBarStatus ? "bg-[#333333]" : "bg-[#595959]" } rounded-r-full px-2`}>
+      			<button id="search-engine-btn" 
+			className="flex items-center bg-transparent border-none cursor-pointer" 
+			onClick={handleClick}>
+        			<img id="search-engine-favicon" 
+				className="w-6 h-6" 
+				src={selectedEngine.favicon} 
+				alt={selectedEngine.name} />
+      			</button>
+    		</div>
   );
 }

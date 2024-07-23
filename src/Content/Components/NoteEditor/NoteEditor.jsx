@@ -5,16 +5,24 @@ import { NoteEditorWindowDisplayContext } from './Components/NoteEditorTopbar/Co
 import NoteEditorTitle, { NoteEditorTitleContext } from './Components/NoteEditorTopbar/Components/NoteEditorTitle.jsx';
 import SaveNoteButton from './Components/Buttons/SaveNoteButton.jsx';
 
+import { WebContentContext } from '@content/content.jsx'
 
-export const NoteEditorContext = React.createContext()
+
 
 export default function NoteEditor() {
 	const MAXIMIZED = true
 	const MINIMIZED = false
 
+	const { SHADOW_ROOT_ELEMENT, NOTE_CONTEXT } = React.useContext(WebContentContext)
+	const [ note, setNote ] = NOTE_CONTEXT
+	const [shadowRootElement] = SHADOW_ROOT_ELEMENT
+
+
 	const [ displayState, updateDisplayState ] = React.useState(MINIMIZED)
-	const [ content,  setContent ] = React.useState('')
-	const [ title, setTitle ] = React.useState('')
+	const [ content,  setContent ] = React.useState(note?.content || '')
+	const [ title, setTitle ] = React.useState(note?.title || '')
+
+	console.log("Note ID: ", note?.id)
 
 	React.useEffect(()=>{ updateDisplayState(MAXIMIZED) },[])
 
@@ -32,7 +40,8 @@ export default function NoteEditor() {
 						<TextInputContext.Provider value={[ content, setContent ]}>
 							<TextEditor 
 								ToolbarComponents={<SaveNoteButton/>} 
-								TailwindClassNames={"fill-gray-800 stroke-gray-800"}/>	
+								TailwindClassNames={"fill-gray-800 stroke-gray-800"}
+								ShadowRootElement={shadowRootElement}/>	
 						</TextInputContext.Provider>
 					</NoteEditorTitleContext.Provider>
 				</div>

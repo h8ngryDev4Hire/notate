@@ -1,47 +1,102 @@
 import React from 'react';
-import NoteCard from '@universal/Components/NoteCard.jsx';
-import StorageHandler from '@universal/Handlers/StorageHandler';
+import NotebookInfoSection from './NotebookInfoSection.jsx'
+import NotebookCollection from './NotebookCollection/NotebookCollection.jsx'
+import Topbar from './Topbar/Topbar.jsx'
+import Bottombar from './Bottombar/Bottombar.jsx'
+import { NotateContext } from '@notate/Notate.jsx'
+import RightSection from './RightSection/RightSection.jsx';
 
-export default function NotebookModal({ notebook, toggleModal }) {
-	const [notes, populateNotes] = React.useState([]);
+export const ExitModalContext = React.createContext()
+export const NotebookModalContext = React.createContext()
 
-	const fetchNotes = async () => {
-		const notes = await StorageHandler.getNotes();
-		const collection = []
+export default function NotebookModal() {
+	const { NOTEBOOK_CONTEXT, RECENT_NOTES_STATE_CONTEXT } = React.useContext(NotateContext)
+	const [ notebook, setNotebook ] = NOTEBOOK_CONTEXT
+	const [ recentNotesState, updateRecentNotesState ] = RECENT_NOTES_STATE_CONTEXT
 
-		for (const note of notes) {
-			for (const childNote of notebook.collection) {
-				if (note.id === childNote) {
-					collection.push(note)
-						
-				}
-			}
-		}
-		populateNotes(collection)
+
+	//TODO: see if its possible to cram these useState hooks into a single Context.Provider call
+	const NOTEBOOK_MODAL_STATE = {
+		TITLE_CONTEXT: React.useState(notebook?.title),
+		DESCRIPTION_CONTEXT: React.useState(notebook?.description),
+		COLLECTION_CONTEXT: React.useState(notebook?.collection),
+		STATUS_CONTEXT: React.useState(false),
+		EXIT_MODAL: undefined // <- Where exitModal() will be populated  
 	}
 
-	React.useEffect(() => {fetchNotes()}, [])
+	const [ status, setStatus ] = NOTEBOOK_MODAL_STATE.STATUS_CONTEXT
+
+
+	const disableSelectFeatures = (state) => {
+		const toBeDisabled = {
+			newItemButton: document.getElementById("new-item-btn-container"),
+			searchBar: document.getElementById("search-bar-container"),
+			dragToTrash: document.getElementById("drag-to-trash-event-listener")
+		} 
+
+		Object.values(toBeDisabled).forEach((feature) => { 
+			if (state) feature.classList.add('pointer-events-none')
+			else feature.classList.remove('pointer-events-none')})
+
+		
+	}
+
+
+	// TODO finish function logic for drop event listeners on #recent-notes-container tag
+	const dispatchListeners = () => {
+	}
+
+
+	const exitModal = async () => {
+		setStatus(false)
+
+		await new Promise (resolve => setTimeout(resolve, 300))
+		setNotebook(null)
+		disableSelectFeatures(false)
+
+	}
+
+	NOTEBOOK_MODAL_STATE.EXIT_MODAL = exitModal
+
+
+	//TODO in the future need to decide if these 2 functions 
+	//will be utilized for clicking outside of the modal
+	const handleOutsideClick = (e) => { if (e.target === e.currentTarget) exitModal() } 
+
+
+	const handlePreventingEventPropagation = (e) => { e.stopPropagation() }
+
+
+	React.useEffect(()=>{
+		disableSelectFeatures(true)
+
+		if (notebook) setStatus(true)
+	},[])
 
 
   return (
-    <div id="modal" className="fixed z-10 left-0 top-0 w-full h-full overflow-auto bg-black bg-opacity-40 ">
-      <div id="modal-content" className="bg-[#2f2f2f] mx-auto my-60 p-5 rounded-lg w-4/5 max-w-xl relative box-border max-h-80vh">
-        <span id="close" 
-	  	className="text-gray-500 absolute top-3 right-5 text-3xl  font-bold cursor-pointer hover:text-red-300" 
-	  	onClick={toggleModal}>&times;
-	</span>
-        <h2 id="modal-title" className="text-lg font-bold ml-2">{notebook.title}</h2>
-        <p>{notebook.description}</p>
-        <div id="notebook-notes-container" className="inline-block">
-	  {console.log(notebook.collection)}
-          {notebook.collection.map((note, index) => (
-		  (()=>{
-			console.log(note)	
-			return <NoteCard key={index} note={note} />;
-		  })() 
-          ))}
-        </div>
-      </div>
-    </div>
+	<div id="notebook-modal-container" 
+	className={`pointer-events-none trans-ease fixed flex justify-center z-modal left-0 top-0 w-full h-full ${ status ? "bg-black bg-opacity-40" : "bg-transparent" }`}
+	onClick={handleOutsideClick}>
+		<div id="notebook-modal" 
+	  	className={ `pointer-events-auto trans-ease flex w-full h-[19rem] top-0 left-0 rounded-b-3xl bg-[#2f2f2f] ${ status ? "translate-y-[0%]" : "-translate-y-[100%]" }` }
+	  	onClick={handlePreventingEventPropagation}>
+
+	  	<NotebookModalContext.Provider value={NOTEBOOK_MODAL_STATE}>
+	  		<ExitModalContext.Provider value={[exitModal]}>
+
+	  			<NotebookInfoSection/>	
+	  			<main id="notebook-modal-main-section"
+	  			className="flex flex-col  h-full overflow-x-auto overflow-y-hidden p-2 px-[1rem] space-y-2 rounded-br-3xl">
+	  				<Topbar/>	
+ 					<NotebookCollection/>
+	  				<Bottombar/>
+	  			</main>
+
+				<RightSection/>
+	  		</ExitModalContext.Provider>
+	  	</NotebookModalContext.Provider>
+	  	</div>
+	</div>
   );
 }

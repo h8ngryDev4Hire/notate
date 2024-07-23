@@ -1,9 +1,10 @@
 import React from 'react';
-import { TextInputContext } from '../TextEditor.jsx';
+import { TextInputContext, ShadowRootContext } from '../TextEditor.jsx';
 
 export default function TextInput() {
 
   const [text, setText] = React.useContext(TextInputContext);
+  const [shadowRootElement] = React.useContext(ShadowRootContext);
 
   const textDisplayRef = React.useRef(null);
 
@@ -39,8 +40,17 @@ export default function TextInput() {
 
 
   React.useEffect(() => {
-	  const INPUT = document.getElementById('input-text-display')
-	  INPUT.innerHTML = text || ''
+	  let INPUT;
+	  const INPUT_TAG = 'input-text-display'
+
+	  if (shadowRootElement) {
+		INPUT = shadowRootElement.getElementById(INPUT_TAG)
+
+	  } else {
+	  	INPUT = document.getElementById(INPUT_TAG)
+	  }
+
+	  if (INPUT instanceof Node) INPUT.innerHTML = text || ''
   },[])
 
 
