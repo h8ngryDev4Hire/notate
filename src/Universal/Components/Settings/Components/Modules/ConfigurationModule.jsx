@@ -12,7 +12,6 @@ export default function ConfigurationModule({module}) {
 		SAVE_CONTEXT,
 		CONFIGURATION_CONTEXT } = React.useContext(SettingsContext)
 	const [ database ] = DATABASE_CONTEXT
-	const [ request, makeRequest ] = REQUEST_CONTEXT
 	const [ saveState ] = SAVE_CONTEXT
 	const [ configuration, setConfiguration ] = CONFIGURATION_CONTEXT 
 

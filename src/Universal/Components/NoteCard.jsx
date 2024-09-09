@@ -12,7 +12,6 @@ export default function NoteCard({ note, stackClass=false, onClick, onDragStart 
 	const cleanContent = async () => {
 		const content = document.getElementById(NOTE_CONTENT_ELEMENT)
 		if (content) content.innerHTML = content.innerText
-		else debugger
 	}
 	
 
@@ -27,11 +26,19 @@ export default function NoteCard({ note, stackClass=false, onClick, onDragStart 
 
   return (
  
-	<div  id={`note-card-${note.id}`} 
-	  className={`${ note?.color?.styles?.card ? note.color.styles.card : 'bg-yellow-200' } ${ stackClass ? stackClass : '' }  flex flex-col min-h-[170px] max-h-[170px] min-w-[230px] max-w-[230px] rounded shadow-lg trans-ease transform hover:-translate-y-5`} 
-	  onClick={()=>{onClick()}}
-	  onDragStart={dragHandler}
-	  draggable>
+	<div  
+	 id={`note-card-${note.id}`} 
+	 className={`
+		 ${ note?.color?.styles?.card ? note.color.styles.card : 'bg-yellow-200' } 
+		 ${ stackClass ? stackClass : '' }  
+		 playfair-regular
+		 flex flex-col min-h-[170px] max-h-[170px] min-w-[230px] max-w-[230px] rounded shadow-lg 
+		 trans-ease transform hover:-translate-y-5
+	 `} 
+	 onClick={onClick}
+	 onDragStart={dragHandler}
+	 draggable
+	>
 		<header id="note-top" 
 	  	className={ `w-full h-4 min-h-4 ${ note?.color?.styles?.top ? note.color.styles.top : 'bg-yellow-400' } rounded-t` }></header>
 	  	<div id="note-card" className="pt-3 px-3 pb-5 flex flex-col space-y-1 overflow-hidden">

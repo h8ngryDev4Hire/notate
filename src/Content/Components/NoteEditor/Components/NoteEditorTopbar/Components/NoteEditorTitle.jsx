@@ -11,11 +11,16 @@ export default function NoteEditorTitle() {
 	}
 
 	return (
-		<input id="edit-title" 
-			className="h-full bg-transparent text-black flex-grow border-none p-2 outline-none"
-			type="text"
-			placeholder="What are we Researching...?"
-			value={title}
-			onChange={handleChange}></input>
+		<input 
+		 id="edit-title" 
+		 className={`
+			 playfair-regular placeholder:text-slate-900 placeholder:opacity-70 placeholder:italic  
+			 h-full bg-transparent text-black font-bold flex-grow border-none p-2 outline-none
+		 `}
+		 type="text"
+		 placeholder="What are we Researching...?"
+		 value={title}
+		 onChange={handleChange}
+		/>
 	)
 }

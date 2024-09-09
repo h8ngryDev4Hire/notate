@@ -52,33 +52,50 @@ export default function SearchBar({ onSearch }) {
 
 
   return (
-    <div id="search-bar-container" 
-	  className="relative max-w-[50rem] w-[50rem] self-center"
-	  onClick={handleSearchBarActiveState}>
-	<div id="external"
-		className={`absolute blur-xl rounded-xl inset-0 ${ barActiveStatus ? "bg-red-300" : "bg-transparent" }`}>
+	<div 
+	 id="search-bar-container" 
+	 className="relative max-w-[50rem] w-[50rem] self-center"
+	 onClick={handleSearchBarActiveState}
+	>
 
+		<div 
+	  	 id="external"
+		 className={`
+			 absolute blur-xl rounded-xl inset-0 
+			 ${ barActiveStatus ? "bg-red-300" : "bg-transparent" }
+		`}/>
+
+		<div 
+		 id="internal"
+		 className={`
+		 relative trans-ease flex max-w-[50rem] mx-auto justify-center rounded-full border  
+		 ${barActiveStatus ? 'border-red-400' : 'border-transparent' }
+		`}>
+			<input
+			 type="text"
+		         id="searchInput"
+		 	 className={`
+				 trans-ease flex-grow px-4 py-3 text-base rounded-l-full 
+				 placeholder:playfair-regular placeholder:font-mono  
+				 ${barActiveStatus 
+						 ? "bg-[#333333]" 
+						 : "bg-[#595959]" } 
+				 text-[#e0e0e0] focus:outline-none
+			 `}
+		         placeholder="Your Conquest for Knowledge begins here..."
+		         value={searchTerm}
+		         onChange={handleInputChange}
+		         onKeyPress={handleKeyPress}
+		  	/>
+	
+			  <BarStatusContext.Provider value={[ barActiveStatus ]}>
+				<SelectedEngineIndexContext.Provider value={[selectedEngineIndex, setSelectedEngineIndex]}>
+		      		<SearchEngineSelector/>
+		  		</SelectedEngineIndexContext.Provider>
+			  </BarStatusContext.Provider>
+	
+		</div>
 	</div>
-
-	<div id="internal"
-	className={`relative trans-ease flex max-w-[50rem] mx-auto justify-center rounded-full border  ${barActiveStatus ? 'border-red-400' : 'border-transparent' }`}>
-		<input
-		type="text"
-	        id="searchInput"
-		className={`trans-ease flex-grow px-4 py-3 text-base rounded-l-full  ${barActiveStatus ? "bg-[#333333]" : "bg-[#595959]" } text-[#e0e0e0] focus:outline-none`}
-	        placeholder="Your Conquest for Knowledge begins here..."
-	        value={searchTerm}
-	        onChange={handleInputChange}
-	        onKeyPress={handleKeyPress}/>
-
-		  <BarStatusContext.Provider value={[ barActiveStatus ]}>
-			<SelectedEngineIndexContext.Provider value={[selectedEngineIndex, setSelectedEngineIndex]}>
-	      		<SearchEngineSelector/>
-	  		</SelectedEngineIndexContext.Provider>
-		  </BarStatusContext.Provider>
-
-	</div>
-    </div>
   );
 }
 

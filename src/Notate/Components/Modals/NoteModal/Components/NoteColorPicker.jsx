@@ -45,7 +45,7 @@ export default function NoteColorPicker() {
 		className="trans-ease flex size-8 bg-[#444] rounded-md items-center justify-center cursor-pointer hover:bg-[#555]"
 		onClick={handleColorPickerClick}>
 			<span id="color"
-			className={ `block size-[1rem] ${selectedColor.card || "bg-gray-200" } ` }></span>
+			className={ `block size-[1rem] ${selectedColor?.card || "bg-gray-200" } ` }></span>
 		</span>
 	)
 }

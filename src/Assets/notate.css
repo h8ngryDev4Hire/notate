@@ -1,3 +1,6 @@
+
+@import url('./Fonts/fonts.css');
+
 @tailwind base;
 @tailwind utilities;
 @tailwind components;
@@ -29,6 +32,10 @@
 	}
 
 
+	.z-notification {
+		@apply z-[300]
+	}
+
 	.z-modal {
 		@apply z-[200]
 	}
@@ -41,16 +48,47 @@
 		@apply z-[50]	
 	}
 
+	.z-content-script {
+		@apply z-[9999999999]
+	}
+
 	.dark-wood-bg {
-		@apply bg-[url(./Backgrounds/wood-bg.jpg)] bg-repeat 
+		@apply bg-dark-wood bg-repeat 
 	}
 
 	.cork-board-bg {
-		@apply bg-[url(./Backgrounds/note-board-bg.jpg)] bg-repeat 
+		@apply bg-cork-board bg-repeat 
+	}
+
+	.note-paper-bg {
+		@apply bg-note-paper bg-repeat 
 	}
 
 	.marble-chess-board-bg {
-		@apply bg-[url(./Backgrounds/marble-chess-bg.jpeg)] bg-repeat 
+		@apply bg-marble-chess-board bg-repeat 
+	}
+
+
+
+
+	.garamond-regular {
+		font-family: 'garamond-regular', sans-serif;
+	}
+
+	.garamond-bold {
+		font-family: 'garamond-bold', sans-serif;
+	}
+
+	.playfair-regular {
+		font-family: 'playfair-regular', sans-serif;
+	}
+
+	.playfair-bold {
+		font-family: 'playfair-bold', sans-serif;
+	}
+
+	.alice-regular {
+		font-family: 'alice-regular', sans-serif;
 	}
 }
 

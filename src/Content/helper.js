@@ -21,10 +21,14 @@ export default class Helper {
 		return result
 	}
 
-	static async databaseOperationRequest ({ request: request, data: data, store: store }) {
+	static async databaseOperationRequest ({ 
+		request: request, 
+		data: data, 
+		store: store 
+	}, database ) {
 		return new Promise((resolve, reject) => {
 			const port = chrome.runtime.connect({ name: 'DATABASE_CONNECTION' })
-			const message = { type: request }
+			const message = { type: request, database: database }
 	
 			switch (request) {
 				case 'GET_DATABASE':
@@ -48,8 +52,8 @@ export default class Helper {
 	
 			port.onMessage.addListener((message)=>{
 				if (message.type === 'DATABASE') {
-					if (typeof message.content === 'object') {
-						Object.setPrototypeOf(message.content, DatabaseAdapter.prototype)
+					if (typeof message.content?.data === 'object') {
+						Object.setPrototypeOf(message.content.data, DatabaseAdapter.prototype)
 						 resolve(message.content)
 						
 							

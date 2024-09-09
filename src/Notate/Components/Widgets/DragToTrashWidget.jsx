@@ -1,5 +1,7 @@
 import React from 'react';
 import Trash from '@assets/Designs/Trash/trash-2-logo.svg'
+import { NOTATE_DB, ERROR_LOGGING_DB, USER_CONFIGURATION_DB } from '@background/background.js'
+
 import ConfirmationMsg, { ConfirmationMsgContext } from '../Modals/ConfirmationModal/ConfirmationMsg.jsx'
 import ConfirmationMsgHandler from '../Modals/ConfirmationModal/ConfimrationMsgHandler.js'
 import { NotificationContext } from '@universal/Components/NotificationMessenger.jsx'
@@ -56,7 +58,13 @@ export default function DragToTrashHandler() {
 		setDeleteHoverState(false)
 
 		const deleteAction = () => {
-			makeRequest({ type: 'DELETE_DATABASE', data: note, store: 'NOTES' })
+			makeRequest({ 
+				type: 'DELETE_DATABASE', 
+				data: note, 
+				store: 'NOTES', 
+				database: NOTATE_DB 
+			})
+
 			setNotification(notification.showInfo('Note Deleted!'))
 		}
 

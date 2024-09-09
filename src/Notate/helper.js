@@ -4,12 +4,20 @@ import DatabaseAdapter from '@universal/Handlers/indexedDBhandler.js'
 export default class Helper {
 	constructor() {
 		this.database = {
-			operationRequest: async ({ request: request, data: data, store: store }) => {
+			operationRequest: async ({ 
+				type: type, 
+				data: data, 
+				store: store
+			}, database ) => {
 				return new Promise((resolve, reject) => {
 					const port = chrome.runtime.connect({ name: 'DATABASE_CONNECTION' })
-					const message = { type: request }
+					const message = { 
+						type: type, 
+						content: { database: database } 
+					}
+
 			
-					switch (request) {
+					switch (type) {
 						case 'GET_DATABASE':
 							port.postMessage(message)
 							break;
@@ -19,20 +27,27 @@ export default class Helper {
 							break;
 			
 						case 'POST_DATABASE':
-							message.content = { data: data, store: store }
+							message.content.store = store
+							message.content.data = data 
 							port.postMessage(message)
 							break;
 			
 						case 'DELETE_DATABASE':
-							message.content = { data: data, store: store }
+							message.content.store = store
+							message.content.data = data 
 							port.postMessage(message)
 							break;
 					}
+
+					console.log('chrome message being sent: ', message)
 			
+
 					port.onMessage.addListener((message)=>{
+						console.log('chrome message being recieved: ,', message)
+
 						if (message.type === 'DATABASE') {
-							if (typeof message.content === 'object') {
-								Object.setPrototypeOf(message.content, DatabaseAdapter.prototype)
+							if (typeof message.content?.data === 'object') {
+								Object.setPrototypeOf(message.content.data, DatabaseAdapter.prototype)
 								 resolve(message.content)
 								
 									

@@ -1,4 +1,5 @@
 import React from 'react';
+import DropdownArrow from '@assets/Designs/Arrows/dropdown-arrow.svg'
 import RelatedNote from './RelatedNote.jsx'
 import { WebContentContext } from '@content/content.jsx'
 
@@ -7,6 +8,8 @@ export default function RelatedNotesHeader() {
 	const [ database ] = DATABASE_CONTEXT
 
 	const [ relatedNotes, setRelatedNotes ] = React.useState([])
+	const [ hoverState, setHoverState ] = React.useState(false)
+	const [ headerState, setHeaderState ] = React.useState(false)
 
 
 	const getNoteURLComparison = () => {
@@ -82,13 +85,16 @@ export default function RelatedNotesHeader() {
 	
         		// Define thresholds
         		let highConfidenceThreshold = averageMatches + standardDeviation;
-        		const lowConfidenceThreshold = highConfidenceThreshold / 2;
+        		let lowConfidenceThreshold = highConfidenceThreshold / 2;
 
 			// Check if highConfidenceThreshold is lower than lowConfidenceThreshold
 			if (highConfidenceThreshold <= lowConfidenceThreshold) {
 				const zeroCheck = highConfidenceThreshold === 0 ? 2 : 1
 
 				highConfidenceThreshold = (highConfidenceThreshold + lowConfidenceThreshold) * zeroCheck
+			} else if (highConfidenceThreshold === 0 && lowConfidenceThreshold) {
+				lowConfidenceThreshold = 1
+				highConfidenceThreshold = 2
 			}
 
         		// Second pass: assign confidence levels
@@ -156,6 +162,19 @@ export default function RelatedNotesHeader() {
 	}
 
 
+	const handleHoverEvent = (e) => {
+		if (e.type === "mouseenter") {
+			setHoverState(true)	
+		}
+		else if (e.type === "mouseleave") {
+			setHoverState(false)
+		}	
+	}
+
+	const handleRelatedNotesUnfocus = (e) => {
+		if (e.target.id !== 'content-script-entry-point') setHeaderState(false)
+	}
+
 	React.useEffect(()=>{
 		const fetchedRelatedNotes = getNoteURLComparison()
 		const termList = extractTermListFromURL()
@@ -173,12 +192,27 @@ export default function RelatedNotesHeader() {
 		setRelatedNotes(fetchedRelatedNotes.fullMatchList)
 	},[database])
 
+	React.useEffect(()=>{
+		if (headerState) {
+			document.addEventListener('click', handleRelatedNotesUnfocus)	
+		}
+
+	},[headerState])
+
 
 	return (
 		<div id="related-notes-hover-region"
-		className="fixed top-0 w-screen h-[2rem] group">
+		className="fixed flex top-0 w-[3rem] h-[2rem]"
+		onMouseEnter={handleHoverEvent}
+		onMouseLeave={handleHoverEvent}>
+			<button id="reveal-related-notes-btn"
+			className={`trans-ease flex w-[3rem] h-[1.5rem] ${ headerState ? "-translate-y-[100%] pointer-events-none" : "bg-yellow-300" }  rounded-b-2xl ${ hoverState ? "-translate-y-[0%]" : "-translate-y-[100%]" }`}
+			onClick={()=>{setHeaderState(true)}}>
+				<DropdownArrow className="h-[inherit] w-[inherit] fill-yellow-600"/>
+			</button>
+
 			<header id="related-notes-header"
-			className="trans-ease flex  w-full h-full -translate-y-[100%] group-hover:-translate-y-[0%]">
+			className={`trans-ease flex w-screen h-full  ${ headerState ? "-translate-y-[0%] pointer-events-auto" : "-translate-y-[100%] pointer-events-none" }`}>
 				{
 					relatedNotes.map((note, id) => {
 						const tagId = note?.id || id
@@ -192,6 +226,7 @@ export default function RelatedNotesHeader() {
 					})
 				}	
 			</header>	
+
 		</div>
 	)
 }

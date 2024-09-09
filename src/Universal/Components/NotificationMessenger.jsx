@@ -44,16 +44,36 @@ export default function NotificationMsg() {
 	return (
 
 		notification?.active && (
-			<div id="notification-banner"
-			className={`pointer-events-none banner ${visible ? "opacity-100" : "opacity-0" } transition-opacity duration-500 ease-in-out z-50`}>
-				<div id="notification"
-				className={`relative flex items-center justify-center w-[31rem] h-[6rem]  rounded-xl`}>
-					<div id="external"
-					className={`absolute inset-0 ${notification?.styles?.blur} rounded-xl blur-xl`}></div>
-					<div id="internal"
-					className={`relative w-[30rem] h-20 bg-[#404040] rounded-xl flex items-center justify-center ${notification?.styles?.ring} ring-2`}>
-						<h3 id="message"
-						className="text-white font-bold text-[1.1rem]">{notification?.message}</h3>
+			<div 
+			 id="notification-banner"
+			 className={`
+				 pointer-events-none banner z-notification 
+				 ${visible ? "opacity-100" : "opacity-0" } 
+				 transition-opacity duration-500 ease-in-out 
+			`}>i
+				<div 
+				 id="notification"
+				 className={`
+				 	relative flex items-center justify-center 
+					w-[31rem] h-[6rem]  rounded-xl
+				`}>
+					<div 
+					 id="external"
+					 className={`
+						 absolute inset-0 rounded-xl blur-xl
+						 ${notification?.styles?.blur} 
+					`}/>
+					<div 
+					 id="internal"
+					 className={`
+					 	relative w-[30rem] h-20 bg-[#404040] rounded-xl 
+						flex items-center justify-center 
+						${notification?.styles?.ring} ring-2
+					`}>
+						<h3 
+						 id="message"
+						 className="text-white font-bold text-[1.1rem]"
+						>{notification?.message}</h3>
 					</div>
 				</div>
 			</div>

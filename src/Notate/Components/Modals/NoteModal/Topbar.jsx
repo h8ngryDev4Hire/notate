@@ -4,8 +4,10 @@ export default function NoteModalTopbar({onExit}) {
 	return (
 	
 		<>
-	  		<div id="modal-topbar" 
-			className="flex mb-5">
+	  		<div 
+			 id="modal-topbar" 
+			 className="flex mb-5 garamond-bold"
+			>
 
           			<span id="close" 
 				className="trans-ease text-gray-500 absolute top-3 right-5 text-3xl  font-bold cursor-pointer hover:text-red-300" 
@@ -14,10 +16,10 @@ export default function NoteModalTopbar({onExit}) {
 				</span>
 
 
-          			<h2 id="modal-title" 
-				className="text-lg font-bold ml-2">
-					Edit Note
-				</h2>
+          			<h2 
+				 id="modal-title" 
+				 className="text-lg font-extrabold ml-2 "
+				> Edit Note </h2>
 	  		</div>
 		</>
 

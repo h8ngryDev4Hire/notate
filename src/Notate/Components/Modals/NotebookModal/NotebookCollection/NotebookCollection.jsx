@@ -8,10 +8,15 @@ import { NotateContext } from '@notate/Notate.jsx'
 
 
 export default function NotebookCollection() {
-	const { NOTE_CONTEXT, NOTEBOOK_CONTEXT, DATABASE_CONTEXT } = React.useContext(NotateContext)
+	const { 
+		NOTE_CONTEXT, 
+		NOTEBOOK_CONTEXT, 
+		NOTATE_DB_CONTEXT 
+	} = React.useContext(NotateContext)
+
 	const [ notebook, setNotebook ] = NOTEBOOK_CONTEXT
 	const [ note, setNote ] = NOTE_CONTEXT
-	const [ database, setDatabase ] = DATABASE_CONTEXT
+	const [ database ] = NOTATE_DB_CONTEXT 
 
 
 	const { COLLECTION_CONTEXT, EXIT_MODAL } = React.useContext(NotebookModalContext)

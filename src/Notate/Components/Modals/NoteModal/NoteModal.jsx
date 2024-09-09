@@ -13,11 +13,14 @@ export const NoteModalContext = React.createContext()
 export default function NoteModal() {
 	const { NOTE_CONTEXT,
 		RECENT_NOTES_STATE_CONTEXT,
-		DATABASE_CONTEXT,
-		SCROLL_STATE_CONTEXT } = React.useContext(NotateContext)
+		NOTATE_DB_CONTEXT,
+		USER_CONFIGURATION_DB_CONTEXT,
+		SCROLL_STATE_CONTEXT 
+	} = React.useContext(NotateContext)
+
   	const [note, setNote ] = NOTE_CONTEXT
 	const [ updateRecentNotesState, triggerRecentNotesUpdateState ] = RECENT_NOTES_STATE_CONTEXT
-	const [ database, setDatabase ] = DATABASE_CONTEXT
+	const [ userconfigurationdb ] = USER_CONFIGURATION_DB_CONTEXT 
 	const [ scrollState, setScrollState ] = SCROLL_STATE_CONTEXT 
 
 	const NOTE_MODAL_CONTEXT = {
@@ -25,7 +28,7 @@ export default function NoteModal() {
 		CONTENT_CONTEXT: React.useState(note.content),	// on new note, value is undefined 
 
 		//TODO : fix color context not defaulting to config value on new note
-		COLOR_CONTEXT: React.useState(note?.color?.name || database?.inventory?.USER_CONFIGURATION[0]?.Notate?.noteModal?.preferredColor?.value)
+		COLOR_CONTEXT: React.useState(note?.color?.name || userconfigurationdb?.inventory?.USER_CONFIGURATION[0]?.Notate?.noteModal?.preferredColor?.value)
 	}
 
 

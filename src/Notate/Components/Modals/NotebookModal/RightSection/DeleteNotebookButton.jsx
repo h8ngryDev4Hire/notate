@@ -1,4 +1,5 @@
 import React from 'react';
+import { NOTATE_DB, ERROR_LOGGING_DB, USER_CONFIGURATION_DB } from '@background/background.js'
 import TrashLogo from '@assets/Designs/trash-logo.svg'
 import { NotebookModalContext } from '../NotebookModal.jsx'
 import { NotateContext } from '@notate/Notate.jsx'
@@ -39,7 +40,13 @@ export default function DeleteNotebookButton() {
 	}
 
 	const performDeleteAction = async () => {
-		makeRequest({ type: 'DELETE_DATABASE', data: notebook, store: 'NOTEBOOKS' })
+		makeRequest({ 
+			type: 'DELETE_DATABASE', 
+			data: notebook, 
+			store: 'NOTEBOOKS', 
+			database: NOTATE_DB
+		})
+
 		await EXIT_MODAL()
 		setNotification(notification.showInfo('Notebook Deleted'))
 	

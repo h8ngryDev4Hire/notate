@@ -8,8 +8,8 @@ import NotebookCard from '@universal/Components/NotebookCard.jsx';
 import RightCurvedUpArrow from '@assets/Designs/Arrows/right-curved-up-arrow.svg'
 
 export default function DisplayMode() {
-	const { DATABASE_CONTEXT } = React.useContext(NotateContext)
-	const [ database ] = DATABASE_CONTEXT
+	const { NOTATE_DB_CONTEXT } = React.useContext(NotateContext)
+	const [ database ] = NOTATE_DB_CONTEXT 
 
 	const { SORTED_ITEMS_CONTEXT, 
 		ACTIVE_SEARCH_CONTEXT, 
@@ -35,9 +35,13 @@ export default function DisplayMode() {
 			notebook: []
 		}
 
-		if (notes) results.note = notes.filter((note) => note.title.toLowerCase().includes(searchTerm.toLowerCase()));
+		if (notes) results.note = notes.filter(
+			(note) => note.title.toLowerCase().includes(searchTerm.toLowerCase())
+		);
 		
-		if (notebooks) results.notebook = notebooks.filter((notebook) => notebook.title.toLowerCase().includes(searchTerm.toLowerCase()));
+		if (notebooks) results.notebook = notebooks.filter(
+			(notebook) => notebook.title.toLowerCase().includes(searchTerm.toLowerCase())
+		);
 		
 		return results
 	}
@@ -190,7 +194,7 @@ const NoItemsFound = () => {
 
 	return (
 		<div id="no-items-found-container" className="flex  items-center justify-center">
-			<h2 id="no-items-found-text" className={`text-[1.45rem] font-bold ${theme.text.h2 || ""}`}>No Notes or Notebooks Found...</h2>
+			<h2 id="no-items-found-text" className={`text-[1.45rem] font-bold garamond-bold ${theme.text.h2 || ""}`}>No Notes or Notebooks Found...</h2>
 		</div>
 	)
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { NOTATE_DB, ERROR_LOGGING_DB, USER_CONFIGURATION_DB } from '@background/background.js'
 import { NotebookModalContext } from '../NotebookModal.jsx'
 import { NotateContext } from '@notate/Notate.jsx'
 import { NotificationContext } from '@universal/Components/NotificationMessenger.jsx'
@@ -29,7 +30,12 @@ export default function SaveNotebookButton() {
 			notebook.description = description
 			notebook.collection = collection
 			setNotification(notification.showInfo('Notebook Saved'))
-			makeRequest({ type: 'POST_DATABASE', data: notebook, store: 'NOTEBOOKS' })
+			makeRequest({ 
+				type: 'POST_DATABASE', 
+				data: notebook, 
+				store: 'NOTEBOOKS',
+				database: NOTATE_DB
+			})
 			await EXIT_MODAL()
 		} catch (e) {
 			console.error(`Error saving notebook: ${e}`)

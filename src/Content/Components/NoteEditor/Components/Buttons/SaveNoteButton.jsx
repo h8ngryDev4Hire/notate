@@ -1,4 +1,5 @@
 import React from 'react';
+//import { NOTATE_DB, ERROR_LOGGING_DB, USER_CONFIGURATION_DB } from '@background/background.js'
 import NoteHandler from '@universal/Handlers/NoteHandler.js'
 import { TextInputContext } from '@universal/Components/TextEditor/TextEditor.jsx';
 import { NoteEditorTitleContext } from '../NoteEditorTopbar/Components/NoteEditorTitle.jsx' 
@@ -6,7 +7,9 @@ import { NotificationContext } from '@universal/Components/NotificationMessenger
 import { WebContentContext } from '@content/content.jsx';
 import SaveNoteLogo from '@assets/Designs/save-note-logo.svg'
 
-
+const NOTATE_DB = "notate"
+const ERROR_LOGGING_DB = "errorLogging"
+const USER_CONFIGURATION_DB = "userConfiguration"
 
 export default function SaveNoteButton() {
 	const { REQUEST_CONTEXT, NOTE_CONTEXT, NOTE_WINDOW_CONTEXT } = React.useContext(WebContentContext)
@@ -26,7 +29,10 @@ export default function SaveNoteButton() {
 			//setNote(new NoteHandler.Note(title, content, origin))
 			note.title = title
 			note.content = content
-			makeRequest('POST_DATABASE')
+			makeRequest({ 
+				type: 'POST_DATABASE', 
+				database: NOTATE_DB 
+			})
 			
 			setNotification(notification.showInfo('Note Saved!'))
 			updateWindowState(false)

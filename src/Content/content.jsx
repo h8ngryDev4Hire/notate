@@ -1,5 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+//import { NOTATE_DB, ERROR_LOGGING_DB, USER_CONFIGURATION_DB } from '@background/background.js'
+import DevTools from '@dev/devutils.js'
+
 import RelatedNotesHeader from './Components/RelatedNotes/RelatedNotesHeader.jsx'
 import ContextMenu from './Components/ContextMenu/ContextMenu.jsx'
 import NoteEditor, {NoteEditorContext} from './Components/NoteEditor/NoteEditor.jsx'
@@ -9,14 +12,26 @@ import NotificationMsg, { NotificationContext } from '@universal/Components/Noti
 import NotificationHandler from '@universal/Handlers/NotificationHandler.js';
 import tailwind from '@assets/notate.css'
 
+/*
+ * DevTool Call
+*/
+DevTools()
+
+
 const tailwindStyles = tailwind.toString()
 
+
+const NOTATE_DB = "notate"
+const ERROR_LOGGING_DB = "errorLogging"
+const USER_CONFIGURATION_DB = "userConfiguration"
 
 
 const root = document.createElement('div')
 root.id = 'content-script-entry-point'
 
+
 const shadow = root.attachShadow({ mode: "open" })
+
 
 const style = document.createElement('style')
 style.textContent = tailwindStyles
@@ -36,6 +51,8 @@ const ContentScript = () => {
 	const CONTENT_SCRIPT_CONTEXT = {
 		NOTE_WINDOW_CONTEXT: React.useState(false),
 		DATABASE_CONTEXT: React.useState(null),
+		NOTATE_DB_CONTEXT: React.useState(null),
+		USER_CONFIGURATION_DB_CONTEXT: React.useState(null),
 		REQUEST_CONTEXT: React.useState('GET_DATABASE'),
 		NOTE_CONTEXT: React.useState(null),
 		SHADOW_ROOT_ELEMENT: React.useState(shadow)
@@ -44,6 +61,8 @@ const ContentScript = () => {
 	const [ noteWindowState, updateNoteWindowState ] = CONTENT_SCRIPT_CONTEXT.NOTE_WINDOW_CONTEXT 
 	const [ note, setNote ] = CONTENT_SCRIPT_CONTEXT.NOTE_CONTEXT
 	const [ database, setDatabase ] = CONTENT_SCRIPT_CONTEXT.DATABASE_CONTEXT 
+	const [ notatedb, setNotate ] = CONTENT_SCRIPT_CONTEXT.NOTATE_DB_CONTEXT
+	const [ userconfigurationdb, setUserConfiguration ] = CONTENT_SCRIPT_CONTEXT.USER_CONFIGURATION_DB_CONTEXT
 	const [ request, makeRequest ] = CONTENT_SCRIPT_CONTEXT.REQUEST_CONTEXT 
 	const [ notification, setNotification ] = React.useState(new NotificationHandler)
 
@@ -53,22 +72,39 @@ const ContentScript = () => {
 	React.useEffect(()=>{
 
 		const asyncEffect = async () => {
-			if (request) {
+			if (request?.type && request?.database) {
 				const payload = {
-					request: request
+					request: request.type,
+					database: request.database
 				}
 
-				if (request === 'POST_DATABASE' || request === 'DELETE_DATABASE') {
+				if (request?.type === 'POST_DATABASE' || request?.type === 'DELETE_DATABASE') {
 					payload.store = 'NOTES'
 					payload.data = note
 				}
 
 				const result = await ContentHelper.databaseOperationRequest(payload)
-					if (typeof result === 'object') {
-						setDatabase(result)
+					if (result?.data && result?.database) {
+						debugger
+						if (result.database === USER_CONFIGURATION_DB) debugger
+						const db = result.data
+
+						switch (request.database) {
+							case NOTATE_DB:
+								setNotate(db)
+								break;
+							case USER_CONFIGURATION_DB:
+								setUserConfiguration(db)
+								break;
+						}
+
 						makeRequest(false)
+
 					} else {
-						makeRequest('RELOAD_DATABASE')
+						makeRequest( { 
+							type: 'RELOAD_DATABASE', 
+							database: request.database 
+						})
 					} 
 			}
 	
@@ -81,7 +117,7 @@ const ContentScript = () => {
 
 	return (
 		<div id="root-container"
-		className="relative z-[2147483637]">
+		className="relative font-sans text-black z-content-script">
 			<WebContentContext.Provider value={CONTENT_SCRIPT_CONTEXT}>
 				<NotificationContext.Provider value={[ notification, setNotification ]}>
 

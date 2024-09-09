@@ -37,7 +37,7 @@ export default function NewItemButton(){
 
 	return (
 		<div id="new-item-btn-container"
-		className="self-center max-h-[2rem] max-w-[80px]"	
+		className="self-center max-h-[2rem] max-w-[80px] font-sans"	
 		onMouseOver={handleMouseOver}
 		onMouseLeave={handleMouseLeave}>
 			<div id="new-note-button"

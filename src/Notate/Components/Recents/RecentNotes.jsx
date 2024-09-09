@@ -1,4 +1,5 @@
 import React from 'react';
+import { NOTATE_DB, ERROR_LOGGING_DB, USER_CONFIGURATION_DB } from '@background/background.js'
 import DisplayMode from './DisplayMode.jsx';
 
 import { NotateContext } from '@notate/Notate.jsx';
@@ -15,14 +16,14 @@ export default function RecentNotes({ searchTerm }) {
 	  NOTE_CONTEXT, 
 	  NOTEBOOK_CONTEXT, 
 	  RECENT_NOTES_STATE_CONTEXT, 
-	  DATABASE_CONTEXT, 
+	  NOTATE_DB_CONTEXT, 
 	  REQUEST_CONTEXT,
 	  THEME_CONTEXT
   } = React.useContext(NotateContext)
 
   const [selectedNote, setSelectedNote] = NOTE_CONTEXT
   const [selectedNotebook, setSelectedNotebook] = NOTEBOOK_CONTEXT
-  const [database, setDatabase] = DATABASE_CONTEXT
+  const [database, setDatabase] = NOTATE_DB_CONTEXT 
   const [ request, makeRequest ] = REQUEST_CONTEXT 
 	const theme = THEME_CONTEXT
 
@@ -69,7 +70,12 @@ export default function RecentNotes({ searchTerm }) {
 	const notebookDragDropListener = async (notebook, note) => {
 		try {
 			notebook.collection.push(note.id)
-			makeRequest({ type: 'POST_DATABASE', data: notebook, store: 'NOTEBOOKS' })	
+			makeRequest({ 
+				type: 'POST_DATABASE', 
+				data: notebook, 
+				store: 'NOTEBOOKS',
+				database: NOTATE_DB
+			})	
 			setUpdateState(true)
 		} catch (e) {
 			console.error(`Error making changes: ${e}`)
@@ -109,7 +115,7 @@ export default function RecentNotes({ searchTerm }) {
 	  		<header id="recent-notes-header"
 	  		className="flex flex-row w-full max-h-[3rem] justify-between mb-5">
 				<h2 id="recent-notes-title" 
-	  			className={`text-2xl font-semibold ${theme.text.h2 || ""} mb-5`}>
+	  			className={`text-2xl playfair-regular font-extrabold ${theme.text.h2 || ""} mb-5`}>
 	  				Your Recent Notes...
 	  			</h2>
 	  		</header>

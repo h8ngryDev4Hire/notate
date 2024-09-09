@@ -1,4 +1,5 @@
 import React from 'react';
+import { NOTATE_DB, ERROR_LOGGING_DB, USER_CONFIGURATION_DB } from '@background/background.js'
 import { NotificationContext } from '@universal/Components/NotificationMessenger.jsx';
 import ConfirmationMsgHandler from '../ConfirmationModal/ConfimrationMsgHandler.js'
 import ConfirmationMsg, { ConfirmationMsgContext } from '../ConfirmationModal/ConfirmationMsg.jsx';
@@ -40,7 +41,13 @@ export default function NoteModalBottombar({onExit}) {
   	      note.content = content;	
 
   	      await onExit();
-  	      makeRequest({ type: 'POST_DATABASE', data: note, store: 'NOTES' })
+  	      makeRequest({ 
+		      type: 'POST_DATABASE', 
+		      data: note, 
+		      store: 'NOTES', 
+		      database: NOTATE_DB
+	      })
+
   	      setNotification(notification.showInfo('Note Saved'))
 
   	  } catch (error) {
@@ -52,7 +59,13 @@ export default function NoteModalBottombar({onExit}) {
 	const handleDeleteClick = () => {
 		const confirmNoteDelete = async () => {
 			await onExit()
-			makeRequest({ type: 'DELETE_DATABASE', data: note, store: 'NOTES' })
+			makeRequest({ 
+				type: 'DELETE_DATABASE', 
+				data: note, 
+				store: 'NOTES', 
+				database: NOTATE_DB 
+			})
+
 			setNotification(notification.showInfo('Note Deleted!'))
 
 		}

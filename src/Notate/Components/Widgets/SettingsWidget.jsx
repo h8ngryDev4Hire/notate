@@ -21,7 +21,7 @@ export default function SettingsWidget() {
 	return (
 		<>
 			<span id="settings-widget"
-			className="trans-ease absolute group flex items-center justify-center top-0 right-0 size-[3rem] bg-[#2f2f2f] rounded-full mr-[2rem] mt-[2rem] cursor-pointer hover:bg-[#4f4f4f]"
+			className="trans-ease hover:animate-spin-slow absolute group flex items-center justify-center top-0 right-0 size-[3rem] bg-[#2f2f2f] rounded-full mr-[2rem] mt-[3.5rem] cursor-pointer hover:bg-[#4f4f4f]"
 			onClick={handleSettingsWidgetClick}>
 				<SettingsCogWheel 
 				className="trans-ease size-[2rem] fill-[#888] group-hover:fill-[#999]"/>

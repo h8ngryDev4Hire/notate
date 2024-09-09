@@ -38,47 +38,65 @@ export default function NotebookCard({ notebook, onNoteClick, onNotebookClick, u
 
 
   	return (
-<div id="notebook-card-container" 
-className="relative group z-0 trans-ease transform hover:-translate-y-5"
-draggable>
+		<div 
+		 id="notebook-card-container" 
+		 className="relative group z-0 trans-ease transform hover:-translate-y-5 playfair-regular"
+		 draggable
+		>
+		
+			  {/* Notebook Cover Designs */}
+			<div id="notebook-card" 
+			 className="flex  relative  min-h-[170px] max-h-[170px] min-w-[230px] max-w-[230px]  rounded shadow-xl  bg-[#dfac5d] z-[5] hover:z-[20]" 
+			 data-notebook-id={notebook.id} 
+			 onClick={onNotebookClick}
+			 onDrop={handleNoteDrop}
+			 onDragOver={handleNoteDragOver}
+		    	>
+				<div id="" className={`w-[1.5rem] bg-[#b7823d] rounded-l`}/>
+				<div id="" className={`flex-grow p-4`}>
+			      		<h3 
+					 id="notebook-title" 
+					 className="text-lg font-medium mt-0 text-white"
+					>{notebook.title}</h3>
+			      		<p 
+					 id="notebook-description" 
+					 className="text-base mb-0 text-gray-200"
+					>{notebook.description}</p>
 
-	  {/* Notebook Cover Designs */}
-    <div id="notebook-card" 
-	  className="relative p-5 min-h-[170px] max-h-[170px] min-w-[230px] max-w-[230px]  rounded shadow-xl  bg-[#2f2f2f] z-[5] hover:z-[20]" 
-	  data-notebook-id={notebook.id} 
-	  onClick={onNotebookClick}
-	  onDrop={handleNoteDrop}
-	  onDragOver={handleNoteDragOver}
-	  >
-      <h3 id="notebook-title" className="text-lg font-medium mt-0 text-gray-200">{notebook.title}</h3>
-      <p id="notebook-description" className="text-base mb-0 text-gray-400">{notebook.description}</p>
-    </div>
-
-	  {/* Where NoteCard Components are populated */}
-	<div id="note-card-group" className="absolute w-full top-0 z-0 max-h-[170px]">{/* <-- need to add tailwind classes to create a stacked visual effect */}  
-        {			
-		noteList.slice(0, 4).map((note, index) => {
-			// group-hover:z-[6] group-hover:z-[7] group-hover:z-[8] group-hover:z-[9]
-			const pos = (((index+1)*(-1))+10).toString() 
-	
-			//  group-hover:-translate-y-[40px] group-hover:-translate-y-[80px] group-hover:-translate-y-[120px] group-hover:-translate-y-[160px]
-			const stack = ((index*40)+40).toString() 
-			const colors = ['bg-yellow-250', 'bg-yellow-300','bg-yellow-350','bg-yellow-400'] //
-					
-			return (
-				<div id="note-card-stack-item" 
-				key={index}
-	     			className={`relative group-hover:z-[${pos}] transition duration-200 ease-in-out transform hover:-translate-y-5`}> 
-					<NoteCard 
-					note={note}  
-					stackClass={`absolute  top-full left-0 w-full transition duration-200 ease-in-out transform group-hover:-translate-y-[${stack}px]`} 
-					onClick={() => onNoteClick(note)} />
 				</div>
-			)
-		})
-	}
-      </div>
-</div>
+
+		    	</div>
+		
+			  {/* Where NoteCard Components are populated */}
+			<div 
+			 id="note-card-group" 
+			 className="absolute w-full top-0 z-0 max-h-[170px]"
+			>{/* <-- need to add tailwind classes to create a stacked visual effect */}  
+		        {			
+				noteList.slice(0, 4).map((note, index) => {
+					// group-hover:z-[6] group-hover:z-[7] group-hover:z-[8] group-hover:z-[9]
+					const pos = (((index+1)*(-1))+10).toString() 
+			
+					//  group-hover:-translate-y-[40px] group-hover:-translate-y-[80px] group-hover:-translate-y-[120px] group-hover:-translate-y-[160px]
+					const stack = ((index*40)+40).toString() 
+					const colors = ['bg-yellow-250', 'bg-yellow-300','bg-yellow-350','bg-yellow-400'] //
+							
+					return (
+						<div id="note-card-stack-item" 
+						 key={index}
+			     			 className={`relative group-hover:z-[${pos}] transition duration-200 ease-in-out transform hover:-translate-y-5`}
+						> 
+							<NoteCard 
+							 note={note}  
+							 stackClass={`absolute  top-full left-0 w-full transition duration-200 ease-in-out transform group-hover:-translate-y-[${stack}px]`} 
+							 onClick={() => onNoteClick(note)} 
+							/>
+						</div>
+					)
+				})
+			}
+			</div>
+		</div>
   );
 }
 

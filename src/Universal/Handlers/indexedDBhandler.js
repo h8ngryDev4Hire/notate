@@ -1,64 +1,81 @@
-import { UserConfiguration as Configuration } from './UserConfiguration.js'
+import { ConfigurationTemplate } from './UserConfiguration.js'
 
 export default class DatabaseAdapter {
-   constructor() {
+   constructor(databaseName) {
     this.mapper = {
-        name: 'NOTATE_DB',
-        stores: ['NOTES', 'NOTEBOOKS', 'USER_CONFIGURATION'],
+        db: {
+		notate: {
+			name:'NOTATE_DB',
+			stores:  ['NOTES', 'NOTEBOOKS'],
+		},
+		errorLogging: {
+			name: 'ERROR_LOGGING_DB',
+			stores: ['ERRORS']
+		},
+		userConfiguration: {
+			name: 'USER_CONFIGURATION_DB',
+			stores: ['USER_CONFIGURATION']
+		}
+	}
     }
-    this.connection =  this.connectToDB();
-    this.inventory =  this.getInventory();
+    this.connection =  this.connectToDB(databaseName);
+    this.inventory =  null;
     this.request = null;
   }
     
-  async connectToDB() {
+  async connectToDB(databaseName) {
 	  	   return new Promise((resolve, reject) => {
 		   
+		   const legend = this.mapper.db[databaseName]
 
-   		   const DBBrige = indexedDB.open(this.mapper.name, 1);
+   		   const DBBrige = indexedDB.open(legend.name, 1);
 
    		   DBBrige.onsuccess = async (e) => {
 		     if (this.workermessage === 'function') await this.workermessage()
    		     this.connection = e.target.result;
+
+		     console.log(`${databaseName} connected. awaiting inventory...`)
+		     this.inventory = await this.getInventory()
    		     resolve(this.connection);
    		   };
 
    		   DBBrige.onerror = (e) => reject(console.error('error initing DB: ' + e.target.error));
 
    		   DBBrige.onupgradeneeded = async (e) => {
-			   console.log('Upgrading DB...')
+			   console.log(`Upgrading DB ${databaseName}...`)
    		 
    		     this.connection = e.target.result;
 		     const transaction = e.target.transaction
 
-   		     this.mapper.stores.forEach((storeKey)=>{
+   		     legend.stores.forEach((storeKey)=>{
    		         this.connection.createObjectStore(storeKey, { keyPath: 'id', autoIncrement: true })
    		     })
    	
-			
-		     await this.setupUserConfiguration(transaction)
+		     if (legend.stores.some( store => store === "USER_CONFIGURATION" )) {
+			await this.setupUserConfiguration(transaction)
+		     } 
+			   
 
-		     console.log('DB upgrade successful')
+		     console.log('DB install successful')
 
 		     //Runs callback if defined
 		     if (this.workermessage === 'function') {
 			await this.workermessage()
 		     }
 
+		     this.inventory = await this.getInventory()
    		     resolve(this.connection);
    		   };
    		 });
-
-
   }
 
   async setupUserConfiguration(transaction) {
 	return new Promise((resolve, reject) => {
 		try {
 			const store = transaction.objectStore('USER_CONFIGURATION')
-			store.add(Configuration)
-			console.log('config upload successful')
+			store.add(ConfigurationTemplate)
 		} catch (e) {
+			console.error(e)
 			console.error('config upload failed')
 		}
 	})

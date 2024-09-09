@@ -54,7 +54,7 @@ export default function ConfigurationOptions({options}) {
 
 	return (
 		<form id={ `${optionType}-option` }
-		className="flex space-x-2">
+		className="flex space-x-2 font-sans">
 		{ 	/* Since this will always contain booleans in the optionList,
 			its best to just parse the strings as actual bool types */
 			(optionType === "checkbox") &&  (
@@ -84,14 +84,16 @@ export default function ConfigurationOptions({options}) {
 		})}
 		{ (optionType === "dropdown") && (
 				<select 
+				className="trans-ease-all border border-gray-300 text-white  rounded-lg block w-full p-[0.15rem] bg-[#3f3f3f]  placeholder-gray-400  focus:ring-blue-500 focus:border-blue-500"
 				defaultValue={selectedOption}
 				onChange={handleOptionChange}>
 				{optionList.map( option => {
 					return (
 						<option 
+						className="bg-inherit"
 						key={option}
 						value={option}>
-						{option}
+						{convertCamelToCapitalized(option)}
 						</option>
 					)
 				})}	

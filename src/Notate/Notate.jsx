@@ -1,8 +1,10 @@
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
-import useTheme from '@universal/Hooks/useTheme.jsx'
+import useTheme from '@universal/Hooks/useTheme/useTheme.jsx'
 
+import DevTools from '@dev/devutils.js'
 import Helper from './helper.js'
+import { NOTATE_DB, ERROR_LOGGING_DB, USER_CONFIGURATION_DB } from '@background/background.js'
 import SearchBar from './Components/Search/SearchBar.jsx';
 import RecentNotes from './Components/Recents/RecentNotes.jsx';
 import NewItemButton from './Components/Recents/NewItemBtn.jsx';
@@ -15,6 +17,16 @@ import DragToTrashWidget from './Components/Widgets/DragToTrashWidget.jsx';
 import SettingsWidget from './Components/Widgets/SettingsWidget.jsx'
 
 import DevActionButton from './dev-action-button.jsx'
+import { data } from 'autoprefixer';
+
+
+/*
+ * DevTool Call
+*/
+DevTools()
+
+
+/* Constants */
 
 
 /* Global Scope Variables */
@@ -52,9 +64,13 @@ const Notate = () => {
 		SEARCH_TERM_CONTEXT: React.useState(''),
 		RECENT_NOTES_STATE_CONTEXT: React.useState(true),
 		DRAG_TO_TRASH_STATE_CONTEXT: React.useState(false),
-		DATABASE_CONTEXT: React.useState(null),
+		NOTATE_DB_CONTEXT: React.useState(null),
+		USER_CONFIGURATION_DB_CONTEXT: React.useState(null),
 		SCROLL_STATE_CONTEXT: React.useState(true),
-		REQUEST_CONTEXT: React.useState({ type: 'GET_DATABASE' }),
+		REQUEST_CONTEXT: React.useState({ 
+			type: 'GET_DATABASE', 
+			database: NOTATE_DB 
+		}),
 		CONF_MSG_CONTEXT: React.useState(false),
 		THEME_CONTEXT: useTheme(wallpaperTheme)
 	}
@@ -62,7 +78,8 @@ const Notate = () => {
 	const [selectedNote, setSelectedNote] = NOTATE_CONTEXT.NOTE_CONTEXT 
 	const [selectedNotebook, setSelectedNotebook] = NOTATE_CONTEXT.NOTEBOOK_CONTEXT 
 	const [searchTerm, setSearchTerm] = NOTATE_CONTEXT.SEARCH_TERM_CONTEXT 
-	const [ database, setDatabase ] = NOTATE_CONTEXT.DATABASE_CONTEXT
+	const [ notatedb, setNotate ] = NOTATE_CONTEXT.NOTATE_DB_CONTEXT
+	const [ userconfigurationdb, setUserConfiguration ] = NOTATE_CONTEXT.USER_CONFIGURATION_DB_CONTEXT
 	const [ scrollState, setScrollState ] = NOTATE_CONTEXT.SCROLL_STATE_CONTEXT 
 	const [ request, makeRequest ] = NOTATE_CONTEXT.REQUEST_CONTEXT 
 	const [ confMsgState, setConfMsgState ] = NOTATE_CONTEXT.CONF_MSG_CONTEXT
@@ -71,9 +88,8 @@ const Notate = () => {
 
 
 
-
-
 	const [ notification, setNotification ] = React.useState(new NotificationHandler);
+	const [ databasesResolved, setDatabaseResolver ] = React.useState(false)
 
 
 	const [ devbool, setDevbool ] = React.useState(false)
@@ -85,6 +101,7 @@ const Notate = () => {
 	  const handleSearch = (term) => { setSearchTerm(term) };
 	
 
+
 	/* React.useEffect Hook */
 	React.useEffect(()=>{
 		helper.visual.changeScrollState(scrollState)
@@ -92,31 +109,39 @@ const Notate = () => {
 
 
 	React.useEffect(()=>{
-		if (database) {
-			setWallpaperTheme(database?.inventory?.USER_CONFIGURATION[0]?.Notate?.page?.backgroundWallpaper?.value)	
+		if (userconfigurationdb) {
+			setWallpaperTheme(userconfigurationdb?.inventory?.USER_CONFIGURATION[0]?.Notate?.page?.backgroundWallpaper?.value)	
+		} else {
+			console.log('userconfigurationdb not found. refetching...')
+			makeRequest({
+				type: 'RELOAD_DATABASE',
+				database: USER_CONFIGURATION_DB 	
+			})
 		}
-	},[database])
+	},[userconfigurationdb])
+
+
+	React.useEffect(()=>{
+		if (userconfigurationdb) console.log('userconfigurationdb: ', userconfigurationdb)
+	},[userconfigurationdb])
+
+	React.useEffect(()=>{
+		if (notatedb) console.log('notatedb: ', notatedb)
+	},[notatedb])
+
 
 
 
 	React.useEffect(() => {
 		const asyncEffect = async () => {
-			if (request?.type) {
-				// Since both focused user data objs cannot be truthy at a given point
-				// in the app's env, we can easily determine with a simple OR statement
-				// what user data obj is being saved to IDB. will change if our needs change
-				// in the future.
-				//const target = selectedNote || selectedNotebook
+			if (request?.type && request?.database) {
 
-
-				// This should always correctly filter for the correct store no matter 
-				// selectedNotebook's value. If target is null, store's val will not matter
-				// in this scenario.
 
 
 				// payload object to be sent to background.js
 				const payload = {
-					request: request.type,
+					type: request.type,
+					database: request.database
 				}
 				
 				if (request.type === 'POST_DATABASE' || 'DELETE_DATABASE' && request?.data && request?.store) {
@@ -125,15 +150,29 @@ const Notate = () => {
 				}
 
 
-				const result = await helper.database.operationRequest(payload)
+				const result = await helper.database.operationRequest(payload, request.database)
 
-				if (typeof result === 'object') {
-					setDatabase(result)
+				if ( result?.data && result?.database ) {
+
+					const db = result.data
+
+					switch (request.database) {
+						case NOTATE_DB:
+							setNotate(db)
+							break;
+						case USER_CONFIGURATION_DB:
+							setUserConfiguration(db)
+							break;
+					}
+
 					makeRequest(false)
 					setRecentsState(true)
 
 				} else {
-					makeRequest({ type: 'RELOAD_DATABASE' })
+					makeRequest({ 
+						type: 'RELOAD_DATABASE', 
+						database: request.database 
+					})
 				} 
 			}
 	
@@ -155,9 +194,12 @@ const Notate = () => {
 						<header id="page-header" 
 		  				className="text-center my-[1rem]">
 						        <h1 id="page-title" 
-		  					className={`text-[3rem] font-bold font-sans mb-2 ${theme.text.h1 || ""} `}>Notate</h1>
-							        <p id="page-subtitle" 
-		  						className={`text-lg font-semibold ${theme.text.sub || ""}`}>Combining The Worlds of Searches &amp; Note Taking</p>
+		  					className={`text-[3rem]  garamond-bold mb-2 ${theme.text.h1 || ""} `}>Notate</h1>
+							        <p 
+		  						 id="page-subtitle" 
+		  						 className={`text-lg playfair-bold ${theme.text.sub || ""}`}
+		  						> Combining The Worlds of Searches &amp; Note Taking
+		  						</p>
 						</header>
 					  	
 						<NotificationContext.Provider value={[ notification, setNotification ]}>
@@ -217,3 +259,53 @@ ReactDOM.createRoot(root).render(
 
 
 // dark-wood-bg cork-board-bg marble-chess-board-bg
+
+
+
+//	React.useEffect(()=>{
+//		console.log('databasesResolved: ', databasesResolved)
+//
+//		const resolveDatabases = async () => {
+//			if (!databasesResolved) {
+//				setDatabaseResolver(true)
+//
+//				if (
+//					notatedb === null || 
+//					notatedb?.inventory instanceof Promise
+//				) {
+//					console.log('notatedb has not been resolved yet')
+//					makeRequest({
+//						type: 'GET_DATABASE',
+//						database: NOTATE_DB
+//					})
+//
+//					return setDatabaseResolver(false) 
+//
+//				} else if (
+//					userconfigurationdb === null || 
+//					userconfigurationdb?.inventory instanceof Promise
+//				) {
+//					console.log('userconfigurationdb has not been resolved yet')
+//					makeRequest({
+//						type: 'GET_DATABASE',
+//						database: USER_CONFIGURATION_DB
+//					})
+//
+//					return setDatabaseResolver(false)
+//
+//				} else {
+//					console.log('notatedb: ', notatedb)
+//					console.log('userconfigurationdb: ', userconfigurationdb)
+//					setDatabaseResolver(true)
+//				}
+//
+//			} else {
+//				console.log('resolved dbs: ')
+//				console.log(notatedb)
+//				console.log(userconfigurationdb)
+//			}	
+//
+//		}
+//
+//		resolveDatabases()
+//	},[databasesResolved])

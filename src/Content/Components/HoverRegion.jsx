@@ -1,20 +1,33 @@
 import React from 'react';
 import { WebContentContext } from '@content/content.jsx'
 import NewNoteButton from './NewNoteButton/NewNoteButton.jsx'
+import { data } from 'autoprefixer';
+
+
+const NOTATE_DB = "notate"
+const ERROR_LOGGING_DB = "errorLogging"
+const USER_CONFIGURATION_DB = "userConfiguration"
 
 
 export default function HoverRegion() {
-	const { DATABASE_CONTEXT } = React.useContext(WebContentContext)
-	const [ database ] = DATABASE_CONTEXT
+	const { USER_CONFIGURATION_DB_CONTEXT, REQUEST_CONTEXT } = React.useContext(WebContentContext)
+	const [ database ] = USER_CONFIGURATION_DB_CONTEXT 
+	const [ request, makeRequest ] = REQUEST_CONTEXT
 
 	const [ newNoteButtonState, setNewNoteButtonState ] = React.useState(false) 
 
 	React.useEffect(()=>{
+		console.log('database: ', database)
 		if (database) {
 			const user = database?.inventory?.USER_CONFIGURATION[0]?.WebContent?.behavior?.newNotePopup?.value
 			const value = user === "true"
 			console.log(value)
 			setNewNoteButtonState(value)
+		} else {
+			makeRequest({
+				type: 'GET_DATABASE',
+				database: USER_CONFIGURATION_DB
+			})
 		}
 	},[database])
 

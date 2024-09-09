@@ -1,14 +1,16 @@
 import React from 'react';
+import { NOTATE_DB, ERROR_LOGGING_DB, USER_CONFIGURATION_DB } from '@background/background.js'
 import { searchEngineProviders } from './searchEngineProviders';
 import { BarStatusContext } from './SearchBar.jsx'
 import { NotateContext } from '@notate/Notate.jsx'
 
+
 export const SelectedEngineIndexContext = React.createContext()
 
 export default function SearchEngineSelector({  }) {
-	const { DATABASE_CONTEXT, REQUEST_CONTEXT } = React.useContext(NotateContext)
+	const { USER_CONFIGURATION_DB_CONTEXT, REQUEST_CONTEXT } = React.useContext(NotateContext)
 	const [ request, makeRequest ] = REQUEST_CONTEXT
-	const [database] = DATABASE_CONTEXT
+	const [database] = USER_CONFIGURATION_DB_CONTEXT 
 
   	const [ searchBarStatus ] = React.useContext(BarStatusContext)
   	const [selectedEngineIndex, setSelectedEngineIndex] = React.useContext(SelectedEngineIndexContext)
@@ -41,7 +43,12 @@ export default function SearchEngineSelector({  }) {
 		if (config?.Notate?.search) {
 			config.Notate.search.preferredEngine.value = selectedEngineIndex
 
-			makeRequest({ type: "POST_DATABASE", data: config, store: 'USER_CONFIGURATION' })
+			makeRequest({ 
+				type: "POST_DATABASE", 
+				data: config, 
+				store: 'USER_CONFIGURATION',
+				database: USER_CONFIGURATION_DB
+			})
 		}
 	},[selectedEngineIndex])
  
