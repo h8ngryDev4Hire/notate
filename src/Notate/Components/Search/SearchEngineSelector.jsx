@@ -39,17 +39,21 @@ export default function SearchEngineSelector({  }) {
 		}
 	},[database])
 
-	React.useEffect(()=>{
-		if (config?.Notate?.search) {
-			config.Notate.search.preferredEngine.value = selectedEngineIndex
+	React.useEffect(() =>{
+		const asyncProcessor = async () => {
+			if (config?.Notate?.search) {
+				config.Notate.search.preferredEngine.value = selectedEngineIndex
 
-			makeRequest({ 
-				type: "POST_DATABASE", 
-				data: config, 
-				store: 'USER_CONFIGURATION',
-				database: USER_CONFIGURATION_DB
-			})
+				await makeRequest({ 
+					type: "POST_DATABASE", 
+					data: config, 
+					store: 'USER_CONFIGURATION',
+					database: USER_CONFIGURATION_DB
+				})
+			}
 		}
+
+		asyncProcessor()
 	},[selectedEngineIndex])
  
   	return (

@@ -40,7 +40,7 @@ export default function DeleteNotebookButton() {
 	}
 
 	const performDeleteAction = async () => {
-		makeRequest({ 
+		await makeRequest({ 
 			type: 'DELETE_DATABASE', 
 			data: notebook, 
 			store: 'NOTEBOOKS', 

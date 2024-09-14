@@ -15,13 +15,15 @@ export default function NoteModal() {
 		RECENT_NOTES_STATE_CONTEXT,
 		NOTATE_DB_CONTEXT,
 		USER_CONFIGURATION_DB_CONTEXT,
-		SCROLL_STATE_CONTEXT 
+		SCROLL_STATE_CONTEXT,
+		MODAL_STATE_CONTEXT
 	} = React.useContext(NotateContext)
 
   	const [note, setNote ] = NOTE_CONTEXT
 	const [ updateRecentNotesState, triggerRecentNotesUpdateState ] = RECENT_NOTES_STATE_CONTEXT
 	const [ userconfigurationdb ] = USER_CONFIGURATION_DB_CONTEXT 
 	const [ scrollState, setScrollState ] = SCROLL_STATE_CONTEXT 
+	const [ modalState, setModalState ] = MODAL_STATE_CONTEXT
 
 	const NOTE_MODAL_CONTEXT = {
 		TITLE_CONTEXT: React.useState(note.title), // on new note, value is undefined
@@ -54,6 +56,7 @@ export default function NoteModal() {
 		setTransition(false)
 		await new Promise(resolve => setTimeout(resolve, 300))
 		setScrollState(true)
+		setModalState(false)
 		triggerRecentNotesUpdateState(true)
 	}
 
@@ -67,24 +70,34 @@ export default function NoteModal() {
 	},[note])
 
 
-  return (
-    <div id="note-modal-container" 
-    className={`trans-ease fixed flex justify-center z-modal left-0 top-0 w-full h-full ${transition ? "bg-black bg-opacity-40" : "bg-transparent" }`}
-    onMouseDown={handleMouseDown}
-    onMouseUp={handleMouseUp}>
-      <div id="modal" 
-      ref={modalRef}
-      className={`trans-ease flex flex-col mt-[100vh] ${ transition ? "-translate-y-[100%]" : "" } bg-[#2f2f2f] max-h-[45rem] h-full  p-5 rounded-lg max-w-[50rem] w-full relative box-border`}
-      onClick={handlePreventingEventPropagation}>
-	  <NoteModalContext.Provider value={NOTE_MODAL_CONTEXT}>
-		<NoteModalTopbar onExit={exitModal} />
-
-		<NoteModalInput onExit={exitModal}/>
-
-		<NoteModalBottombar onExit={exitModal}/> 
-	  </NoteModalContext.Provider>
+	return (
+		<div 
+		 id="note-modal-container" 
+    		 className={`
+			 trans-ease fixed flex justify-center z-modal left-0 top-0 w-full h-full 
+			 ${transition ? "bg-black bg-opacity-40" : "bg-transparent" }
+		 `}
+    		 onMouseDown={handleMouseDown}
+    		 onMouseUp={handleMouseUp}
+		>
+      			<div 
+			 id="modal" 
+      			 ref={modalRef}
+      			 className={`
+				 trans-ease flex flex-col mt-[100vh] 
+				 ${ transition ? "-translate-y-[100%]" : "" } 
+				 bg-[#2f2f2f] max-h-[45rem] h-full max-w-[50rem] 
+				 p-5 rounded-lg w-full relative box-border
+			 `}
+      			 onClick={handlePreventingEventPropagation}
+			>
+	  			<NoteModalContext.Provider value={NOTE_MODAL_CONTEXT}>
+					<NoteModalTopbar onExit={exitModal} />
+					<NoteModalInput onExit={exitModal}/>
+					<NoteModalBottombar onExit={exitModal}/> 
+	  		</NoteModalContext.Provider>
 	  
-      </div>
-    </div>
+      			</div>
+    		</div>
   );
 }

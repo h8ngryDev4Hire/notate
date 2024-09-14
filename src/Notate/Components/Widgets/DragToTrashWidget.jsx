@@ -57,8 +57,8 @@ export default function DragToTrashHandler() {
 		setSelfState(false)
 		setDeleteHoverState(false)
 
-		const deleteAction = () => {
-			makeRequest({ 
+		const deleteAction = async () => {
+			await makeRequest({ 
 				type: 'DELETE_DATABASE', 
 				data: note, 
 				store: 'NOTES', 

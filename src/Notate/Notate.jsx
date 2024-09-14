@@ -1,8 +1,7 @@
-import React, { StrictMode } from 'react';
-import ReactDOM from 'react-dom/client';
+import React  from 'react';
 import useTheme from '@universal/Hooks/useTheme/useTheme.jsx'
+import useRequest from '@universal/Hooks/useRequest/useRequest.jsx'
 
-import DevTools from '@dev/devutils.js'
 import Helper from './helper.js'
 import { NOTATE_DB, ERROR_LOGGING_DB, USER_CONFIGURATION_DB } from '@background/background.js'
 import SearchBar from './Components/Search/SearchBar.jsx';
@@ -17,13 +16,6 @@ import DragToTrashWidget from './Components/Widgets/DragToTrashWidget.jsx';
 import SettingsWidget from './Components/Widgets/SettingsWidget.jsx'
 
 import DevActionButton from './dev-action-button.jsx'
-import { data } from 'autoprefixer';
-
-
-/*
- * DevTool Call
-*/
-DevTools()
 
 
 /* Constants */
@@ -31,16 +23,6 @@ DevTools()
 
 /* Global Scope Variables */
 const helper = new Helper
-
-
-/* Application Entry Point */
-const root  = document.getElementById('root');
-
-
-
-
-/* Exported Functions */
-
 
 
 /* React Context Declarations  */
@@ -54,7 +36,7 @@ chrome.runtime.onMessage.addListener(()=>{
 
 
 /* App Component */
-const Notate = () => {
+export default function Notate(){
 	const [ wallpaperTheme, setWallpaperTheme ] = React.useState(false)
 
 	  /* React useState Hooks */
@@ -67,11 +49,9 @@ const Notate = () => {
 		NOTATE_DB_CONTEXT: React.useState(null),
 		USER_CONFIGURATION_DB_CONTEXT: React.useState(null),
 		SCROLL_STATE_CONTEXT: React.useState(true),
-		REQUEST_CONTEXT: React.useState({ 
-			type: 'GET_DATABASE', 
-			database: NOTATE_DB 
-		}),
 		CONF_MSG_CONTEXT: React.useState(false),
+		MODAL_STATE_CONTEXT: React.useState(false),
+		REQUEST_CONTEXT: useRequest(),
 		THEME_CONTEXT: useTheme(wallpaperTheme)
 	}
 
@@ -81,108 +61,115 @@ const Notate = () => {
 	const [ notatedb, setNotate ] = NOTATE_CONTEXT.NOTATE_DB_CONTEXT
 	const [ userconfigurationdb, setUserConfiguration ] = NOTATE_CONTEXT.USER_CONFIGURATION_DB_CONTEXT
 	const [ scrollState, setScrollState ] = NOTATE_CONTEXT.SCROLL_STATE_CONTEXT 
-	const [ request, makeRequest ] = NOTATE_CONTEXT.REQUEST_CONTEXT 
 	const [ confMsgState, setConfMsgState ] = NOTATE_CONTEXT.CONF_MSG_CONTEXT
 	const [ recentsState, setRecentsState ] = NOTATE_CONTEXT.RECENT_NOTES_STATE_CONTEXT
-	const  theme = NOTATE_CONTEXT.THEME_CONTEXT 
 
-
+	const theme = NOTATE_CONTEXT.THEME_CONTEXT 
+	const [ response, makeRequest, processing ] = NOTATE_CONTEXT.REQUEST_CONTEXT 
 
 	const [ notification, setNotification ] = React.useState(new NotificationHandler);
-	const [ databasesResolved, setDatabaseResolver ] = React.useState(false)
-
 
 	const [ devbool, setDevbool ] = React.useState(false)
 	
+	const notateInitialized = React.useRef(false)
+	const userconfigurationIntialized = React.useRef(false)
 	
 	  /* Internal Component Functions */
-	
-	
 	  const handleSearch = (term) => { setSearchTerm(term) };
 	
 
+	React.useEffect(()=>{
+		if (notatedb) console.log('notatedb resolved: ', notatedb)
+	},[notatedb])
 
-	/* React.useEffect Hook */
+	React.useEffect(()=>{
+		if (userconfigurationdb) console.log('userconfigurationdb resolved: ', userconfigurationdb)
+	},[userconfigurationdb])
+
+
+	/* useEffect Hooks */
+  	React.useEffect(() => {
+		const asyncProcessor = async () => {
+    			// Initial data fetch
+			if (!notatedb?.inventory) {
+    				await makeRequest({ type: 'GET_DATABASE', database: NOTATE_DB })
+			}
+
+			if (!userconfigurationdb?.inventory) {
+    				await makeRequest({ type: 'GET_DATABASE', database: USER_CONFIGURATION_DB })
+			}
+
+		}
+
+		asyncProcessor()
+
+  	}, [response])
+
+
 	React.useEffect(()=>{
 		helper.visual.changeScrollState(scrollState)
 	}, [scrollState])
 
 
-	React.useEffect(()=>{
-		if (userconfigurationdb) {
-			setWallpaperTheme(userconfigurationdb?.inventory?.USER_CONFIGURATION[0]?.Notate?.page?.backgroundWallpaper?.value)	
-		} else {
-			console.log('userconfigurationdb not found. refetching...')
-			makeRequest({
-				type: 'RELOAD_DATABASE',
-				database: USER_CONFIGURATION_DB 	
-			})
+	React.useEffect(() =>{
+		const asyncProcessor = async () => {
+			if (userconfigurationdb ) {
+				setWallpaperTheme(userconfigurationdb?.inventory?.USER_CONFIGURATION[0]?.Notate?.page?.backgroundWallpaper?.value)	
+			} else {
+				await makeRequest({
+					type: 'GET_DATABASE',
+					database: USER_CONFIGURATION_DB 	
+				})
+			}
 		}
-	},[userconfigurationdb])
 
-
-	React.useEffect(()=>{
-		if (userconfigurationdb) console.log('userconfigurationdb: ', userconfigurationdb)
-	},[userconfigurationdb])
-
-	React.useEffect(()=>{
-		if (notatedb) console.log('notatedb: ', notatedb)
-	},[notatedb])
-
-
+		asyncProcessor()
+	},[userconfigurationdb, wallpaperTheme])
 
 
 	React.useEffect(() => {
-		const asyncEffect = async () => {
-			if (request?.type && request?.database) {
 
+		
+		const responseHandler = async () => {
+			if (response.type === 'RESULT') {
+      				if (response.status === '200') {
+        				const result = response.content;
 
+        				if (result?.data && result?.database) {
+        	  				const db = result.data;
 
-				// payload object to be sent to background.js
-				const payload = {
-					type: request.type,
-					database: request.database
-				}
-				
-				if (request.type === 'POST_DATABASE' || 'DELETE_DATABASE' && request?.data && request?.store) {
-					payload.data = request.data
-					payload.store = request.store
-				}
+        	  				switch (result.database) {
+        	    					case NOTATE_DB:
+        	      						setNotate(db);
+        	      						break;
 
+        	    					case USER_CONFIGURATION_DB:
+        	      						setUserConfiguration(db);
+        	      						break;
+        	  				}
 
-				const result = await helper.database.operationRequest(payload, request.database)
+        	  				setRecentsState(true);
+						
+        				}
+      				} else if (response.status === '400') {
+					console.error('response: ', response)
+        				console.error('Request failed');
 
-				if ( result?.data && result?.database ) {
-
-					const db = result.data
-
-					switch (request.database) {
-						case NOTATE_DB:
-							setNotate(db)
-							break;
-						case USER_CONFIGURATION_DB:
-							setUserConfiguration(db)
-							break;
-					}
-
-					makeRequest(false)
-					setRecentsState(true)
-
-				} else {
-					makeRequest({ 
+        				// Optionally, you could retry the request here
+        				await makeRequest({ 
 						type: 'RELOAD_DATABASE', 
-						database: request.database 
+						database: response.content.database 
 					})
-				} 
-			}
-	
+      				}
+    			} 
 		}
 
-		asyncEffect()
-	
-	}, [request]);
-	
-	
+		if (!processing) {
+			responseHandler()
+		}
+  	},[response])
+
+
 	  /* Component */
 	  return (
 		<div id="app" className="w-full h-screen flex flex-col flex-grow">
@@ -250,62 +237,5 @@ const ShadeComponent = ({direction}) => {
 	)
 }
 
-
-ReactDOM.createRoot(root).render(
-	<StrictMode>
-				<Notate/>
-	</StrictMode>
-);
-
-
 // dark-wood-bg cork-board-bg marble-chess-board-bg
 
-
-
-//	React.useEffect(()=>{
-//		console.log('databasesResolved: ', databasesResolved)
-//
-//		const resolveDatabases = async () => {
-//			if (!databasesResolved) {
-//				setDatabaseResolver(true)
-//
-//				if (
-//					notatedb === null || 
-//					notatedb?.inventory instanceof Promise
-//				) {
-//					console.log('notatedb has not been resolved yet')
-//					makeRequest({
-//						type: 'GET_DATABASE',
-//						database: NOTATE_DB
-//					})
-//
-//					return setDatabaseResolver(false) 
-//
-//				} else if (
-//					userconfigurationdb === null || 
-//					userconfigurationdb?.inventory instanceof Promise
-//				) {
-//					console.log('userconfigurationdb has not been resolved yet')
-//					makeRequest({
-//						type: 'GET_DATABASE',
-//						database: USER_CONFIGURATION_DB
-//					})
-//
-//					return setDatabaseResolver(false)
-//
-//				} else {
-//					console.log('notatedb: ', notatedb)
-//					console.log('userconfigurationdb: ', userconfigurationdb)
-//					setDatabaseResolver(true)
-//				}
-//
-//			} else {
-//				console.log('resolved dbs: ')
-//				console.log(notatedb)
-//				console.log(userconfigurationdb)
-//			}	
-//
-//		}
-//
-//		resolveDatabases()
-//	},[databasesResolved])

@@ -8,6 +8,3 @@ export default function useTheme(style) {
 		return themes[style] || themes["darkWood"]
 	},[style])
 }
-
-
-

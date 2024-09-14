@@ -41,7 +41,7 @@ export default function NoteModalBottombar({onExit}) {
   	      note.content = content;	
 
   	      await onExit();
-  	      makeRequest({ 
+  	      await makeRequest({ 
 		      type: 'POST_DATABASE', 
 		      data: note, 
 		      store: 'NOTES', 

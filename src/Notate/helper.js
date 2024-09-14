@@ -3,66 +3,7 @@ import DatabaseAdapter from '@universal/Handlers/indexedDBhandler.js'
 
 export default class Helper {
 	constructor() {
-		this.database = {
-			operationRequest: async ({ 
-				type: type, 
-				data: data, 
-				store: store
-			}, database ) => {
-				return new Promise((resolve, reject) => {
-					const port = chrome.runtime.connect({ name: 'DATABASE_CONNECTION' })
-					const message = { 
-						type: type, 
-						content: { database: database } 
-					}
 
-			
-					switch (type) {
-						case 'GET_DATABASE':
-							port.postMessage(message)
-							break;
-			
-						case 'RELOAD_DATABASE':
-							port.postMessage(message)
-							break;
-			
-						case 'POST_DATABASE':
-							message.content.store = store
-							message.content.data = data 
-							port.postMessage(message)
-							break;
-			
-						case 'DELETE_DATABASE':
-							message.content.store = store
-							message.content.data = data 
-							port.postMessage(message)
-							break;
-					}
-
-					console.log('chrome message being sent: ', message)
-			
-
-					port.onMessage.addListener((message)=>{
-						console.log('chrome message being recieved: ,', message)
-
-						if (message.type === 'DATABASE') {
-							if (typeof message.content?.data === 'object') {
-								Object.setPrototypeOf(message.content.data, DatabaseAdapter.prototype)
-								 resolve(message.content)
-								
-									
-							} else {
-								 resolve(false)
-							}
-						}
-					})
-				})
-			}
-		}
-
-		this.dragdrop = {
-			start: () => {},
-		}
 
 		this.visual = {
 			changeScrollState: async (bool) => {

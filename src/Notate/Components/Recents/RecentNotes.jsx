@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { NOTATE_DB, ERROR_LOGGING_DB, USER_CONFIGURATION_DB } from '@background/background.js'
 import DisplayMode from './DisplayMode.jsx';
+import Loading from '@universal/Components/Loading/RecentsLoading.jsx'
 
 import { NotateContext } from '@notate/Notate.jsx';
 import { NotificationContext } from '@universal/Components/NotificationMessenger.jsx';
@@ -12,24 +13,26 @@ export const RecentNotesContext = React.createContext()
 
 
 export default function RecentNotes({ searchTerm }) {
-  const { 
-	  NOTE_CONTEXT, 
-	  NOTEBOOK_CONTEXT, 
-	  RECENT_NOTES_STATE_CONTEXT, 
-	  NOTATE_DB_CONTEXT, 
-	  REQUEST_CONTEXT,
-	  THEME_CONTEXT
-  } = React.useContext(NotateContext)
+	const { 
+		NOTE_CONTEXT, 
+		NOTEBOOK_CONTEXT, 
+		RECENT_NOTES_STATE_CONTEXT, 
+		NOTATE_DB_CONTEXT, 
+		REQUEST_CONTEXT,
+		MODAL_STATE_CONTEXT,
+		THEME_CONTEXT
+	} = React.useContext(NotateContext)
 
-  const [selectedNote, setSelectedNote] = NOTE_CONTEXT
-  const [selectedNotebook, setSelectedNotebook] = NOTEBOOK_CONTEXT
-  const [database, setDatabase] = NOTATE_DB_CONTEXT 
-  const [ request, makeRequest ] = REQUEST_CONTEXT 
+	const [selectedNote, setSelectedNote] = NOTE_CONTEXT
+	const [selectedNotebook, setSelectedNotebook] = NOTEBOOK_CONTEXT
+	const [ modalState, setModalState ] = MODAL_STATE_CONTEXT
+  	const [database, setDatabase] = NOTATE_DB_CONTEXT 
+  	const [ request, makeRequest ] = REQUEST_CONTEXT 
 	const theme = THEME_CONTEXT
 
 
-  const [ updateState, setUpdateState ] = RECENT_NOTES_STATE_CONTEXT
-  const [notification, setNotification] = React.useContext(NotificationContext)
+  	const [ updateState, setUpdateState ] = RECENT_NOTES_STATE_CONTEXT
+  	const [notification, setNotification] = React.useContext(NotificationContext)
 
 
 	const RECENT_NOTES_CONTEXT = {
@@ -46,20 +49,28 @@ export default function RecentNotes({ searchTerm }) {
 	const [ search, setSearch ] = RECENT_NOTES_CONTEXT.SEARCH_TERM_CONTEXT
 
 
-    const readStorageData = async () => {
-      const NOTES = database?.inventory?.NOTES
-      const NOTEBOOKS = database?.inventory?.NOTEBOOKS
+    	const readStorageData = () => {
+      		const NOTES = database?.inventory?.NOTES
+      		const NOTEBOOKS = database?.inventory?.NOTEBOOKS
 
-      if (NOTES && NOTEBOOKS) {
-	      setNotes(NOTES);
-	      setNotebooks(NOTEBOOKS);
-      }
-    };
+      		if (NOTES && NOTEBOOKS) {
+	      		setNotes(NOTES);
+	      		setNotebooks(NOTEBOOKS);
+      		}
+    	};
 
 
-  	const handleNoteClick = (note) => { if (!selectedNotebook) setSelectedNote(note) };
+  	const handleNoteClick = (note) => { if (!selectedNotebook) {
+			setSelectedNote(note)
+			setModalState(true)
+		} 
+	};
 
- 	const handleNotebookClick = (notebook) => { if (!selectedNote) setSelectedNotebook(notebook); };
+ 	const handleNotebookClick = (notebook) => { if (!selectedNote) {
+			setSelectedNotebook(notebook);
+			setModalState(true)
+		} 
+	};
 
   	const handleModalClose = () => {
     		setSelectedNote(null);
@@ -70,7 +81,7 @@ export default function RecentNotes({ searchTerm }) {
 	const notebookDragDropListener = async (notebook, note) => {
 		try {
 			notebook.collection.push(note.id)
-			makeRequest({ 
+			await makeRequest({ 
 				type: 'POST_DATABASE', 
 				data: notebook, 
 				store: 'NOTEBOOKS',
@@ -94,10 +105,10 @@ export default function RecentNotes({ searchTerm }) {
 
 
   	React.useEffect(() => { 	
-		if (!request) {
+		if (!modalState) {
 			setSelectedNote(null) 
 			setSelectedNotebook(null)
-		}	
+		} 	
 
 		readStorageData()
   		setUpdateState(false)
@@ -120,7 +131,9 @@ export default function RecentNotes({ searchTerm }) {
 	  			</h2>
 	  		</header>
 			
-	  		<DisplayMode/>
+	  		<Suspense fallback={<Loading/>}>
+	  			<DisplayMode/>
+			</Suspense>
 
 		</div>
 	</RecentNotesContext.Provider>

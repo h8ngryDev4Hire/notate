@@ -30,7 +30,7 @@ export default function SaveNotebookButton() {
 			notebook.description = description
 			notebook.collection = collection
 			setNotification(notification.showInfo('Notebook Saved'))
-			makeRequest({ 
+			await makeRequest({ 
 				type: 'POST_DATABASE', 
 				data: notebook, 
 				store: 'NOTEBOOKS',

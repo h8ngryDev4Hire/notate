@@ -29,8 +29,10 @@ export default function SaveNoteButton() {
 			//setNote(new NoteHandler.Note(title, content, origin))
 			note.title = title
 			note.content = content
-			makeRequest({ 
+			await makeRequest({ 
 				type: 'POST_DATABASE', 
+				data: note,
+				store: 'NOTES',
 				database: NOTATE_DB 
 			})
 			

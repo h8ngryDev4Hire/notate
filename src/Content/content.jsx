@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-//import { NOTATE_DB, ERROR_LOGGING_DB, USER_CONFIGURATION_DB } from '@background/background.js'
+import useRequest from '@universal/Hooks/useRequest/useRequest.jsx'
+
 import DevTools from '@dev/devutils.js'
 
 import RelatedNotesHeader from './Components/RelatedNotes/RelatedNotesHeader.jsx'
@@ -53,7 +54,7 @@ const ContentScript = () => {
 		DATABASE_CONTEXT: React.useState(null),
 		NOTATE_DB_CONTEXT: React.useState(null),
 		USER_CONFIGURATION_DB_CONTEXT: React.useState(null),
-		REQUEST_CONTEXT: React.useState('GET_DATABASE'),
+		REQUEST_CONTEXT: useRequest(),
 		NOTE_CONTEXT: React.useState(null),
 		SHADOW_ROOT_ELEMENT: React.useState(shadow)
 	}
@@ -63,56 +64,65 @@ const ContentScript = () => {
 	const [ database, setDatabase ] = CONTENT_SCRIPT_CONTEXT.DATABASE_CONTEXT 
 	const [ notatedb, setNotate ] = CONTENT_SCRIPT_CONTEXT.NOTATE_DB_CONTEXT
 	const [ userconfigurationdb, setUserConfiguration ] = CONTENT_SCRIPT_CONTEXT.USER_CONFIGURATION_DB_CONTEXT
-	const [ request, makeRequest ] = CONTENT_SCRIPT_CONTEXT.REQUEST_CONTEXT 
+	const [ response, makeRequest, processing ] = CONTENT_SCRIPT_CONTEXT.REQUEST_CONTEXT 
 	const [ notification, setNotification ] = React.useState(new NotificationHandler)
 
 
 
-
 	React.useEffect(()=>{
-
-		const asyncEffect = async () => {
-			if (request?.type && request?.database) {
-				const payload = {
-					request: request.type,
-					database: request.database
-				}
-
-				if (request?.type === 'POST_DATABASE' || request?.type === 'DELETE_DATABASE') {
-					payload.store = 'NOTES'
-					payload.data = note
-				}
-
-				const result = await ContentHelper.databaseOperationRequest(payload)
-					if (result?.data && result?.database) {
-						debugger
-						if (result.database === USER_CONFIGURATION_DB) debugger
-						const db = result.data
-
-						switch (request.database) {
-							case NOTATE_DB:
-								setNotate(db)
-								break;
-							case USER_CONFIGURATION_DB:
-								setUserConfiguration(db)
-								break;
-						}
-
-						makeRequest(false)
-
-					} else {
-						makeRequest( { 
-							type: 'RELOAD_DATABASE', 
-							database: request.database 
-						})
-					} 
+		const asyncProcessor = async () => {
+			if (!notatedb?.inventory) {
+				await makeRequest({
+					type: 'GET_DATABASE',
+					database: NOTATE_DB
+				})
 			}
-	
-		}
-	
-		asyncEffect()
 
-	},[request])
+			if (!userconfigurationdb?.inventory) {
+				await makeRequest({
+					type: 'GET_DATABASE',
+					database: USER_CONFIGURATION_DB
+				})
+			}
+		}
+
+		asyncProcessor()
+	},[response])
+
+	
+	React.useEffect(()=>{
+		const responseHandler = async () => {
+			if (response.type === 'RESULT' && response.status === '200') {
+				const result = response.content
+
+				if (result?.data && result?.database) {
+					const db = result.data
+
+					switch (result.database) {
+						case NOTATE_DB:
+							setNotate(db)
+							break;
+						case USER_CONFIGURATION_DB:
+							setUserConfiguration(db)
+							break;
+					}
+				}
+			} else if (response.status === '400') {
+				console.error('response: ', response)
+				console.error('Request failed')
+
+				await makeRequest({
+					type: 'RELOAD_DATABASE',
+					database: response.content.database
+				})
+			}
+		}
+
+		if (!processing) {
+			responseHandler()
+		}
+	},[response])
+
 
 
 	return (

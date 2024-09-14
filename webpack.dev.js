@@ -12,7 +12,7 @@ module.exports = {
 		errorDetails: true	
 	},
 	entry: {
-		notate: path.resolve(__dirname, 'src', 'Notate', 'Notate.jsx'),
+		notate: path.resolve(__dirname, 'src', 'App.jsx'),
 		background: path.resolve(__dirname, 'src', 'Background', 'background.js'),
 		content: path.resolve(__dirname, 'src', 'Content', 'content.jsx'),
 		devutils: path.resolve(__dirname, 'src', 'DevUtils', 'devutils.js')

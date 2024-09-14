@@ -20,7 +20,12 @@ export default class NoteHandler {
 	Note.modified:	Timestamp of when note was modified using Date() class
 */
   static Note = class {
-    constructor(title="", content="", origin=window.location.href, modified = new Date()) {
+    constructor(
+	    title="", 
+	    content="", 
+	    origin=window.location.hostname + window.location.pathname, 
+	    modified = new Date()
+    ) {
       this.title = title;
       this.content = content;
       this.origin = origin;

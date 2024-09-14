@@ -18,17 +18,22 @@ export default function HoverRegion() {
 
 	React.useEffect(()=>{
 		console.log('database: ', database)
-		if (database) {
-			const user = database?.inventory?.USER_CONFIGURATION[0]?.WebContent?.behavior?.newNotePopup?.value
-			const value = user === "true"
-			console.log(value)
-			setNewNoteButtonState(value)
-		} else {
-			makeRequest({
-				type: 'GET_DATABASE',
-				database: USER_CONFIGURATION_DB
-			})
+
+		const asyncProcessor = async () => {
+			if (database) {
+				const user = database?.inventory?.USER_CONFIGURATION[0]?.WebContent?.behavior?.newNotePopup?.value
+				const value = user === "true"
+				console.log(value)
+				setNewNoteButtonState(value)
+			} else {
+				await makeRequest({
+					type: 'GET_DATABASE',
+					database: USER_CONFIGURATION_DB
+				})
+			}
 		}
+
+		asyncProcessor()
 	},[database])
 
 
