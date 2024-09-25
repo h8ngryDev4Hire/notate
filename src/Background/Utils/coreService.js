@@ -1,10 +1,10 @@
 import DatabaseAdapter from '@universal/Handlers/indexedDBhandler.js';
+import { setHighPriorityVariables } from './chromeStorageHandler.js'
 
 export const NOTATE_DB = "notate"
 export const ERROR_LOGGING_DB = "errorLogging"
 export const USER_CONFIGURATION_DB = "userConfiguration"
 
-const CHROME_STORE_HIGH_PRIORITY = "CHROME_STORE_HIGH_PRIORITY"
 
 
 export default class CoreService {
@@ -20,6 +20,11 @@ export default class CoreService {
 			},
 			common: {
 
+			},
+			namespace: {
+				chromeStorage: {
+					highPriority: "CHROME_STORE_HIGH_PRIORITY"
+				}
 			}
 		}
 	}
@@ -97,7 +102,14 @@ export default class CoreService {
 						store = message?.content?.store
 		
 						const insertOperation = async () => {
-							if ( data && store && typeof db.insertData === 'function' ) {
+							await db
+							await db.insertData
+							
+							if ( db.insertData === 'undefined' ) {
+								await this.initializeDatabase(target)
+								await insertOperation()
+
+							} else if ( data && store && typeof db.insertData === 'function'  ) {
 						 		await db.insertData(data, store)
 								await this.initializeDatabase(target)
 		
@@ -111,6 +123,7 @@ export default class CoreService {
 									content: { data: db, database: target }
 								})
 							} else {
+								console.log('insertData failed both checks for some reason...')
 								await this.initializeDatabase(target)
 								await insertOperation()
 							}
@@ -126,7 +139,13 @@ export default class CoreService {
 						store = message?.content?.store
 		
 						const deleteOperation = async () => {
-							if ( data && store && typeof db.deleteData === 'function' ) {
+							await db
+
+							if ( db.deleteData === 'undefined' ) {
+								await this.initializeDatabase(target)
+								await deleteOperation()
+
+							} else if ( data && store && typeof db.deleteData === 'function' ) {
 								await db.deleteData(data, store)
 								await this.initializeDatabase(target)
 								port.postMessage({ 
@@ -135,6 +154,7 @@ export default class CoreService {
 									
 								})
 							} else {
+								console.log('deleteData failed both checks for some reason...')
 								await this.initializeDatabase(target)
 								await deleteOperation()
 							}
@@ -202,13 +222,14 @@ export default class CoreService {
 			if (launchBehavior) {
 				console.log('env variables initialized. Updating high priority env variables...')
 				
-				chrome.storage.sync.set({ CHROME_STORE_HIGH_PRIORITY: this.env.important })
-	
+				setHighPriorityVariables(this.env.important)
 			} 
 		}
 	}
 
 	async generateErrorLog(error, context={}) {
+		console.log('logging error...')
+
 		if (
 			!this.databases.errorloggingdb || 
 			this.databases.errorloggingdb?.inventory instanceof Promise || 
@@ -236,6 +257,26 @@ export default class CoreService {
 		} catch (error) {
 	
 		}
-
 	}
+
+	
+//	setHighPriorityVariables() {
+//		const target = this.env.namespace.chromeStorage.highPriority 
+//		const payload = this.env.important
+//
+//		chrome.storage.sync.set({ target : payload })
+//	}
+//
+//
+//	fetchHighPriorityVariables() {
+//		let result;
+//
+//		const target = this.env.namespace.chromeStorage.highPriority
+//
+//		chrome.storage.sync.get(target, (res)=>{
+//			result = res	
+//		})
+//
+//		return result
+//	}
 }

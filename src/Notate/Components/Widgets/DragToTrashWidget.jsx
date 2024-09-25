@@ -28,16 +28,22 @@ export default function DragToTrashHandler() {
 	const [ selfState, setSelfState ] = React.useState(false)
 	const [ hoverState, setHoverState ] = React.useState(false)
 	const [ deleteHoverState, setDeleteHoverState ] = React.useState(false)
+	const [ target, setTarget ] = React.useState(false)
 
 
 
 	const handleDragStart = (e) => {
 		const element = e.target.id
 
-		if (element && (element.includes("note-card") || element.includes("notebook-card"))) {
+		if (element && element.includes("note-card")) {
 			const note = e.target.id
 			setHoverState(true)
+			setTarget('NOTES')
 
+		} else if (element.includes("notebook-card")) {
+			const notebook = e.target.id
+			setHoverState(true)
+			setTarget('NOTEBOOKS')
 		}
 
 	}
@@ -45,13 +51,14 @@ export default function DragToTrashHandler() {
 	const handleDragEnd = (e) => {
 		e.preventDefault()
 		setHoverState(false)
+		setTarget(false)
 	}
 
 
 	const handleDeleteAction = (e) => {
 		e.preventDefault()
 
-		const note = JSON.parse(e.dataTransfer.getData("text/plain"))
+		const item = JSON.parse(e.dataTransfer.getData("text/plain"))
 		const message = 'Are you sure you want to delete this note? This is a permanent action!'
 
 		setSelfState(false)
@@ -60,15 +67,15 @@ export default function DragToTrashHandler() {
 		const deleteAction = async () => {
 			await makeRequest({ 
 				type: 'DELETE_DATABASE', 
-				data: note, 
-				store: 'NOTES', 
+				data: item, 
+				store: target, 
 				database: NOTATE_DB 
 			})
 
 			setNotification(notification.showInfo('Note Deleted!'))
 		}
 
-		setConfMsgState(new ConfirmationMsgHandler('Delete Note?',
+		setConfMsgState(new ConfirmationMsgHandler('Delete Item?',
 								message,
 								'Delete',
 								deleteAction,

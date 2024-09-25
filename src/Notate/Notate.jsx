@@ -76,15 +76,6 @@ export default function Notate(){
 	
 	  /* Internal Component Functions */
 	  const handleSearch = (term) => { setSearchTerm(term) };
-	
-
-	React.useEffect(()=>{
-		if (notatedb) console.log('notatedb resolved: ', notatedb)
-	},[notatedb])
-
-	React.useEffect(()=>{
-		if (userconfigurationdb) console.log('userconfigurationdb resolved: ', userconfigurationdb)
-	},[userconfigurationdb])
 
 
 	/* useEffect Hooks */
@@ -128,8 +119,6 @@ export default function Notate(){
 
 
 	React.useEffect(() => {
-
-		
 		const responseHandler = async () => {
 			if (response.type === 'RESULT') {
       				if (response.status === '200') {
@@ -157,8 +146,12 @@ export default function Notate(){
 
         				// Optionally, you could retry the request here
         				await makeRequest({ 
-						type: 'RELOAD_DATABASE', 
-						database: response.content.database 
+						type: response.content.type == 'GET_DATABASE' 
+							? 'RELOAD_DATABASE' 
+							: response.content.type, 
+						database: response.content.database,
+						data: response.content?.data,
+						store: response.content?.store
 					})
       				}
     			} 

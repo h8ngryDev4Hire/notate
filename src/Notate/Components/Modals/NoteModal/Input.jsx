@@ -17,8 +17,10 @@ export default function NoteModalInput() {
 
 	<TextInputContext.Provider value={[ content, setContent ]}>
 
-		<div id="title-n-color-section"
-		className="flex py-1  my-2 space-x-2">
+		<div 
+		 id="title-n-color-section"
+		 className="flex py-1  my-2 space-x-2"
+		>
 	       		 <input
 	       		   type="text"
 	       		   id="edit-note-title"
@@ -31,7 +33,8 @@ export default function NoteModalInput() {
 			<NoteColorPicker/>
 		</div>
 
-			<TextEditor TailwindClassNames={"fill-gray-200 stroke-gray-200"}/>	
+			<
+			 TextEditor TailwindClassNames={"fill-gray-200 stroke-gray-200"}/>	
 	</TextInputContext.Provider>
 
 	)

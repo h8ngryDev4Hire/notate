@@ -92,7 +92,7 @@ export default function Settings({ContextAdapter, targetModule, setterCallback})
 
 	},[exitState])
 
-
+	
 
 	return (
 		<div 
@@ -103,8 +103,14 @@ export default function Settings({ContextAdapter, targetModule, setterCallback})
 			 justify-center z-modal playfair-regular
 		 `}>
 
-			<div id="settings-modal"
-			className={ `trans-ease flex flex-col absolute px-[2rem] ${ settingsState ? "translate-y-[0%]" : "translate-y-[100%]" } h-[85%] w-[60%] bottom-0 bg-[#444] rounded-t-xl  ` }>
+			<div 
+			 id="settings-modal"
+			 className={`
+			 	trans-ease flex flex-col absolute px-[2rem] 
+			 	${ settingsState ? "translate-y-[0%]" : "translate-y-[100%]" } 
+			 	h-[85%] w-[60%] bottom-0 bg-zinc-800 rounded-t-xl  
+			`}>
+
 				<SettingsContext.Provider value={SETTINGS_CONTEXT}>
 					<SettingsTopBar/>	
 						<main className="overflow-auto space-y-5">
@@ -112,8 +118,7 @@ export default function Settings({ContextAdapter, targetModule, setterCallback})
 							return (
 								<ul className="space-y-3 mx-4"
 								key={module}>
-									<header
-									className="text-lg text-white font-bold">
+									<header className="text-xl text-white font-bold">
 									{module}</header>
 									<ConfigurationModule
 									module={module}/>

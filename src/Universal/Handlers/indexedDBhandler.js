@@ -34,7 +34,7 @@ export default class DatabaseAdapter {
 		     if (this.workermessage === 'function') await this.workermessage()
    		     this.connection = e.target.result;
 
-		     console.log(`${databaseName} connected. awaiting inventory...`)
+		     //console.log(`${databaseName} connected. awaiting inventory...`)
 		     this.inventory = await this.getInventory()
    		     resolve(this.connection);
    		   };
@@ -42,7 +42,7 @@ export default class DatabaseAdapter {
    		   DBBrige.onerror = (e) => reject(console.error('error initing DB: ' + e.target.error));
 
    		   DBBrige.onupgradeneeded = async (e) => {
-			   console.log(`Upgrading DB ${databaseName}...`)
+			   //console.log(`Upgrading DB ${databaseName}...`)
    		 
    		     this.connection = e.target.result;
 		     const transaction = e.target.transaction
@@ -56,7 +56,7 @@ export default class DatabaseAdapter {
 		     } 
 			   
 
-		     console.log('DB install successful')
+		     //console.log('DB install successful')
 
 		     //Runs callback if defined
 		     if (this.workermessage === 'function') {

@@ -1,5 +1,6 @@
 import DatabaseAdapter from '@universal/Handlers/indexedDBhandler.js'
 import DevTools from '@dev/devutils.js'
+import { BackgroundService } from './background'
 
 
 /*
@@ -79,9 +80,12 @@ EVENT LISTENER:
 */
 chrome.tabs.onCreated.addListener(async ()=> {
 	// TODO: do we call chrome.storage ops in here?
-	fetchHighPriorityVariables()
+	const highPriority = BackgroundService.fetchHighPriorityVariables()
+
+	debugger
 
 	if (typeof launchBehavior === 'undefined') {
+
 	}
 
 	console.log('launchBehavior: ', launchBehavior)

@@ -1,5 +1,6 @@
 import CoreService from './Utils/coreService.js'
 import { spawnNotateTab } from './Utils/eventActions.js'
+import { setHighPriorityVariables, getHighPriorityVariables } from './Utils/chromeStorageHandler.js'
 import DevTools from '@dev/devutils.js'
 
 
@@ -37,7 +38,7 @@ chrome.runtime.onStartup.addListener(async ()=> {
 	let launchBehavior = BackgroundService.env.important.launchBehavior
 
 	if (launchBehavior && launchBehavior === 'onNewTab') {
-		await spawnNotateTab(launchBehavior)
+		spawnNotateTab(launchBehavior)
 	}
 })
 
@@ -66,14 +67,7 @@ EVENT LISTENER:
 	configuration has 'onNewTab' enabled.
 */
 chrome.tabs.onCreated.addListener(async ()=> {
-	await BackgroundService.updateBackgroundEnvVariables()
-
-	let launchBehavior = BackgroundService.env.important.launchBehavior
-
-	if (typeof launchBehavior === 'undefined') {
-	}
-
-	console.log('launchBehavior: ', launchBehavior)
+	const launchBehavior = await getHighPriorityVariables('launchBehavior')
 	if (launchBehavior === 'onNewTab')  spawnNotateTab(launchBehavior)
 })
 
@@ -84,11 +78,8 @@ EVENT LISTENER:
 	Fires and runs spawnTab() function when user clicks Notate
 	popup
 */
-chrome.action.onClicked.addListener(async() => {
-	await BackgroundService.updateBackgroundEnvVariables()
-
-	let launchBehavior = BackgroundService.env.important.launchBehavior
-
+chrome.action.onClicked.addListener(async () => {
+	const launchBehavior = await getHighPriorityVariables('launchBehavior')
 	if (launchBehavior === 'onClickPopup')  spawnNotateTab(launchBehavior)
 })
 

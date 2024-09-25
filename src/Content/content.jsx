@@ -4,7 +4,7 @@ import useRequest from '@universal/Hooks/useRequest/useRequest.jsx'
 
 import DevTools from '@dev/devutils.js'
 
-import RelatedNotesHeader from './Components/RelatedNotes/RelatedNotesHeader.jsx'
+import RelatedNotesViewer from './Components/RelatedNotesViewer/RelatedNotesViewer.jsx'
 import ContextMenu from './Components/ContextMenu/ContextMenu.jsx'
 import NoteEditor, {NoteEditorContext} from './Components/NoteEditor/NoteEditor.jsx'
 import HoverRegion from './Components/HoverRegion.jsx';
@@ -42,7 +42,7 @@ const content = document.createElement('div')
 content.id = 'content-script-load'
 
 
-document.body.prepend(root)
+document.body.insertAdjacentElement('beforebegin', root)
 shadow.prepend(style, content)
 
 
@@ -51,7 +51,6 @@ export const WebContentContext = React.createContext()
 const ContentScript = () => {
 	const CONTENT_SCRIPT_CONTEXT = {
 		NOTE_WINDOW_CONTEXT: React.useState(false),
-		DATABASE_CONTEXT: React.useState(null),
 		NOTATE_DB_CONTEXT: React.useState(null),
 		USER_CONFIGURATION_DB_CONTEXT: React.useState(null),
 		REQUEST_CONTEXT: useRequest(),
@@ -61,7 +60,6 @@ const ContentScript = () => {
 
 	const [ noteWindowState, updateNoteWindowState ] = CONTENT_SCRIPT_CONTEXT.NOTE_WINDOW_CONTEXT 
 	const [ note, setNote ] = CONTENT_SCRIPT_CONTEXT.NOTE_CONTEXT
-	const [ database, setDatabase ] = CONTENT_SCRIPT_CONTEXT.DATABASE_CONTEXT 
 	const [ notatedb, setNotate ] = CONTENT_SCRIPT_CONTEXT.NOTATE_DB_CONTEXT
 	const [ userconfigurationdb, setUserConfiguration ] = CONTENT_SCRIPT_CONTEXT.USER_CONFIGURATION_DB_CONTEXT
 	const [ response, makeRequest, processing ] = CONTENT_SCRIPT_CONTEXT.REQUEST_CONTEXT 
@@ -108,12 +106,19 @@ const ContentScript = () => {
 					}
 				}
 			} else if (response.status === '400') {
+				// Retry the request 
+
 				console.error('response: ', response)
 				console.error('Request failed')
 
-				await makeRequest({
-					type: 'RELOAD_DATABASE',
-					database: response.content.database
+
+        			await makeRequest({ 
+					type: response.content.type == 'GET_DATABASE' 
+						? 'RELOAD_DATABASE' 
+						: response.content.type, 
+					database: response.content.database,
+					data: response.content?.data,
+					store: response.content?.store
 				})
 			}
 		}
@@ -131,7 +136,7 @@ const ContentScript = () => {
 			<WebContentContext.Provider value={CONTENT_SCRIPT_CONTEXT}>
 				<NotificationContext.Provider value={[ notification, setNotification ]}>
 
-					<RelatedNotesHeader/>
+					<RelatedNotesViewer/>
 
 					{ notification?.active && <NotificationMsg/> }
 

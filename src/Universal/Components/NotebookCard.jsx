@@ -27,6 +27,11 @@ export default function NotebookCard({ notebook, onNoteClick, onNotebookClick, u
 	}
 
 
+	const dragHandler = (event) => {
+		const JSONified = JSON.stringify(notebook)
+		event.dataTransfer.setData('text/plain', JSONified)
+	}
+
 
 	// update this to add more visual functionality
 	const handleNoteDragOver = (event) => {
@@ -40,27 +45,32 @@ export default function NotebookCard({ notebook, onNoteClick, onNotebookClick, u
   	return (
 		<div 
 		 id="notebook-card-container" 
-		 className="relative group z-0 trans-ease transform hover:-translate-y-5 playfair-regular"
+		 className={`
+			 relative group z-0 trans-ease transform hover:-translate-y-5 
+			 playfair-regular cursor-pointer
+		 `}
+		 onDragStart={dragHandler}
 		 draggable
 		>
 		
 			  {/* Notebook Cover Designs */}
-			<div id="notebook-card" 
+			<div 
+			 id="notebook-card" 
 			 className="flex  relative  min-h-[170px] max-h-[170px] min-w-[230px] max-w-[230px]  rounded shadow-xl  bg-[#dfac5d] z-[5] hover:z-[20]" 
 			 data-notebook-id={notebook.id} 
 			 onClick={onNotebookClick}
 			 onDrop={handleNoteDrop}
 			 onDragOver={handleNoteDragOver}
 		    	>
-				<div id="" className={`w-[1.5rem] bg-[#b7823d] rounded-l`}/>
-				<div id="" className={`flex-grow p-4`}>
+				<div id="" className={`min-w-[1.5rem] bg-[#b7823d] rounded-l`}/>
+				<div id="" className={`flex-grow overflow-hidden p-4`}>
 			      		<h3 
 					 id="notebook-title" 
-					 className="text-lg font-medium mt-0 text-white"
+					 className="text-lg font-medium mt-0 text-white overflow-hidden text-ellipsis whitespace-nowrap"
 					>{notebook.title}</h3>
 			      		<p 
 					 id="notebook-description" 
-					 className="text-base mb-0 text-gray-200"
+					 className="text-base mb-0 text-gray-200 overflow-hidden text-ellipsis whitespace-nowrap"
 					>{notebook.description}</p>
 
 				</div>

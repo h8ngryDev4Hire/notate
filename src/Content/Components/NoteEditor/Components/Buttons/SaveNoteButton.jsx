@@ -26,9 +26,9 @@ export default function SaveNoteButton() {
 	const handleSave = async (noteTitle, noteContent) => {
 
 		try {
-			//setNote(new NoteHandler.Note(title, content, origin))
 			note.title = title
 			note.content = content
+
 			await makeRequest({ 
 				type: 'POST_DATABASE', 
 				data: note,

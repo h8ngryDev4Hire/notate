@@ -35,7 +35,12 @@ export default function useRequest() {
 				setResponse({
 					type: 'RESULT',
 					status: '400',
-					content: { database: database } 
+					content: { 
+						database: database,
+						type: request.type,
+						data: request?.data,
+						store: request?.store
+					} 
 				})
 			}
 		}
