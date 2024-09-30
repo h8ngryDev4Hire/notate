@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "wipe": "rm -rf ./prod & rm -rf ./dist & rm -rf ./bin",
+    "wipe": "rm -rf ./prod & rm -rf ./dist",
     "dev": "webpack --config webpack.dev.js && npx tailwindcss -i src/Assets/notate.css -o prod/notate.css --watch",
     "prod": "scripts/build/build.sh",
     "watch": "webpack --watch --config webpack.dev.js",
