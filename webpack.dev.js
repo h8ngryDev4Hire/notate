@@ -1,8 +1,6 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HTMLWebpackPlugin = require('html-webpack-plugin')
-const postcssConfig = require('./postcss.config');
-const { config } = require('process');
 
 
 module.exports = {
@@ -67,7 +65,7 @@ module.exports = {
 						}
 					}
 				],
-				exclude: /\.module\.css$/,
+				exclude: [ /\.module\.css$/ ],
 			},{
 				test: /\.svg$/i,
 				issuer: /\.[jt]sx?$/,

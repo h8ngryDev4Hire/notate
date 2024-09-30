@@ -1,3 +1,5 @@
 mappings.txt
 TODO
 sample-data.js
+*.pem
+./dist/

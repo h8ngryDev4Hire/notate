@@ -51,6 +51,10 @@ export default class CoreService {
 
 			await database.inventory
 
+			if (name === USER_CONFIGURATION_DB) {
+				await this.updateBackgroundEnvVariables()
+			}
+
 			resolve(database)
 		})
 	}
