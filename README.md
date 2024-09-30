@@ -9,6 +9,7 @@ Notate is a powerful browser extension that seamlessly integrates note-taking an
 - [Usage](#usage)
 - [Technology Stack](#technology-stack)
 - [Development](#development)
+- [Inspiration](#inspiration)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -32,7 +33,9 @@ Notate is a powerful browser extension that seamlessly integrates note-taking an
    - Chrome: `chrome://extensions`
    - Firefox: `about:addons`
 3. Enable Developer Mode.
-4. Click "Load unpacked" and select the cloned `notate` directory.
+4. Back in your File Explorer, head over to the `./bin` directory from the project root
+5. Simply drag'n'drop the `Notate.crx` file into the extensions page of your browser.
+
 
 ### Method 2: Installing from Web Stores
 
@@ -44,32 +47,33 @@ Notate is a powerful browser extension that seamlessly integrates note-taking an
 2. Open a new tab to access the Notate interface.
 3. Start creating notes, organizing them into notebooks, and exploring Notate's features.
 
-For detailed usage instructions, please refer to our [User Guide](docs/USER_GUIDE.md).
 
 ## Technology Stack
 
-- Frontend: React.js
-- Styling: Tailwind CSS
+- Frontend: react.js
+- Styling: tailwindcss
 - Build Tool(s): webpack
 - Package Mgr: npm
-- Version Control: Git
+- Version Control: git
 
 ## Development
 
-To set up a development environment:
+To set up a development build:
 
 1. Install dependencies:
    ```bash
    npm i 
    ```
-2. Start the development server:
+2. run the build script:
    ```bash
    npm run dev
    ```
-3. Build the extension:
-   ```bash
-   npm run build
-   ```
+3. Build script creates `./prod` directory which you can load into the Chrome browser for further development. 
+
+
+## Inspiration
+
+This is a React.js project that was originally supposed to be written using JQuery but I soon realized that the mountains of code was starting to become very cumbersome!! After 2 weeks of hard work put into the project, I had made the ultimate decision to begin my React.js Journey by rewriting my initial code in React and seeing this project to completion. This project has no other dependencies besides the required ones such as react, tailwindcss, webpack, etc. After almost 7 months of blood, sweat, tears, and maybe some dented desks (sorry desk... :\ ), I am very proud to announce the 1st iteration of my Application/Extension!
 
 ## Contributing
 
