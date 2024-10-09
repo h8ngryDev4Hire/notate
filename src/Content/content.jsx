@@ -5,13 +5,15 @@ import useRequest from '@universal/Hooks/useRequest/useRequest.jsx'
 import DevTools from '@dev/devutils.js'
 
 import RelatedNotesViewer from './Components/RelatedNotesViewer/RelatedNotesViewer.jsx'
-import ContextMenu from './Components/ContextMenu/ContextMenu.jsx'
+import Modal from './Components/Modals/Modal.jsx'
+//import ContextMenu from './Components/ContextMenu/ContextMenu.jsx'
+//import { SelectedContextMenuItemContext } from './Components/ContextMenu/ContextItems.jsx'
 import NoteEditor, {NoteEditorContext} from './Components/NoteEditor/NoteEditor.jsx'
-import HoverRegion from './Components/HoverRegion.jsx';
-import ContentHelper from './helper.js'
+import ContextMenuHoverRegion from './Components/HoverRegions/ContextMenuHoverRegion.jsx';
 import NotificationMsg, { NotificationContext } from '@universal/Components/NotificationMessenger.jsx';
 import NotificationHandler from '@universal/Handlers/NotificationHandler.js';
-import tailwind from '@assets/notate.css'
+import notatecss from '@assets/notate.css'
+import globalcss from '@assets/global.css'
 
 /*
  * DevTool Call
@@ -19,7 +21,7 @@ import tailwind from '@assets/notate.css'
 DevTools()
 
 
-const tailwindStyles = tailwind.toString()
+const tailwindStyles = notatecss.toString() + '\n' + globalcss.toString()
 
 
 const NOTATE_DB = "notate"
@@ -55,7 +57,10 @@ const ContentScript = () => {
 		USER_CONFIGURATION_DB_CONTEXT: React.useState(null),
 		REQUEST_CONTEXT: useRequest(),
 		NOTE_CONTEXT: React.useState(null),
-		SHADOW_ROOT_ELEMENT: React.useState(shadow)
+		MODAL_STATE_CONTEXT: React.useState(false),
+		SHADOW_ROOT_ELEMENT: React.useState(shadow),
+		CONTEXT_MENU_CONTEXT: React.useState(false),
+		DARK_MODE_CONTEXT: React.useState(window.matchMedia('(prefers-color-scheme: dark)').matches)
 	}
 
 	const [ noteWindowState, updateNoteWindowState ] = CONTENT_SCRIPT_CONTEXT.NOTE_WINDOW_CONTEXT 
@@ -63,7 +68,10 @@ const ContentScript = () => {
 	const [ notatedb, setNotate ] = CONTENT_SCRIPT_CONTEXT.NOTATE_DB_CONTEXT
 	const [ userconfigurationdb, setUserConfiguration ] = CONTENT_SCRIPT_CONTEXT.USER_CONFIGURATION_DB_CONTEXT
 	const [ response, makeRequest, processing ] = CONTENT_SCRIPT_CONTEXT.REQUEST_CONTEXT 
+	const [ selectedModal ] = CONTENT_SCRIPT_CONTEXT.MODAL_STATE_CONTEXT
+
 	const [ notification, setNotification ] = React.useState(new NotificationHandler)
+	const [ selectedContextItem, setSelectedContextItem ] = React.useState(false)
 
 
 
@@ -108,10 +116,6 @@ const ContentScript = () => {
 			} else if (response.status === '400') {
 				// Retry the request 
 
-				console.error('response: ', response)
-				console.error('Request failed')
-
-
         			await makeRequest({ 
 					type: response.content.type == 'GET_DATABASE' 
 						? 'RELOAD_DATABASE' 
@@ -140,11 +144,11 @@ const ContentScript = () => {
 
 					{ notification?.active && <NotificationMsg/> }
 
-					<HoverRegion/>
+					<ContextMenuHoverRegion/>
 
 					{ note && noteWindowState && <NoteEditor/> }
 
-					<ContextMenu/>
+					{ selectedModal && <Modal modal={selectedModal}/> }
 
 				</NotificationContext.Provider>
 			</WebContentContext.Provider>

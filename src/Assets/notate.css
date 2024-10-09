@@ -44,7 +44,7 @@
 		@apply z-[100]
 	}
 
-	.z-component {
+	.z-button {
 		@apply z-[50]	
 	}
 

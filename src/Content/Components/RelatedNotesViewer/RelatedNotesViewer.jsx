@@ -126,11 +126,6 @@ export default function RelatedNotesHeader() {
 
 
 	React.useEffect(()=>{
-		console.log('view: ', view)
-		console.log('payload: ', relatedNotes)
-	},[ relatedNotes])
-
-	React.useEffect(()=>{
 		if (headerState) {
 			document.addEventListener('click', handleRelatedNotesUnfocus)	
 		}

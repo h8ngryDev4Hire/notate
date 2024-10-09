@@ -165,7 +165,7 @@ export default function Notate(){
 
 	  /* Component */
 	  return (
-		<div id="app" className="w-full h-screen flex flex-col flex-grow">
+		<div id="app" className="w-full h-screen flex  flex-col flex-grow">
 		  	<NotateContext.Provider value={NOTATE_CONTEXT}>
 		  	<div id="wallpaper-theme" 
 		  	className={`min-w-full flex flex-col flex-grow top-0 left-0 ${ theme.background || "" }`}>

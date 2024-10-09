@@ -2,4 +2,6 @@ mappings.txt
 TODO
 sample-data.js
 *.pem
+*.old
 ./dist/
+./node_modules/

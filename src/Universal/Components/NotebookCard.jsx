@@ -21,11 +21,18 @@ export default function NotebookCard({ notebook, onNoteClick, onNotebookClick, u
 
 	const handleNoteDrop = async (event) => {
 		event.preventDefault();
-		const parsedData = event.dataTransfer.getData('text/plain')
-		const note = JSON.parse(parsedData)
+		const fetchedData = event.dataTransfer.getData('text/plain')
+		const parsedData = JSON.parse(fetchedData) 
+		const note = sanitizeNoteData(parsedData) 
 		await updatesDispatcher(notebook, note)
 	}
 
+	const sanitizeNoteData = (note) => {
+		// add more props if any parts of application
+		// attach props for specific use cases
+		delete note?.hits
+		return note
+	}
 
 	const dragHandler = (event) => {
 		const JSONified = JSON.stringify(notebook)

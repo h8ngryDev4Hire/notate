@@ -1,4 +1,4 @@
-import DatabaseAdapter from '@universal/Handlers/indexedDBhandler.js'
+import DatabaseAdapter from '@universal/Handlers/IdbHandler.js'
 
 
 export default class Helper {

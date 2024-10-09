@@ -1,5 +1,5 @@
 import React from 'react'
-import DatabaseAdapter from '@universal/Handlers/indexedDBhandler.js'
+import DatabaseAdapter from '@universal/Handlers/IdbHandler.js'
 
 
 const POST = 'POST_DATABASE'

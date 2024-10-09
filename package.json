@@ -6,8 +6,8 @@
     "wipe": "rm -rf ./prod & rm -rf ./dist",
     "dev": "webpack --config webpack.dev.js && npx tailwindcss -i src/Assets/notate.css -o prod/notate.css --watch",
     "prod": "scripts/build/build.sh",
-    "watch": "webpack --watch --config webpack.dev.js",
-    "tail": "npx tailwindcss -i src/Assets/notate.css -o prod/notate.css --watch",
+    "watch:webpack": "webpack --watch --config webpack.dev.js",
+    "watch:tail": "npx tailwindcss -i src/Assets/notate.css -o prod/notate.css --watch",
     "test": "echo $1"
   },
   "keywords": [],
@@ -24,6 +24,7 @@
     "crx": "^5.0.1",
     "css-loader": "^7.1.1",
     "html-webpack-plugin": "^5.6.0",
+    "lodash": "^4.17.21",
     "postcss": "^8.4.38",
     "postcss-loader": "^8.1.1",
     "react": "^18.2.0",
