@@ -3,6 +3,6 @@ TODO
 sample-data.js
 *.pem
 *.old
-./dist/
-./prod/
-./node_modules/
+dist/
+prod/
+node_modules/
