@@ -5,4 +5,4 @@ sample-data.js
 *.old
 dist/
 node_modules/
-dev/
+/dev/
