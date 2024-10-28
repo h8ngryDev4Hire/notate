@@ -164,7 +164,7 @@ export default function RelatedNotesHeader() {
 					 id="divider" 
 					 className={`
 						flex-grow h-full bg-yellow-500 
-						garamond-bold text-[.8rem] text-center font-bold
+						alice-regular text-[.8rem] text-center font-bold
 					`}>
 						{`${view.name} View`}
 					</span>

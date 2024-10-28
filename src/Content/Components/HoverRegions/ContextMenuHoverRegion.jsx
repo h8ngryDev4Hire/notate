@@ -48,7 +48,7 @@ export default function ContextMenuHoverRegion() {
 	React.useEffect(()=>{
 		const asyncProcessor = async () => {
 			if (database) {
-				const user = database?.inventory?.USER_CONFIGURATION[0]?.WebContent?.behavior?.newNotePopup?.value
+				const user = database?.inventory?.USER_CONFIGURATION[0]?.WebContent?.behavior?.contextMenuPopup?.value
 				const value = user === "true"
 				setContextMenuButton(value)
 			} else {
@@ -61,6 +61,7 @@ export default function ContextMenuHoverRegion() {
 
 		asyncProcessor()
 	},[database])
+
 
 	React.useEffect(()=>{
 		if (contextMenuState) {

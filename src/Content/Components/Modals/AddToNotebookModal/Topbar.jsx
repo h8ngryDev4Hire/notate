@@ -16,6 +16,7 @@ export default function Topbar() {
 				 id="title" 
 				 className={`
 				 	text-white playfair-regular text-xl
+					font-bold
 				`}>
 				{`Add To Your Notebook Collection`}
 				</h2>

@@ -5,13 +5,13 @@ export const ConfigurationTemplate = {
 				value: "perplexityai",
 				description: "Sets your preferred Search Engine.",
 				options: ["google", "bing", "duckduckgo", "yahoo", "baidu", "yandex", "ecosia", "perplexityai"],
-				enabled: true
+				enabled: true 
 			},
 			searchNotes: {
 				value: "true",
 				description: "Sets whether or not notes should be searched for when searching in the search bar.",
 				options: ["true", "false"],
-				enabled: true
+				enabled: true 
 			}
 		},
 		page: {
@@ -39,11 +39,10 @@ export const ConfigurationTemplate = {
 	},
 	WebContent: {
 		tools: {
-
-		
+			
 		},
 		behavior: {
-			newNotePopup: {
+			contextMenuPopup: {
 				value: "true",
 				description: "Sets whether the New Note Button shows when hovering the cursor in the corner of the page.",
 				options: ["true", "false"],

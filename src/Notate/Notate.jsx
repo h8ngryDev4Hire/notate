@@ -30,9 +30,7 @@ export const NotateContext = React.createContext()
 
 
 /* Event Listeners */
-chrome.runtime.onMessage.addListener(()=>{
-	
-})
+
 
 
 /* App Component */

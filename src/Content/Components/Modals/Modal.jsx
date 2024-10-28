@@ -9,6 +9,7 @@ export const ModalControllerContext = React.createContext()
 const MODAL_CONTAINER_ID = "modal-container"
 
 
+
 /**
  * Expects following props:
  * @param 'modal': Modal component to be mounted

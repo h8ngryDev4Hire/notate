@@ -2,7 +2,9 @@ import React from 'react'
 import { ContextMenuHoverRegionContext } from '@content/Components/HoverRegions/ContextMenuHoverRegion.jsx'
 import ContextItem from './ContextItem.jsx'
 import NewNoteButton from './Buttons/NewNoteButton.jsx' 
+
 import AddToNotebookModal from '@content/Components/Modals/AddToNotebookModal/AddToNotebookModal.jsx'
+import AddToNotebookSVG from '@assets/Designs/Buttons/save-to-logo.svg'
 
 
 /**
@@ -15,7 +17,7 @@ export default function ContextMenu(){
 		name: 'add-to-notebook',
 		desc: 'Add to your Notebooks',
 		modal: (<AddToNotebookModal/>),
-		icon: undefined,
+		icon: (<AddToNotebookSVG/>),
 	}]
 
 	const { CONTEXT_MENU_CONTEXT } = React.useContext(ContextMenuHoverRegionContext)
@@ -38,6 +40,7 @@ export default function ContextMenu(){
 				 modal={item.modal}
 				 callerId={item.name}
 				 infoMessage={item.desc}
+				 icon={item.icon}
 				/>	
 			)
 		})}
@@ -45,12 +48,4 @@ export default function ContextMenu(){
 		</div>	
 	)
 }
-
-
-function Option() {
-	return (
-		<div className="btn-round-icon bg-zinc-800"></div>
-	)
-}
-
 

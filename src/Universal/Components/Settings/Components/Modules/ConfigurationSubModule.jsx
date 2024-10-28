@@ -4,6 +4,7 @@ import ConfigurationOptions from './ConfigurationOptions.jsx'
 
 export default function ConfigurationSubModule({name, module, parent}) {
 	const [ moduleArray, setModuleArray ] = React.useState(Object.entries(module))
+	const [ optionsEnabled, setOptionsEnabled ] = React.useState(false)
 	const [ moduleName, setModuleName ] = React.useState(name)
 
 
@@ -68,9 +69,16 @@ export default function ConfigurationSubModule({name, module, parent}) {
 		if (moduleName) setModuleName(convertCamelToCapitalized(name)) 
 	},[moduleArray])
 
+	React.useEffect(()=>{
+		if (moduleArray instanceof Array) {
+			const enabled = moduleArray.some( sub => sub[1].enabled === true )
+			setOptionsEnabled(enabled)
+		}	
+	},[])
 
 
-	return (
+
+	if (optionsEnabled) return (
 		<section id={ `${name}-module` }
 		className="w-full h-auto text-white border-t-2 border-b-2 border-t-[#555] border-b-[#555] border-opacity-50">
 			<div className="py-[0.5rem]">
@@ -79,11 +87,12 @@ export default function ConfigurationSubModule({name, module, parent}) {
 				<ul className="list-disc space-y-[1rem] py-2 pl-[1.5rem]">
 					{moduleArray && moduleArray.map( (sub,key) => {
 						if (sub.length == 2) {
+							const enabled = sub[1].enabled
 							const configTitle = convertCamelToCapitalized(sub[0])
 							const configOptions = sub[1]
 							const optionType = buildOptionSelector(sub)
 
-							return (
+							if (enabled) return (
 								<li id=""
 								className=""
 								key={key}>

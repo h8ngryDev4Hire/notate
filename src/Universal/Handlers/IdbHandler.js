@@ -1,5 +1,4 @@
 import { ConfigurationTemplate } from './ConfigurationHandlers/ConfigurationTemplate.js'
-import { checkAndMergeConfig, mergeConfigurations } from './ConfigurationHandlers/merge.js'
 import handleConfigurationDb from './ConfigurationHandlers/ConfigurationHandler.js'
 
 export default class DatabaseAdapter {

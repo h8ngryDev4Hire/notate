@@ -1,0 +1,95 @@
+
+@import url('./Fonts/fonts.css');
+
+@tailwind base;
+@tailwind utilities;
+@tailwind components;
+
+
+@layer components {
+	.trans-ease {
+		@apply transition duration-300 ease-in-out; 
+	}
+
+	.trans-ease-all {
+		@apply transition-all duration-300 ease-in-out;
+	}
+
+	.banner {
+		@apply fixed  mt-[35%] inset-0 flex items-center justify-center;
+	}
+
+	.btn-sm-text {
+		@apply h-10 w-20 rounded text-center;
+	}
+
+	.btn-sm-icon {
+		@apply h-10 w-20 rounded flex items-center justify-center; 
+	}
+
+	.btn-round-icon {
+		@apply size-[3.5rem]  rounded-[3rem];
+	}
+
+
+	.z-notification {
+		@apply z-[300]
+	}
+
+	.z-modal {
+		@apply z-[200]
+	}
+
+	.z-shader {
+		@apply z-[100]
+	}
+
+	.z-button {
+		@apply z-[50]	
+	}
+
+	.z-content-script {
+		@apply z-[9999999999]
+	}
+
+	.dark-wood-bg {
+		@apply bg-dark-wood bg-repeat 
+	}
+
+	.cork-board-bg {
+		@apply bg-cork-board bg-repeat 
+	}
+
+	.note-paper-bg {
+		@apply bg-note-paper bg-repeat 
+	}
+
+	.marble-chess-board-bg {
+		@apply bg-marble-chess-board bg-repeat 
+	}
+
+
+
+
+	.garamond-regular {
+		font-family: 'garamond-regular', sans-serif;
+	}
+
+	.garamond-bold {
+		font-family: 'garamond-bold', sans-serif;
+	}
+
+	.playfair-regular {
+		font-family: 'playfair-regular', sans-serif;
+	}
+
+	.playfair-bold {
+		font-family: 'playfair-bold', sans-serif;
+	}
+
+	.alice-regular {
+		font-family: 'alice-regular', sans-serif;
+	}
+}
+
+

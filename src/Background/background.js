@@ -1,13 +1,17 @@
+import browser from 'webextension-polyfill'
+
 import CoreService from './Utils/coreService.js'
-import { spawnNotateTab } from './Utils/eventActions.js'
-import { setHighPriorityVariables, getHighPriorityVariables } from './Utils/chromeStorageHandler.js'
+import { spawnNotateTab, bootstrapApplication, declareEnvironmentVariables } from './Utils/eventActions.js'
+import Environment from './Utils/environmentKeeper.js'
 import DevTools from '@dev/devutils.js'
 
 
 /*
  * DevTool Call
 */
-DevTools()
+try {
+	DevTools()
+} catch(e){}
 
 
 
@@ -23,7 +27,8 @@ export const USER_CONFIGURATION_DB = "userConfiguration"
 const CHROME_STORE_HIGH_PRIORITY = "CHROME_STORE_HIGH_PRIORITY"
 
 
-export const BackgroundService = new CoreService()
+const BackgroundService = new CoreService()
+const env = new Environment()
 
 
 
@@ -32,12 +37,13 @@ EVENT LISTENER
 	Fires on Chrome startup. Is one of 2 chrome event listeners
 	that fires bootstrapApplication().
 */
-chrome.runtime.onStartup.addListener(async ()=> {
-	await bootstrapApplication()
+browser.runtime.onStartup.addListener(async ()=> {
+	await bootstrapApplication(BackgroundService, env)
+	await declareEnvironmentVariables(BackgroundService, env)
 
-	let launchBehavior = BackgroundService.env.important.launchBehavior
+	let launchBehavior = env.variables.important.launchBehavior 
 
-	if (launchBehavior && launchBehavior === 'onNewTab') {
+	if (launchBehavior && typeof launchBehavior === 'string') {
 		spawnNotateTab(launchBehavior)
 	}
 })
@@ -49,8 +55,9 @@ EVENT LISTENER
 	Fires on Chrome startup. Is one of 2 chrome event listeners
 	that fires bootstrapApplication().
 */
-chrome.runtime.onInstalled.addListener(async ()=> {
-	await bootstrapApplication()
+browser.runtime.onInstalled.addListener(async ()=> {
+	await bootstrapApplication(BackgroundService, env)
+	await declareEnvironmentVariables(BackgroundService, env)
 
 	let launchBehavior = BackgroundService.env.important.launchBehavior
 
@@ -66,8 +73,8 @@ EVENT LISTENER:
 	Fires and runs the spawnTab() function on new tab if user 
 	configuration has 'onNewTab' enabled.
 */
-chrome.tabs.onCreated.addListener(async ()=> {
-	const launchBehavior = await getHighPriorityVariables('launchBehavior')
+browser.tabs.onCreated.addListener(async ()=> {
+	const launchBehavior = env.variables.important.launchBehavior 
 	if (launchBehavior === 'onNewTab')  spawnNotateTab(launchBehavior)
 })
 
@@ -78,8 +85,9 @@ EVENT LISTENER:
 	Fires and runs spawnTab() function when user clicks Notate
 	popup
 */
-chrome.action.onClicked.addListener(async () => {
-	const launchBehavior = await getHighPriorityVariables('launchBehavior')
+browser.action.onClicked.addListener(async () => {
+	const launchBehavior = env.variables.important 
+	debugger
 	if (launchBehavior === 'onClickPopup')  spawnNotateTab(launchBehavior)
 })
 
@@ -91,7 +99,7 @@ EVENT LISTENER:
 	delegates all database operations to the databaseRequest()
 	function.
 */
-chrome.runtime.onConnect.addListener((port) => {
+browser.runtime.onConnect.addListener((port) => {
   if (port.name === 'DATABASE_CONNECTION') {
     port.onMessage.addListener(async (message) => {
 	await BackgroundService.databaseRequest(port, message)
@@ -106,36 +114,7 @@ chrome.runtime.onConnect.addListener((port) => {
 
 
 
-/*
-FUNCTION:
-	Intializes application by grabbing IDB Stores + updating necessary background worker 
-	variables. Should only fire @ browser launch / extension install.
-*/
-const bootstrapApplication = async () => {
-	await Promise.allSettled([
-		BackgroundService.initializeDatabase(USER_CONFIGURATION_DB),
-		BackgroundService.initializeDatabase(ERROR_LOGGING_DB),
-		BackgroundService.initializeDatabase(NOTATE_DB)
-	])
-	
 
-	if (
-		!BackgroundService.databases.errorloggingdb ||
-		BackgroundService.databases.errorloggingdb?.inventory instanceof Promise
-	) {
-		await BackgroundService.initializeDatabase(ERROR_LOGGING_DB)
-	}
-
-	if (
-		BackgroundService.databases.userconfigurationdb instanceof Promise ||
-		!BackgroundService.databases.userconfigurationdb ||
-		!BackgroundService.databases?.inventory || 
-		BackgroundService?.inventory instanceof Promise
-	) {
-		await BackgroundService.initializeDatabase(USER_CONFIGURATION_DB)
-	} else await BackgroundService.updateBackgroundEnvVariables()
-
-}
 
 
 
@@ -144,7 +123,7 @@ FUNCTION:
 	Used to quickly fetch env variables which is needed at startup.
 */
 const fetchHighPriorityVariables =  () => {
-	chrome.storage.sync.get([CHROME_STORE_HIGH_PRIORITY], (ENV_VARS)=>{
+	browser.storage.sync.get([CHROME_STORE_HIGH_PRIORITY], (ENV_VARS)=>{
 		console.log('ENV_VARS: ', ENV_VARS)
 		try {
 			launchBehavior = ENV_VARS[CHROME_STORE_HIGH_PRIORITY].pageBehavior

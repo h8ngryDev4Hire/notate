@@ -1,5 +1,5 @@
+import browser from 'webextension-polyfill'
 import DatabaseAdapter from '@universal/Handlers/IdbHandler.js';
-import { setHighPriorityVariables } from './chromeStorageHandler.js'
 
 export const NOTATE_DB = "notate"
 export const ERROR_LOGGING_DB = "errorLogging"
@@ -51,9 +51,9 @@ export default class CoreService {
 
 			await database.inventory
 
-			if (name === USER_CONFIGURATION_DB) {
-				await this.updateBackgroundEnvVariables()
-			}
+		//	if (name === USER_CONFIGURATION_DB) {
+		//		await this.updateBackgroundEnvVariables()
+		//	}
 
 			resolve(database)
 		})
@@ -120,7 +120,7 @@ export default class CoreService {
 								// Since only Update Ops will be performed on this store, its safe
 								// to always assume that this function needs to be ran after every
 								// user configuration update.
-								if (store === 'USER_CONFIGURATION') await this.updateBackgroundEnvVariables()
+								//if (store === 'USER_CONFIGURATION') await this.updateBackgroundEnvVariables()
 	
 								port.postMessage({ 
 									type: 'DATABASE', 
@@ -250,9 +250,9 @@ export default class CoreService {
 				},
 				context: {
 					 ...context,
-					url: chrome.runtime.getURL(''),
-					extensionId: chrome.runtime.id,
-					manifestVersion: chrome.runtime.getManifest()?.manifest_version
+					url: browser.runtime.getURL(''),
+					extensionId: browser.runtime.id,
+					manifestVersion: browser.runtime.getManifest()?.manifest_version
 	
 				}
 			}
@@ -262,25 +262,4 @@ export default class CoreService {
 	
 		}
 	}
-
-	
-//	setHighPriorityVariables() {
-//		const target = this.env.namespace.chromeStorage.highPriority 
-//		const payload = this.env.important
-//
-//		chrome.storage.sync.set({ target : payload })
-//	}
-//
-//
-//	fetchHighPriorityVariables() {
-//		let result;
-//
-//		const target = this.env.namespace.chromeStorage.highPriority
-//
-//		chrome.storage.sync.get(target, (res)=>{
-//			result = res	
-//		})
-//
-//		return result
-//	}
 }

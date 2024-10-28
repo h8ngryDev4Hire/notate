@@ -43,10 +43,13 @@ export default function ContextItem({
 			 onMouseLeave={()=> setIsRevealed(false)}
 			 onClick={handleEventDelegation}
 			>
+				<span id="svg-icon" className={`h-[50%] w-[50%]`}>
+					{icon}
+				</span>
 				<label 
 				 id="info-msg" 
 				 className={`
-					trans-ease-all absolute  
+					trans-ease-all absolute font-bold 
 					z-[-1] text-center ${ isRevealed 
 					? "-translate-x-[75%] opacity-100" 
 					: "translate-x-[0%] opacity-0" }	

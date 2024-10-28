@@ -6,19 +6,20 @@ import DevTools from '@dev/devutils.js'
 
 import RelatedNotesViewer from './Components/RelatedNotesViewer/RelatedNotesViewer.jsx'
 import Modal from './Components/Modals/Modal.jsx'
-//import ContextMenu from './Components/ContextMenu/ContextMenu.jsx'
-//import { SelectedContextMenuItemContext } from './Components/ContextMenu/ContextItems.jsx'
 import NoteEditor, {NoteEditorContext} from './Components/NoteEditor/NoteEditor.jsx'
 import ContextMenuHoverRegion from './Components/HoverRegions/ContextMenuHoverRegion.jsx';
 import NotificationMsg, { NotificationContext } from '@universal/Components/NotificationMessenger.jsx';
 import NotificationHandler from '@universal/Handlers/NotificationHandler.js';
-import notatecss from '@assets/notate.css'
+import notatecss from '@assets/tailwind.css'
 import globalcss from '@assets/global.css'
+
 
 /*
  * DevTool Call
 */
-DevTools()
+try {
+	DevTools()
+} catch(e){}
 
 
 const tailwindStyles = notatecss.toString() + '\n' + globalcss.toString()

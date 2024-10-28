@@ -1,4 +1,5 @@
 import React from 'react'
+import browser from 'webextension-polyfill'
 import DatabaseAdapter from '@universal/Handlers/IdbHandler.js'
 
 
@@ -81,7 +82,7 @@ export default function useRequest() {
 		return new Promise( ( resolve, reject )=>{
 			const { type, database, data, store } = payload
 			
-			const port = chrome.runtime.connect({ name: 'DATABASE_CONNECTION' })
+			const port = browser.runtime.connect({ name: 'DATABASE_CONNECTION' })
 			const message = {
 				type: type,
 				content: { database: database }

@@ -38,6 +38,16 @@
       "sub": "text-gray-600"
     },
     "accent": {}
+  },
+  "monoColor": {
+    "background": "note-paper-bg",
+    "text": {
+      "h1": "text-black",
+      "h2": "text-gray-800",
+      "h3": "text-gray-700",
+      "sub": "text-gray-600"
+    },
+    "accent": {}
   }
 }
 

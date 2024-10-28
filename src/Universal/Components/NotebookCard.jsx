@@ -54,7 +54,7 @@ export default function NotebookCard({ notebook, onNoteClick, onNotebookClick, u
 		 id="notebook-card-container" 
 		 className={`
 			 relative group z-0 trans-ease transform hover:-translate-y-5 
-			 playfair-regular cursor-pointer
+			 playfair-bold cursor-pointer
 		 `}
 		 onDragStart={dragHandler}
 		 draggable

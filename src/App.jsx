@@ -9,8 +9,9 @@ import DevTools from '@dev/devutils.js'
 /*
  * DevTool Call
 */
-DevTools()
-
+try {
+	DevTools()
+} catch(e){}
 
 /* Application Entry Point */
 const root  = document.getElementById('root');

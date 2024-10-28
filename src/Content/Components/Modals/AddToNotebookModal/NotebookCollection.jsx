@@ -14,7 +14,7 @@ export default function NotebookCollection() {
 	const [ notatedb ] = NOTATE_DB
 
 	const [ notebooks, setNotebooks ] = React.useState([])
-
+	const [ isEmpty, setIsEmpty ] = React.useState(false)
 
 	const handleNoteDrop = (notebook, note) => {
 		try {
@@ -44,14 +44,22 @@ export default function NotebookCollection() {
 		asyncProcessor()
 	},[notatedb])
 
+	React.useEffect(()=>{
+		console.log('is empty? ', notebooks.length <= 0)
+		setIsEmpty(notebooks.length <= 0)
+	},[notebooks])
+
 	return (
 		<main 
 		 id="notebook-collection" 
 		 className={`
 		 	flex items-center  space-x-[1rem] 
+			${ isEmpty ? "justify-center" : "" }
 			overflow-x-auto px-[1rem] flex-grow
 		`}>
-		{notebooks.map( (notebook, key) => {
+
+		{isEmpty ? <NoNotebooksFound/> 
+		: notebooks.map( (notebook, key) => {
 			return (
 				<
 				 NotebookCard
@@ -62,5 +70,23 @@ export default function NotebookCollection() {
 			)
 		})}
 		</main>
+	)
+}
+
+function NoNotebooksFound() {
+	return (
+		<section 
+		 id="no-notebooks-found-help-msg" 
+		 className={`
+		 	text-slate-100 text-opacity-90 text-center
+			flex flex-col space-y-2
+		`}>
+			<label>
+			{`You have no notebooks yet... \n`}
+			</label>
+			<label>
+			{`Go back to your Notate page to create one!`}
+			</label>
+		</section>
 	)
 }

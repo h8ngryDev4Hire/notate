@@ -18,7 +18,6 @@ export default function Bottombar() {
 
 	const handleSave = async () => {
 		if (queue.length > 0) {
-			debugger
 			queue.forEach( async tx => {
 				await makeRequest({
 					type: 'POST_DATABASE',

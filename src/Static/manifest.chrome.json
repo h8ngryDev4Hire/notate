@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Notate",
+  "description": "",
+  "version": "1.0",
+  "permissions": ["storage", "tabs", "activeTab", "history" ],
+  "action": {
+	  "default_title": "Open Notate"
+  },
+  "icons":{
+	"256": "/Manifest/notate-logo.png"
+  },
+ "background": {
+	"service_worker": "background.pack.js",
+	"type": "module"
+  },
+  "content_scripts": [{
+	"matches": ["<all_urls>"],
+	"js": ["content.pack.js"],
+	"css":["content.fonts.css"],
+	"run_at": "document_end"
+  }],
+  "web_accessible_resources": [
+	{
+		"resources":["/Fonts/*/*.ttf", "/Designs/*"],
+		"matches": ["<all_urls>"]
+	}
+  ]
+}
