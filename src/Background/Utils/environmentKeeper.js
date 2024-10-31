@@ -3,38 +3,7 @@ import _ from 'lodash'
 
 const CHROME_STORE_HIGH_PRIORITY = 'CHROME_STORE_HIGH_PRIORITY'
 
-//export const setHighPriorityVariables = (data) => {
-//	try {
-//		browser.storage.sync.set({ CHROME_STORE_HIGH_PRIORITY : data })
-//	} catch (e) {
-//		console.error('something went wrong in setHighPriorityVariables')
-//		console.error(e)
-//	}
-//} 
-//
-//export const getHighPriorityVariables = async (query) => {
-//	
-//	return new Promise( resolve => {
-//		try {
-//			browser.storage.sync.get(CHROME_STORE_HIGH_PRIORITY).then( resolution => {
-//				if (typeof resolution === 'object' && Object.keys(resolution).length > 0) {
-//
-//					Object.entries(resolution.CHROME_STORE_HIGH_PRIORITY).forEach(([ key, val ])=>{
-//						if (query == key) {
-//							resolve(val)
-//						}
-//					})
-//				} 	
-//			})
-//		} catch (e) {
-//			console.error('something went wrong in getHighPriorityVariables')
-//			console.error(e)
-//		}
-//
-//
-//	})
-//
-//}
+
 
 export default class Environment {
 	constructor(){
@@ -62,7 +31,7 @@ export default class Environment {
 		// target common type env variables after 
 	
 		// 'browserType'
-		const browserType = (typeof browser === 'object') ?  "firefox" : "chrome"
+		const browserType = (typeof chrome === 'object') ?  "chrome" : "firefox"
 		this.variables.common.browserType = browserType
 	}	
 
@@ -112,6 +81,7 @@ export default class Environment {
 			return false;
 		}
 
+		this.variables.important.launchBehavior = undefined
 
 		function findPath(obj, target) {
         		// Handle base cases
@@ -139,10 +109,7 @@ export default class Environment {
 
 		const path = findPath(this.variables ,key)	
 
-		debugger
-		const result = _.set(this.variables, key, value);
-
-		console.log('Environment.update result: ', result)
+		const result = _.set(this.variables, path, value);
 
 		return result !== undefined;
 	}

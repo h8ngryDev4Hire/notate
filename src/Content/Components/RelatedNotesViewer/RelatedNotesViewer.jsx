@@ -43,12 +43,16 @@ export default function RelatedNotesHeader() {
 
 
 	const termList = React.useMemo(()=> extractTermListFromURL(), [window.location.href])
+	//console.log('termList: ', termList)
 	
 	const fetchedRelatedNotes = React.useMemo(()=> getNoteURLComparison(database), [database, window.location.href])
+	//console.log('fetchedRelatedNotes: ', fetchedRelatedNotes)
 
 	const suggestedNoteList = React.useMemo(()=> getNoteSuggestion(database, termList), [database, termList])
+	//console.log('suggestedNoteList: ', suggestedNoteList)
 
 	const notesRelatedByNotebook = React.useMemo(()=> getNotesGroupedByNotebook(database),[database])
+	//console.log('notesRelatedByNotebook: ', notesRelatedByNotebook)
 
 
 	const handleHoverEvent = (e) => {

@@ -4,10 +4,8 @@
   "description": "",
   "scripts": {
     "wipe": "rm -rf ./prod & rm -rf ./dist",
-    "dev": "./scripts/build/dev/chromium/chromium.sh",
+    "dev": "./scripts/build/dev/build.sh",
     "prod": "scripts/build/prod/build.sh",
-    "watch:webpack": "webpack --watch --config webpack.dev.js",
-    "watch:tail": "npx tailwindcss -i src/Assets/tailwind.css -o prod/chrome/notate.css --watch",
     "test": "echo $1"
   },
   "keywords": [],

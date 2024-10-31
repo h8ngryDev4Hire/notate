@@ -152,7 +152,7 @@ export default function Notate(){
 						store: response.content?.store
 					})
       				}
-    			} 
+    			}
 		}
 
 		if (!processing) {

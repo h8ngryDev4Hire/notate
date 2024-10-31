@@ -55,7 +55,7 @@ export default function TextInput() {
 		const target = event.target
 
 
-
+		debugger
     		if (htmlData && plainTextData.startsWith('img-')) {
 			console.log('existing img found')
 
@@ -107,7 +107,6 @@ export default function TextInput() {
 
 
   	const handleKeyDown = (event) => {
-
       		if (event.key === 'Tab') {
       			event.preventDefault();
       			document.execCommand('insertText', true, '\t');
@@ -117,7 +116,10 @@ export default function TextInput() {
     		} else if (event.ctrlKey && event.key === 'y') {
       			event.preventDefault();
  			document.execCommand('redo', false, null);
-    		} else {
+    	//	} else if (event.key === 'Backspace') {
+	//		event.preventDefault()
+	//		document.execCommand('delete')
+		} else {
 			event.stopPropagation()
     		}
 

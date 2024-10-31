@@ -1,5 +1,6 @@
 import browser from 'webextension-polyfill'
 import DatabaseAdapter from '@universal/Handlers/IdbHandler.js';
+import { BROWSER_TYPE } from './browserType.js'
 
 export const NOTATE_DB = "notate"
 export const ERROR_LOGGING_DB = "errorLogging"
@@ -93,12 +94,13 @@ export default class CoreService {
 	
 				switch (type) {
 					case 'GET_DATABASE': 
-	
-						port.postMessage({ 
+						const payload = { 
 							type: 'DATABASE', 
 							content: { data: db, database: target }
 							 
-						});
+						}
+
+						this.sendMessage(payload, port)
 						break;
 					
 					case 'POST_DATABASE': 
@@ -121,11 +123,15 @@ export default class CoreService {
 								// to always assume that this function needs to be ran after every
 								// user configuration update.
 								//if (store === 'USER_CONFIGURATION') await this.updateBackgroundEnvVariables()
-	
-								port.postMessage({ 
+
+								
+								const payload = { 
 									type: 'DATABASE', 
 									content: { data: db, database: target }
-								})
+								}
+
+								this.sendMessage(payload, port)
+	
 							} else {
 								console.log('insertData failed both checks for some reason...')
 								await this.initializeDatabase(target)
@@ -152,11 +158,14 @@ export default class CoreService {
 							} else if ( data && store && typeof db.deleteData === 'function' ) {
 								await db.deleteData(data, store)
 								await this.initializeDatabase(target)
-								port.postMessage({ 
+
+								const payload = { 
 									type: 'DATABASE', 
 									content: { data: db, database: target }
 									
-								})
+								}
+
+								this.sendMessage(payload, port)
 							} else {
 								console.log('deleteData failed both checks for some reason...')
 								await this.initializeDatabase(target)
@@ -172,11 +181,13 @@ export default class CoreService {
 						if (!db || db?.inventory instanceof Promise) {
 							await this.initializeDatabase(target)
 						} else {
-							port.postMessage({ 
+							const payload = { 
 								type: 'DATABASE', 
 								content: { data: db, database: target },
 								
-							})
+							}
+
+							this.sendMessage(payload, port)
 						}
 		
 						break;
@@ -188,6 +199,21 @@ export default class CoreService {
 			}
 		} catch (error) {
 			await this.generateErrorLog(error, { function: 'databaseRequest' })
+		}
+	}
+
+
+	async sendMessage(obj, port) {
+		try {
+			if (BROWSER_TYPE === 'firefox') {
+				const payload = JSON.stringify(obj)
+				port.postMessage(payload)
+			} else {
+				port.postMessage(obj)
+			}
+
+		} catch (error) {
+			await this.generateErrorLog(error, { function: 'sendMessage' })
 		}
 	}
 

@@ -1,12 +1,15 @@
 import React from 'react'
 import browser from 'webextension-polyfill'
 import DatabaseAdapter from '@universal/Handlers/IdbHandler.js'
+import { BROWSER_TYPE } from '@background/Utils/browserType.js'
 
 
 const POST = 'POST_DATABASE'
 const GET = 'GET_DATABASE'
 const DELETE = 'DELETE_DATABASE'
 const REFRESH = 'RELOAD_DATABASE'
+
+
 
 export default function useRequest() {
 	const [ response, setResponse ] = React.useState(false)	
@@ -19,11 +22,13 @@ export default function useRequest() {
 
 	React.useEffect(()=>{
 		const processor = async (request) => {
+
 			const { database } = request
 
 			const result = await handleRequest(request)
 
 			setProcessing(false)
+
 
 			if (result && typeof result === 'object') {
 
@@ -96,6 +101,11 @@ export default function useRequest() {
 			port.postMessage(message)
 	
 			port.onMessage.addListener( message => {
+				if (BROWSER_TYPE === 'firefox') {
+					const parsed = JSON.parse(message)
+					message = parsed
+				}
+
 				if (message.type === 'DATABASE') {
 					if (typeof message.content?.data === 'object') {
 						Object.setPrototypeOf(message.content.data, DatabaseAdapter.prototype)

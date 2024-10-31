@@ -1,7 +1,25 @@
 # Notate
 
+<div align="center">
+
+[![Contributors Needed](https://img.shields.io/badge/Contributors-Needed-red.svg)](CONTRIBUTING.md)
+[![Firefox Support](https://img.shields.io/badge/Firefox_Support-In_Progress-orange.svg)](CONTRIBUTING.md)
+[![Chrome Support](https://img.shields.io/badge/Chrome-Full_Support-green.svg)](CONTRIBUTING.md)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+</div>
+
+> 🚧 **Active Development - Contributors Needed!** 
+>
+> We're actively seeking contributors to help with Firefox compatibility! If you're passionate about browser extensions and want to make an impact, check out our [Help Wanted](#help-wanted) section.
+
 Jot your ideas, discoveries, research notes, or practically anything! Without leaving your browser! Enter Notate, your web navigation partner! 
 Notate is a powerful browser extension that seamlessly integrates note-taking and web browsing.
+
+[Quick Links: [Contributing](#contributing) | [Firefox Support Status](#browser-support) | [Development Guide](#development)]
+
+---
+
 ## Table of Contents
 
 - [Features](#features)
@@ -10,6 +28,7 @@ Notate is a powerful browser extension that seamlessly integrates note-taking an
 - [Technology Stack](#technology-stack)
 - [Development](#development)
 - [Inspiration](#inspiration)
+- [Browser Support](#browser-support)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -74,6 +93,10 @@ To set up a development build:
 ## Inspiration
 
 This is a React.js project that was originally supposed to be written using JQuery but I soon realized that the mountains of code was starting to become very cumbersome!! After 2 weeks of hard work put into the project, I had made the ultimate decision to begin my React.js Journey by rewriting my initial code in React and seeing this project to completion. This project has no other dependencies besides the required ones such as react, tailwindcss, webpack, etc. After almost 7 months of blood, sweat, tears, and maybe some dented desks (sorry desk... :\ ), I am very proud to announce the 1st iteration of my Application/Extension!
+
+## Browser Support
+
+This project was written originally for Chromium-based Web Browsers, but also has active development for Gecko-based (Firefox) Browsers. Please review 
 
 ## Contributing
 
