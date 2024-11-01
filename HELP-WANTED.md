@@ -10,7 +10,7 @@
 - Context menu behavior inconsistencies
 
 **Required Skills**:
-- Firefox WebExtensions API experience
+- Firefox WebExtensions API experience 
 - JavaScript debugging
 - Cross-browser testing experience
 
@@ -42,14 +42,12 @@
 ## Getting Started
 
 1. Review our [CONTRIBUTING.md](CONTRIBUTING.md) guidelines
-2. Check [Issues](link-to-issues) labeled with `help-wanted`
+2. Check [Issues](https://github.com/h8ngrydev4hire/notate/issues) labeled with `help-wanted`
 3. Join our development discussions
 
 ## Contact
 
 - Open an issue for technical discussions
-- Email the maintainers: [maintainer@email.com]
-- Development chat: [Discord/Slack link]
 
 ## Recognition
 
