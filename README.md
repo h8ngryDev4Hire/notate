@@ -71,8 +71,8 @@ Notate is a powerful browser extension that seamlessly integrates note-taking an
    - Chrome: `chrome://extensions`
    - Firefox: `about:addons`
 3. Enable Developer Mode.
-4. Back in your File Explorer, head over to the `./bin` directory from the project root
-5. Simply drag'n'drop the `Notate.crx` file into the extensions page of your browser.
+4. Back in your File Explorer, head over to the `./dist` directory from the project root
+5. Simply drag'n'drop the unpacked `./dist` directory into the extensions page of your browser.
 
 
 ### Method 2: Installing from Web Stores
