@@ -78,6 +78,7 @@ Notate is a powerful browser extension that seamlessly integrates note-taking an
 ### Method 2: Installing from Web Stores
 
 > Note: Notate is currently not available on Chrome Web Store or Mozilla Add-ons. Stay tuned for updates on official store releases.
+
 > UPDATE (11/17/24): Notate is currently in the process of being reviewed for public release on the Chrome Web Store. More updates will follow once we hear back from their team!
 
 ## Usage
