@@ -20,6 +20,25 @@ Notate is a powerful browser extension that seamlessly integrates note-taking an
 
 ---
 
+## Showcase
+
+<div align="center">
+  <img src="./assets/webstore/promo1.png" alt="Notate New Tab Interface" width="800"/>
+  <p><em>Create and organize notes directly from your new tab page</em></p>
+  <table>
+    <tr>
+      <td align="center">
+        <img src="./assets/webstore/promo2.png" alt="Notebook Organization" width="400"/>
+        <p><em>Organize notes into notebooks</em></p>
+      </td>
+      <td align="center">
+        <img src="./assets/webstore/promo3.png" alt="Smart Suggestions" width="400"/>
+        <p><em>Intelligent note suggestions</em></p>
+      </td>
+    </tr>
+  </table>
+</div>
+
 ## Table of Contents
 
 - [Features](#features)
@@ -96,7 +115,7 @@ This is a React.js project that was originally supposed to be written using JQue
 
 ## Browser Support
 
-This project was written originally for Chromium-based Web Browsers, but also has active development for Gecko-based (Firefox) Browsers. Please review 
+This project was written originally for Chromium-based Web Browsers, but also has active development for Gecko-based (Firefox) Browsers. Please review our [HELP-WANTED.md](https://github.com/h8ngryDev4Hire/notate/blob/main/HELP-WANTED.md) for Firefox's current development status.
 
 ## Contributing
 
