@@ -44,8 +44,8 @@ Notate is a powerful browser extension that seamlessly integrates note-taking an
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Technology Stack](#technology-stack)
 - [Development](#development)
+- [Technology Stack](#technology-stack)
 - [Inspiration](#inspiration)
 - [Browser Support](#browser-support)
 - [Contributing](#contributing)
@@ -88,14 +88,6 @@ Notate is a powerful browser extension that seamlessly integrates note-taking an
 3. Start creating notes, organizing them into notebooks, and exploring Notate's features.
 
 
-## Technology Stack
-
-- Frontend: react.js
-- Styling: tailwindcss
-- Build Tool(s): webpack
-- Package Mgr: npm
-- Version Control: git
-
 ## Development
 
 To set up a development build:
@@ -109,6 +101,63 @@ To set up a development build:
    npm run dev
    ```
 3. Build script creates `./prod` directory which you can load into the Chrome browser for further development. 
+
+## Technology Stack
+
+### FRONTEND LAYER
+
+**Framework:** React.JS 18
+
+**Styling:** TailwindCSS
+
+**State Mgmt:**
+
+- React Context API
+- Custom React Hooks
+
+### APPLICATION LAYER
+
+**Service Worker:**
+
+- Background Service
+
+**Business Logic:**
+
+- User Content Mgmt System
+- Note Relationship Algorithm Engine
+- User Configuration Mgmt
+
+**Backend API**
+
+- Chrome Extension API
+
+
+
+### DATA LAYER
+
+**Database Framework**
+
+- IndexedDB
+- Chrome Storage API
+
+**Data Types**
+
+- Notes / Notebooks
+
+### DEVELOPMENT BUILD TOOLS
+
+**Build System:** Webpack
+
+**Package Mgmt System:** Npm
+
+**Version Control System:** Git
+
+**Additional Tools:**
+
+- Babel
+- PostCSS
+- Custom Build / Test Scripts
+
 
 
 ## Inspiration
