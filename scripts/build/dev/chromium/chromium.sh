@@ -28,5 +28,4 @@ fi
 
 
 # run webpack build cmd & tailwind build cmd for chrome
-npx webpack --watch --config $WEBPACK_CONF --env browser=$BROWSER_TARGET & \
-	npx tailwindcss -i $TW_INPUT -o $TW_OUTPUT --watch 
+npx webpack --watch --config $WEBPACK_CONF --env browser=$BROWSER_TARGET 

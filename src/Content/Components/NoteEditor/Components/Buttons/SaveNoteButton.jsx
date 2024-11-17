@@ -48,7 +48,11 @@ export default function SaveNoteButton() {
 
 	return (
 		<button id="save-note-btn"
-		className={ `trans-ease flex h-6 w-10 rounded ${ permittedToSave ? "bg-yellow-300 hover:bg-green-400" : "backdrop-filter backdrop-brightness-[.80]" } text-white items-center justify-center ` }
+		className={ `
+			trans-ease flex h-6 w-10 rounded 
+			${ permittedToSave ? "bg-black bg-opacity-25 hover:bg-green-400 hover:bg-opacity-100" : "backdrop-filter backdrop-brightness-[.80]" } 
+			text-white items-center justify-center 
+		`}
 		onClick={()=>{handleSave(title, content)}}
 		disabled={!permittedToSave}>
 			<SaveNoteLogo className="size-4"/>

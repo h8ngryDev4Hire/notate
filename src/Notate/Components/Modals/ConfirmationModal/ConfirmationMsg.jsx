@@ -13,13 +13,13 @@ export default function ConfirmationMsg() {
 
 	const performAction = () => {
 		confMsgState?.action?.function()
-		setConfMsgState?.action?.handleScroll ? setScrollState(true) : setScrollState(false)
+		confMsgState?.action?.handleScroll ? setScrollState(true) : setScrollState(false)
 		setConfMsgState(false)
 	}
 
 	const performCancel = () => {
 		confMsgState?.action?.handleScroll ? setScrollState(true) : setScrollState(false)
-		typeof confMsgState?.action?.cancelCallback === 'function' ? confMsgState.action.cancelCallback() : ''
+		(typeof confMsgState?.action?.cancelCallback === 'function') ? confMsgState.action.cancelCallback() : ''
 		setConfMsgState(false)
 	}
 

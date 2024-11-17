@@ -41,26 +41,38 @@ export default function NewItemButton(){
 		onMouseOver={handleMouseOver}
 		onMouseLeave={handleMouseLeave}>
 			<div id="new-note-button"
-			className="">
+			className="group">
 				<button 
-				className={ `relative btn-sm-icon z-[5] bg-green-500 shadow-lg` }>
+				 className={`
+				 	relative btn-sm-icon z-[5] bg-green-500 shadow-lg group-hover:rounded-b-none
+				`}>
 					<span id="btn-logo" className="text-2xl font-bold ">+</span> {/* <--- to be replaced by an svg icon */}
 
 				</button>
 
-					<div id="new-options" className="w-full  flex flex-col">
-						<button id="new-note-button" 
-						className={ `trans-ease ${ styleState ? "-translate-y-[0%]" : "-translate-y-[100%]" } w-full h-[2rem] bg-green-600 z-[4]` }
-						onClick={handleNewNoteClick}>
-							<span className="text-white font-semibold text-sm">+ Note</span>
-						</button>
+				<div id="new-options" className="w-full flex flex-col ">
+					<button 
+					 id="new-note-button" 
+					 className={`
+					 	trans-ease-all ${ styleState ? "-translate-y-[0%]" : "-translate-y-[100%]" } 
+						w-full h-[2rem] bg-green-600 z-[4] rounded-b group-hover:rounded-b-none
+					`}
+					 onClick={handleNewNoteClick}
+					>
+						<span className="text-white font-semibold text-sm">+ Note</span>
+					</button>
 
-						<button id="new-notebook-button" 
-						className={ `trans-ease ${ styleState ? "-translate-y-[0%]" : "-translate-y-[200%]" } bg-green-700 q-full h-[2rem] rounded-b z-[4]` }
-						onClick={handleNewNotebookClick}>
-							<span className="text-white font-semibold text-sm">+ Book</span>
-						</button>
-					</div>
+					<button 
+					 id="new-notebook-button" 
+					 className={`
+					 	trans-ease-all ${ styleState ? "-translate-y-[0%]" : "-translate-y-[200%]" } 
+						bg-green-700 q-full h-[2rem] rounded-b z-[4]
+					 `}
+					 onClick={handleNewNotebookClick}
+					>
+						<span className="text-white font-semibold text-sm">+ Book</span>
+					</button>
+				</div>
 				
 			</div>
 

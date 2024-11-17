@@ -31,7 +31,6 @@ export default function Bottombar() {
 	}
 
 	React.useEffect(()=>{
-		console.log('queue size: ', queue)
 		if (queue.length > 0) {
 			setIsEnabled(true)	
 		} else {

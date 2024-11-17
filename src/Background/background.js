@@ -2,16 +2,14 @@ import browser from 'webextension-polyfill'
 
 import CoreService from './Utils/coreService.js'
 import { spawnNotateTab, bootstrapApplication, declareEnvironmentVariables } from './Utils/eventActions.js'
-import Environment from './Utils/environmentKeeper.js'
+import Environment from './Utils/environment.js'
 import DevTools from '@dev/devutils.js'
 
 
 /*
  * DevTool Call
 */
-try {
-	DevTools()
-} catch(e){}
+try { DevTools() } catch(e){}
 
 
 
@@ -106,32 +104,5 @@ browser.runtime.onConnect.addListener((port) => {
     });
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-FUNCTION:
-	Used to quickly fetch env variables which is needed at startup.
-*/
-const fetchHighPriorityVariables =  () => {
-	browser.storage.sync.get([CHROME_STORE_HIGH_PRIORITY], (ENV_VARS)=>{
-		console.log('ENV_VARS: ', ENV_VARS)
-		try {
-			launchBehavior = ENV_VARS[CHROME_STORE_HIGH_PRIORITY].pageBehavior
-		} catch (error) {
-		}
-	})	
-}
-
-
 
 

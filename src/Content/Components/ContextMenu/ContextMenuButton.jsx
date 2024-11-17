@@ -27,7 +27,7 @@ export default function ContextMenuButton () {
 			>
 				<span className={`size-[100%] flex items-center justify-center z-[100]`}>
 					<img 
-					 src={`chrome-extension://emhjkpjiffmogbndmcnbnhpcfkljjonc/Designs/notate-logo.svg`} 
+					 src={`chrome-extension://mienhcnmknnplcaheeelfggdagmighap/Designs/notate-logo.svg`} 
 					 className={`
 						h-[75%] w-[85%]
 					`}/>

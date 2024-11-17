@@ -13,24 +13,38 @@ export default function NoteEditor() {
 	const MAXIMIZED = true
 	const MINIMIZED = false
 
-	const { SHADOW_ROOT_ELEMENT, NOTE_CONTEXT } = React.useContext(WebContentContext)
+	const { SHADOW_ROOT_ELEMENT, NOTE_CONTEXT, TEXT_BUFFER_CONTEXT } = React.useContext(WebContentContext)
 	const [ note, setNote ] = NOTE_CONTEXT
 	const [shadowRootElement] = SHADOW_ROOT_ELEMENT
+	const [ buffer, setBuffer ] = TEXT_BUFFER_CONTEXT
 
 
 	const [ displayState, updateDisplayState ] = React.useState(MINIMIZED)
-	const [ content,  setContent ] = React.useState(note?.content || '')
-	const [ title, setTitle ] = React.useState(note?.title || '')
+	const [ content,  setContent ] = React.useState(note?.content || buffer?.content)
+	const [ title, setTitle ] = React.useState(note?.title || buffer?.title)
 
 
-	React.useEffect(()=>{ updateDisplayState(MAXIMIZED) },[])
+	React.useEffect(()=>{ 
+		updateDisplayState(MAXIMIZED) 
+	},[])
+
+	React.useEffect(()=> {
+		if (!note.id) {
+			setBuffer({
+				title: title,
+				content: content
+			})
+		}
+	},[ title, content ])
 
 	return (
 		<NoteEditorWindowDisplayContext.Provider value={[ displayState, updateDisplayState ]}>
 			<div 
 			 id="note-editor-container"
-			 className="fixed bottom-0 left-0 ml-10"
-			>
+			 className={`
+				 fixed bottom-0 left-0 ml-10
+				 ${ !displayState && "pointer-events-none" }
+			`}>
 
 				<div 
 				 id="note-editor" 
@@ -46,7 +60,10 @@ export default function NoteEditor() {
 							<
 							 TextEditor 
 							 ToolbarComponents={<SaveNoteButton/>} 
-							 TailwindClassNames={"fill-gray-800 stroke-gray-800"}
+							 TailwindClassNames={`
+								 fill-gray-800 stroke-gray-800 
+								 ${note?.color?.styles?.card || "bg-yellow-200"}
+							 `}
 							 ShadowRootElement={shadowRootElement}
 							/>	
 						</TextInputContext.Provider>

@@ -1,11 +1,11 @@
 import browser from 'webextension-polyfill'
 import CoreService from './coreService.js'
-import Environment from './environmentKeeper.js'
+import Environment from './environment.js'
 import { NOTATE_DB, ERROR_LOGGING_DB, USER_CONFIGURATION_DB } from '../background.js'
 import { BROWSER_TYPE } from './browserType.js'
 
 
-const NOTATE_LANDING_PAGE = './index.html';
+const NOTATE_LANDING_PAGE = './notate.html';
 
 const NEWTAB = (BROWSER_TYPE === 'chrome') ? 'chrome://newtab/' : 'about:newtab'
 
@@ -23,11 +23,6 @@ export const spawnNotateTab = async (directive) => {
 	
 			if ( tab?.url == NEWTAB || tab?.pendingUrl == NEWTAB ) {
 				browser.tabs.update(tab.id, { url: browser.runtime.getURL(NOTATE_LANDING_PAGE) })
-			}
-			else {
-				console.log('statement not executed')
-				console.log((tab?.url ? ('TAB URL: ', tab?.url) : ''))
-				console.log('PENDING TAB URL: ', tab?.pendingUrl)
 			}
 	
 		})	

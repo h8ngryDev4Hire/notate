@@ -1,16 +1,17 @@
 import React from 'react';
-import { NOTATE_DB, ERROR_LOGGING_DB, USER_CONFIGURATION_DB } from '@background/background.js'
 import ConfigurationModule from './Components/Modules/ConfigurationModule.jsx';
 import SettingsBottomBar from './Components/Bars/SettingsBottomBar.jsx';
 import SettingsTopBar from './Components/Bars/SettingsTopBar.jsx';
+import ErrorReporter from './Components/ErrorReporter/ErrorReporter.jsx';
 
-
+const NOTATE_DB = "notate"
+const ERROR_LOGGING_DB = "errorLogging"
+const USER_CONFIGURATION_DB = "userConfiguration"
 
 export const SettingsContext = React.createContext()
 
 
 export default function Settings({ContextAdapter, targetModule, setterCallback}) {
-	//const CONFIGURATION = [0]?.inventory?.USER_CONFIGURATION[0]
 
 	const SETTINGS_CONTEXT = {
 		DATABASE_CONTEXT: ContextAdapter.USER_CONFIGURATION_DB_CONTEXT,
@@ -37,7 +38,7 @@ export default function Settings({ContextAdapter, targetModule, setterCallback})
 			targetModule.forEach( target => {
 				result[target] = user[target]
 			} )
-			console.log(result)
+
 			setConfiguration(result)
 		}
 	}
@@ -108,12 +109,12 @@ export default function Settings({ContextAdapter, targetModule, setterCallback})
 			 className={`
 			 	trans-ease flex flex-col absolute px-[2rem] 
 			 	${ settingsState ? "translate-y-[0%]" : "translate-y-[100%]" } 
-			 	h-[85%] w-[60%] bottom-0 bg-zinc-800 rounded-t-xl  
+			 	h-[85%] md:w-[60%] w-[95%] bottom-0 bg-zinc-800 rounded-t-xl  
 			`}>
 
 				<SettingsContext.Provider value={SETTINGS_CONTEXT}>
 					<SettingsTopBar/>	
-						<main className="overflow-auto space-y-5">
+						<main id="settings-content" className="overflow-auto space-y-5">
 						{ targetModule instanceof Array && targetModule.map( module => {
 							return (
 								<ul className="space-y-3 mx-4"
@@ -125,6 +126,9 @@ export default function Settings({ContextAdapter, targetModule, setterCallback})
 								</ul>
 							)
 						})}
+
+						<ErrorReporter/>
+
 						</main>
 					<SettingsBottomBar/>
 				</SettingsContext.Provider>

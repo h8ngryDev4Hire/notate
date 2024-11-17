@@ -2,46 +2,51 @@ import NoteHandler from '@universal/Handlers/NoteHandler.js';
 import NotebookHandler from '@universal/Handlers/NotebookHandler.js';
 
 class TestDataGenerator {
-    constructor() {
-        this.domains = [
-            'example.com/article/12345',
-            'test.org/blog/technology',
-            'docs.website.com/tutorials',
-            'research.edu/papers',
-            'news.site.net/latest',
-            'blog.dev/javascript',
-            'learn.coding.io/react'
-        ];
-
-        this.titlePrefixes = [
-            'Research on', 'Notes about', 'Thoughts regarding',
-            'Analysis of', 'Summary of', 'Key points from',
-            'Investigation into', 'Study of', 'Overview of'
-        ];
-
-        this.subjects = [
-            'React Hooks', 'State Management', 'Browser APIs',
-            'IndexedDB Implementation', 'Web Extensions',
-            'Chrome Extensions', 'JavaScript Patterns',
-            'Data Structures', 'Algorithms', 'Web Development'
-        ];
-
-        this.notebookTitles = [
-            'Web Development Resources',
-            'JavaScript Deep Dive',
-            'Browser Extension Research',
-            'React Architecture Notes',
-            'Programming Concepts'
-        ];
-
-        this.notebookDescriptions = [
-            'Collection of essential web development documentation and tutorials',
-            'Advanced JavaScript concepts and patterns exploration',
-            'Research and documentation for browser extension development',
-            'Notes on React best practices and architectural patterns',
-            'Fundamental programming concepts and principles'
-        ];
-    }
+	constructor() {        
+		this.domains = [
+            		'example.com/article/12345',
+            		'test.org/blog/technology',
+            		'docs.website.com/tutorials',
+            		'research.edu/papers',
+            		'news.site.net/latest',
+            		'blog.dev/javascript',
+            		'learn.coding.io/react'
+        	];
+		this.titlePrefixes = [
+	        	'Brainstorm:', 'Quick thoughts on', 'Meeting notes:', 
+	        	'Ideas for', 'Inspiration:', 'Project plan:', 
+	        	'Reading notes:', 'Research:', 'Follow-up on'
+	    	];
+	
+	 	this.subjects = [
+	        	'Digital Marketing Strategy',
+	        	'Product Launch Timeline',
+	        	'Team Collaboration Tools',
+	        	'Creative Writing Projects',
+	 		'Personal Development Goals',
+	   		'Travel Planning Ideas',
+	   		'Book Recommendations',
+	   		'Recipe Collection',
+	   		'Business Opportunities',
+	   		'Learning Resources'
+	    	];
+	
+		this.notebookTitles = [
+	        	'My Creative Workshop',
+	        	'Professional Development',
+	        	'Personal Projects',
+	        	'Daily Inspirations',
+	        	'Learning Journey'
+	    	];
+	
+	    	this.notebookDescriptions = [
+	        	'Where ideas come to life - sketches, drafts, and creative experiments',
+	        	'Career growth, skills development, and professional achievements tracker',
+	        	'Organizing personal goals, projects, and future plans',
+	        	'Daily discoveries, quotes, and moments of inspiration',
+	        	'Tracking my learning progress across various interests and skills'
+	    	];
+	}
 
     generateRandomDate(start = new Date(2023, 0, 1), end = new Date()) {
         return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())).toString();

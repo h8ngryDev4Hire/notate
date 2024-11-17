@@ -1,58 +1,53 @@
 import React from 'react';
-import { 
-	getNoteURLComparison, 
-	getNoteSuggestion, 
-	countWordOccurrences, 
-	extractTermListFromURL, 
-	extractTextContentFromHTML,
-	getNotesGroupedByNotebook
-} from './algorithms/RelatedNotesAlgoritm.js'
 
-import DropdownArrow from '@assets/Designs/Arrows/dropdown-arrow.svg'
-import RelatedNote from './RelatedNote.jsx'
+
 import { WebContentContext } from '@content/content.jsx'
+import RelatedNotesProcessor from './RelatedNotesProcessor.jsx'
+import ViewSelector from './ViewSelector.jsx';
+import ViewNavigator from './ViewNavigator.jsx';
 
 
-// TODO: use this for dataset cycling logic
-//const nextIndex = (currentIndex + 1) % colors.length
-//const currentIndex = colors.indexOf(colorIndex)
-
-const views = [
+export const views = [
 	{
 		type: 'related-by-url',
 		name: 'Related By URL'
 	},{
 		type: 'related-by-suggestion',
 		name: 'Notate\'s Suggestion'
-	},{
-		type: 'related-by-notebook',
-		name: 'Related By Notebook'
-	}
+	},
 ]
 
 
+export const RelatedNotesContext = React.createContext()
+
+
+
 export default function RelatedNotesHeader() {
-	const { NOTATE_DB_CONTEXT } = React.useContext(WebContentContext)
+
+	const { NOTATE_DB_CONTEXT, RELATED_NOTES_CONTEXT } = React.useContext(WebContentContext)
+
+	const NOTE_VIEWER_CONTEXT = {
+		NAV_STATE: React.useState(false),
+		VIEW_STATE: React.useState(views[0]),
+		HOVER_STATE: React.useState(false),
+		HEADER_STATE: RELATED_NOTES_CONTEXT,
+		NAV_POS_STATE: React.useState(0),
+		END_REACHED: React.useState(false)
+	}
+
 	const [ database ] = NOTATE_DB_CONTEXT
+	const [ headerState, setHeaderState ] = NOTE_VIEWER_CONTEXT.HEADER_STATE 
+	const [ hoverState, setHoverState ] = NOTE_VIEWER_CONTEXT.HOVER_STATE 
+	const [ navState, setNavState ] = NOTE_VIEWER_CONTEXT.NAV_STATE
+	const [ view, setView ] = NOTE_VIEWER_CONTEXT.VIEW_STATE 
+	const [ position, setPosition ] = NOTE_VIEWER_CONTEXT.NAV_POS_STATE
+	const [ endReached, setEndReached ] = NOTE_VIEWER_CONTEXT.END_REACHED
 
-	const [ relatedNotes, setRelatedNotes ] = React.useState([])
-	const [ hoverState, setHoverState ] = React.useState(false)
-	const [ headerState, setHeaderState ] = React.useState(false)
-	const [ navState, setNavState ] = React.useState(false)
-	const [ view, setView ] = React.useState(views[0])
 
+	const [ enabled, setEnabled ] = React.useState(false)
 
-	const termList = React.useMemo(()=> extractTermListFromURL(), [window.location.href])
-	//console.log('termList: ', termList)
-	
-	const fetchedRelatedNotes = React.useMemo(()=> getNoteURLComparison(database), [database, window.location.href])
-	//console.log('fetchedRelatedNotes: ', fetchedRelatedNotes)
+	const viewerLengthRef = React.useRef(null)
 
-	const suggestedNoteList = React.useMemo(()=> getNoteSuggestion(database, termList), [database, termList])
-	//console.log('suggestedNoteList: ', suggestedNoteList)
-
-	const notesRelatedByNotebook = React.useMemo(()=> getNotesGroupedByNotebook(database),[database])
-	//console.log('notesRelatedByNotebook: ', notesRelatedByNotebook)
 
 
 	const handleHoverEvent = (e) => {
@@ -72,61 +67,9 @@ export default function RelatedNotesHeader() {
 		} 
 	}
 
-	
-	const handleViewCycle = (directive) => {
-		const current = views.indexOf(view)
-
-		
-		if (directive === 'forward') {
-			const next = ( current + 1 ) % views.length
-			setView(views[next])
-		} else {
-			const next = ( (current - 1) + views.length ) % views.length
-			setView(views[next])
-		}	
-	}
-
-
-	React.useEffect(()=>{
-		if (database) {
-			let payload = [];
-		
-			/*
-			 * suggestedNoteList Brainstorm:
-			 * 	Should we render when no note found on webpage?
-			 * 	Should we render after a new note is created on that page? 
-			 *
-			*/
 
 
 
-			switch (view.type) {
-				case 'related-by-url':
-					payload = [
-						...fetchedRelatedNotes.domainMatchList,
-						...fetchedRelatedNotes.fullMatchList
-					]
-					break
-
-				case 'related-by-notebook':
-					payload = [
-						...notesRelatedByNotebook
-					]
-					break
-
-				case 'related-by-suggestion':
-          				payload = [
-            					...suggestedNoteList.noteList.highConfidence,
-            					...suggestedNoteList.noteList.mediumConfidence,
-            					...suggestedNoteList.noteList.lowConfidence
-          				];
-					break
-			}
-
-
-			setRelatedNotes(payload)
-		}
-	},[database, view])
 
 
 	React.useEffect(()=>{
@@ -142,80 +85,60 @@ export default function RelatedNotesHeader() {
 	},[headerState])
 
 
+
+
+	React.useEffect(()=>{
+		if (!enabled) {
+			setPosition(0)
+		}
+	},[enabled])
+
+
+
+	React.useEffect(()=> {
+		const viewer = viewerLengthRef.current
+
+		if (viewer) {
+			const intersectionObserver = new IntersectionObserver( ([entry]) => {
+				setEnabled(!entry.isIntersecting)
+			},{
+				root: null,
+				rootMargin: '0px',
+				threshold: 1.0
+			})
+
+			intersectionObserver.observe(viewer)
+
+			return () => intersectionObserver.disconnect()
+		}
+
+	},[viewerLengthRef.current])
+
+
 	return (
 		<div 
 		 id="related-notes-hover-region"
-		 className="fixed flex top-0 w-[3rem] h-[2rem]"
+		 className="fixed flex top-0  h-[2rem] "
 		 onMouseEnter={handleHoverEvent}
 		 onMouseLeave={handleHoverEvent}
+		 ref={viewerLengthRef}
 		>
-			{headerState ? (
-				<span
-				 id="related-notes-navigation"
-				 className={`
-					trans-ease flex min-w-[15rem] h-[1.5rem] rounded-b-2xl bg-yellow-300
-					font-extrabold
-					${ navState ? "-translate-y-[0%]" : "-translate-y-[100%]" }
-				`}>
-					<button 
-					 id="cycle-backwards-btn" 
-					 onClick={()=>{handleViewCycle('backward')}}
-					 className={`
-						w-[15%]
-					`}>{`<`}</button>
+			<RelatedNotesContext.Provider value={NOTE_VIEWER_CONTEXT}>
+				<ViewSelector/>
 
-					<span 
-					 id="divider" 
-					 className={`
-						flex-grow h-full bg-yellow-500 
-						alice-regular text-[.8rem] text-center font-bold
-					`}>
-						{`${view.name} View`}
-					</span>
+				{headerState && (
+					<
+					 RelatedNotesProcessor 
+					 database={database} 
+					 view={view}
+					/>
+				)}
 
-					<button 
-					 id="cycle-forwards-btn" 
-					 onClick={()=>{handleViewCycle('forward')}}
-					 className={`
-						w-[15%]
-					`}>{`>`}</button>
-				</span>
-			) : (
-				<button 
-				 id="reveal-related-notes-btn"
-				 onClick={()=>{setHeaderState(true)}}
-				 className={`
-					 trans-ease flex w-[3rem] h-[1.5rem] rounded-b-2xl
-					 ${ headerState ? "-translate-y-[100%] pointer-events-none" : "bg-yellow-300" }  
-					 ${ hoverState ? "-translate-y-[0%]" : "-translate-y-[100%]" }
-				`}>
-					<DropdownArrow className="h-[inherit] w-[inherit] fill-yellow-600"/>
-				</button>
-			)}
+				{ enabled && <ViewNavigator/>}
 
-
-			<header 
-			 id="related-notes-viewer"
-			 className={`
-				 trans-ease flex flex-grow h-full  
-				 ${ headerState ? "-translate-y-[0%] pointer-events-auto" 
-				 : "-translate-y-[100%] pointer-events-none" }
-			`}>
-				{
-					relatedNotes.map((note, id) => {
-						const tagId = note?.id || id
-
-						return (
-							<
-							 RelatedNote 
-							 note={note}
-							 tagId={tagId}
-							 key={id}
-							/>
-						)
-					})
-				}	
-			</header>	
+			</RelatedNotesContext.Provider>
 		</div>
 	)
 }
+
+// -translate-x-[0%] -translate-x-[20%] -translate-x-[40%] -translate-x-[60%] -translate-x-[80%] -translate-x-[100%]

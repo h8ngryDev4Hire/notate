@@ -13,7 +13,6 @@ export default async function handleConfigurationDb(database, requestType) {
         			break;
       			}
       			default: {
-        			console.log('Unknown request type');
       			}
     		}
 	}
@@ -35,7 +34,6 @@ async function configurationMergeCheck(database) {
     		if (!currentConfig) {
      			// If no configuration exists, insert the template
 			await database.insertData(ConfigurationTemplate, 'USER_CONFIGURATION');
-      			console.log('Initial configuration template inserted');
       			return;
 		}
 
@@ -45,9 +43,6 @@ async function configurationMergeCheck(database) {
     		if (mergedConfig) {
       			// A merge is needed, update the database
       			await database.insertData(mergedConfig, 'USER_CONFIGURATION');
-      			console.log('Configuration updated after merge');
-    		} else {
-      			console.log('No configuration update needed');
     		}
 	} catch (error) {
     		console.error('Error in config DB merge check:', error);

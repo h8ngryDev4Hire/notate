@@ -35,13 +35,16 @@ export default function NotebookCard({ notebook, onNoteClick, onNotebookClick, u
 	}
 
 	const dragHandler = (event) => {
-		const JSONified = JSON.stringify(notebook)
-		event.dataTransfer.setData('text/plain', JSONified)
+		if (event.target.id === 'notebook-card-container') {
+			const JSONified = JSON.stringify(notebook)
+			event.dataTransfer.setData('text/plain', JSONified)
+		}
 	}
 
 
 	// update this to add more visual functionality
 	const handleNoteDragOver = (event) => {
+		// Needed for event propagation | onDrop event to fire
 		event.preventDefault();
 	}
 
@@ -62,14 +65,14 @@ export default function NotebookCard({ notebook, onNoteClick, onNotebookClick, u
 		
 			  {/* Notebook Cover Designs */}
 			<div 
-			 id="notebook-card" 
-			 className="flex  relative  min-h-[170px] max-h-[170px] min-w-[230px] max-w-[230px]  rounded shadow-xl  bg-[#dfac5d] z-[5] hover:z-[20]" 
-			 data-notebook-id={notebook.id} 
+			 id={`notebook-card-${notebook.id}`} 
+			 data-notebook-id={notebook.id}
+			 className="flex  relative  min-h-[170px] max-h-[170px] min-w-[230px] max-w-[230px]  rounded shadow-xl  bg-[#bf8040] z-[5] hover:z-[20]" 
 			 onClick={onNotebookClick}
 			 onDrop={handleNoteDrop}
 			 onDragOver={handleNoteDragOver}
 		    	>
-				<div id="" className={`min-w-[1.5rem] bg-[#b7823d] rounded-l`}/>
+				<div id="notebook-cover-side" className={`min-w-[1.5rem] bg-[#86592d] rounded-l`}/>
 				<div id="" className={`flex-grow overflow-hidden p-4`}>
 			      		<h3 
 					 id="notebook-title" 

@@ -8,7 +8,7 @@ BUILD_TARGET=$2
 MANIFEST=manifest.$BROWSER_TARGET.json
 BUILD_DIR=$ROOT/$BUILD_TARGET/$BROWSER_TARGET
 
-MANIFEST_BUILDER=$ROOT/scripts/build/webpack/build-manifest.py
+#MANIFEST_BUILDER=$ROOT/scripts/build/webpack/build-manifest.py
 
 
 #build_chrome_manifest() {

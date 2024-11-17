@@ -30,9 +30,10 @@ export default function SettingsWidget() {
 			{
 				widgetState && 
 					<Settings
-					ContextAdapter={NOTATE_CONTEXT}
-					targetModule={["Notate", "WebContent"]}
-					setterCallback={setWidgetState}/> 
+					 ContextAdapter={NOTATE_CONTEXT}
+					 targetModule={["Notate", "WebContent"]}
+					 setterCallback={setWidgetState}
+					/> 
 			}
 		</>
 	)

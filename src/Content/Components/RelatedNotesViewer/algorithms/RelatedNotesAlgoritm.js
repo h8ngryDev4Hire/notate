@@ -15,8 +15,6 @@ domain: window.location.hostname,
 			path: window.location.pathname === "/" ? false : window.location.pathname
 		}
 
-
-
 	
 		inventory.forEach((item) => {
 			if (item.origin.includes(URL.full)) relatedNotes.fullMatchList.push(item)
@@ -68,20 +66,32 @@ export const getNoteSuggestion = (database, termList) => {
         	const standardDeviation = Math.sqrt(
             		matchCounts.reduce((sum, { matches }) => sum + Math.pow(matches - averageMatches, 2), 0) / matchCounts.length
         	);
+
 	
         	// Define thresholds
-        	let highConfidenceThreshold = averageMatches + standardDeviation;
-        	let lowConfidenceThreshold = highConfidenceThreshold / 2;
+		let highConfidenceThreshold = averageMatches + 2 * standardDeviation
+		let lowConfidenceThreshold = averageMatches - 2 * standardDeviation
+
+		//console.log('standardDeviation: ', standardDeviation)
+		//console.log('highConfidenceThreshold: ', highConfidenceThreshold)
+		//console.log('lowConfidenceThreshold: ', lowConfidenceThreshold)
 
 		// Check if highConfidenceThreshold is lower than lowConfidenceThreshold
 		if (highConfidenceThreshold <= lowConfidenceThreshold) {
 			const zeroCheck = highConfidenceThreshold === 0 ? 2 : 1
 
 			highConfidenceThreshold = (highConfidenceThreshold + lowConfidenceThreshold) * zeroCheck
-		} else if (highConfidenceThreshold === 0 && lowConfidenceThreshold) {
+		} else if (highConfidenceThreshold === 0 && lowConfidenceThreshold !== 0) {
 			lowConfidenceThreshold = 1
 			highConfidenceThreshold = 2
+		} 
+
+
+		if  (highConfidenceThreshold === 0 && lowConfidenceThreshold === 0) {
+			highConfidenceThreshold = 10
+			lowConfidenceThreshold = 10
 		}
+
 
        		// Second pass: assign confidence levels
        		matchCounts.forEach(({ note, matches }) => {
@@ -96,23 +106,33 @@ export const getNoteSuggestion = (database, termList) => {
             		} else {
 				suggestedNotes.noConfidence.add(note)	
 			}
-});
+		});
+
 
 
 
 		return {
-			noteList: {
+			noteList : {
 	       			highConfidence: Array.from(suggestedNotes.highConfidence),
-        			mediumConfidence: Array.from(suggestedNotes.mediumConfidence),
+				// Slicing mediumConfidence as it often returns the most hits
+        			mediumConfidence: Array.from(suggestedNotes.mediumConfidence).slice(0,7),
         			lowConfidence: Array.from(suggestedNotes.lowConfidence),
 				noConfidence: Array.from(suggestedNotes.noConfidence)
 			}, 
-			levels: {
-				 high: highConfidenceThreshold,
-				 low: lowConfidenceThreshold
+			stats : {
+				confidenceHits: {
+					high: suggestedNotes.highConfidence.size,
+					med: suggestedNotes.mediumConfidence.size,
+					low: suggestedNotes.lowConfidence.size,
+					none: suggestedNotes.noConfidence.size
+				},
+				levels: {
+					 high: highConfidenceThreshold,
+					 low: lowConfidenceThreshold
+				},
+				termList: termList,
+				termRegex: termRegex
 			},
-			termList: termList,
-			termRegex: termRegex
     		};
     	}
 }
@@ -126,23 +146,32 @@ export const countWordOccurrences = (corpus, word) => {
 
 
 export const extractTermListFromURL = () => {
-	const URL = window.location.hostname + window.location.pathname
+	//const URL = window.location.hostname + window.location.pathname
+	const URL = window.location.href.replace(/^(https?|file):\/\//i, '')
 	
 
 	const regexList = URL.match(/[a-zA-Z]+/g) || [];
-	const termList = regexList.filter(term => term.length > 0)
+
+	//const wordList = regexList.filter( word => word.length > 2 )
+
+	// Adjust filter function if too many irrelevant notes are being 
+	// suggested 
+	const termList = regexList.filter(term => term.length > 2)
 
 	return termList
 }
 
 
-export const extractTextContentFromHTML = () => {
+export const extractTextContentFromHTML = (termList) => {
   	const tagNames = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a'];
 
 	return tagNames.flatMap(tag => 
        		Array.from(document.getElementsByTagName(tag))
-       			.map(element => element.innerText)
+       			.map(element => element.innerText.toLowerCase())
          		.filter(text => text && text.trim() !== '')
+			.flatMap( text => text.split(/\s+/) )
+			.filter( word => word.length > 3 )
+			
     	);
 }
 
@@ -163,9 +192,9 @@ export const getNotesGroupedByNotebook = (database) => {
 
     		notes.forEach(note => {
     	  		if (note.notebookId) {
-    	    		if (notebookGroups[note.notebookId]) {
-    	      			notebookGroups[note.notebookId].notes.push(note);
-    	    		}
+    	    			if (notebookGroups[note.notebookId]) {
+    	      				notebookGroups[note.notebookId].notes.push(note);
+    	    			}
     	  		}
     		});
   	}

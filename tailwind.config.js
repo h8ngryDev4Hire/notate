@@ -9,6 +9,10 @@ module.exports = {
 	],
   	theme: {
   		extend: {
+			screen: {
+				'short': { 'raw': '(max-height: 400px)' },
+				'tall': { 'raw': '(max-height: 900px)' }
+			},
 			animation: {
 				'spin-slow': 'spin 3s linear infinite'
 			},

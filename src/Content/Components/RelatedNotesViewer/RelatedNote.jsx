@@ -21,13 +21,20 @@ export default function RelatedNote({note, tagId}) {
 
 
 	return (
-		<header id={ `related-note-heading-${tagId}` }
-		className="trans-ease flex flex-col w-[12rem] h-[7rem] rounded-md bg-yellow-400 -translate-y-[75%] hover:-translate-y-[0%]"
-		onClick={handleNoteClick}
-		onDragStart={handleDragStart}
-		draggable>
+		<header 
+		 id={ `related-note-heading-${tagId}` }
+		 className={`
+			 trans-ease flex flex-col  
+			 min-w-[12rem] max-w-[12rem] h-[7rem] 
+			 rounded-md ${note?.color?.styles?.top ||"bg-yellow-400" } 
+			 -translate-y-[75%] hover:-translate-y-[0%]
+		 `}
+		 onClick={handleNoteClick}
+		 onDragStart={handleDragStart}
+		 draggable
+		>
 			<div id="related-note" 
-			className="w-full flex-grow top-0 rounded-t-md bg-yellow-200"></div>
+			className={`w-full flex-grow top-0 rounded-t-md ${note?.color?.styles?.card || "bg-yellow-200"}`}></div>
 				<p 
 				 id="related-note-title"
 				 className={`

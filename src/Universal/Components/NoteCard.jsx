@@ -3,6 +3,10 @@ import React from 'react';
 export default function NoteCard({ note, stackClass=false, onClick, onDragStart }) {
 	const NOTE_CONTENT_ELEMENT = `note-${note?.id}-content`
 
+	//const [ content, setContent ] = React.useState('')
+
+	const noteContentRef = React.useRef(null)
+
 
 	const dragHandler = (event) => {
 		const JSONified = JSON.stringify(note)
@@ -31,12 +35,19 @@ export default function NoteCard({ note, stackClass=false, onClick, onDragStart 
 
 
 	React.useEffect(()=>{
-		const contentTag = document.getElementById(NOTE_CONTENT_ELEMENT);
-		if (contentTag) {
-			contentTag.textContent = note.content
+	//	if (note?.content) {
+	//		setContent(note.content)
+	//		contentTag.textContent = content
+	//	}
+		const ref = noteContentRef.current
+
+		if (ref) {
+			ref.textContent = note.content
 			cleanContent()
-		} 
-	},[note])
+			 
+		}
+	},[note, noteContentRef.current])
+
 
   return (
  
@@ -73,6 +84,7 @@ export default function NoteCard({ note, stackClass=false, onClick, onDragStart 
 	  		<div 
 	  		 id={NOTE_CONTENT_ELEMENT} 
 	  		 className=" text-base mb-0 text-gray-800 ml-2  whitespace-normal break-words overflow-hidden"
+	  		 ref={noteContentRef}
 	  		/>
 	 	</div>
     </div>

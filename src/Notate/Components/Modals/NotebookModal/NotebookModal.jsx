@@ -5,14 +5,16 @@ import Topbar from './Topbar/Topbar.jsx'
 import Bottombar from './Bottombar/Bottombar.jsx'
 import { NotateContext } from '@notate/Notate.jsx'
 import RightSection from './RightSection/RightSection.jsx';
+import { data } from 'autoprefixer';
 
 export const ExitModalContext = React.createContext()
 export const NotebookModalContext = React.createContext()
 
 export default function NotebookModal() {
-	const { NOTEBOOK_CONTEXT, RECENT_NOTES_STATE_CONTEXT } = React.useContext(NotateContext)
+	const { NOTEBOOK_CONTEXT, RECENT_NOTES_STATE_CONTEXT, NOTATE_DB_CONTEXT } = React.useContext(NotateContext)
 	const [ notebook, setNotebook ] = NOTEBOOK_CONTEXT
 	const [ recentNotesState, updateRecentNotesState ] = RECENT_NOTES_STATE_CONTEXT
+	const [ database ] = NOTATE_DB_CONTEXT
 
 
 	//TODO: see if its possible to cram these useState hooks into a single Context.Provider call
@@ -42,11 +44,6 @@ export default function NotebookModal() {
 	}
 
 
-	// TODO finish function logic for drop event listeners on #recent-notes-container tag
-	const dispatchListeners = () => {
-	}
-
-
 	const exitModal = async () => {
 		setStatus(false)
 
@@ -73,14 +70,35 @@ export default function NotebookModal() {
 		if (notebook) setStatus(true)
 	},[])
 
+	React.useEffect(()=> {
+		if (notebook?.id) {
+			const id = notebook.id
+
+			const [ updatedNotebook ] = database.inventory.NOTEBOOKS
+				.filter( notebook => notebook.id === id )
+
+			setNotebook(updatedNotebook)
+		}
+	},[database])
+
 
   return (
-	<div id="notebook-modal-container" 
-	className={`pointer-events-none trans-ease fixed flex justify-center z-modal left-0 top-0 w-full h-full ${ status ? "bg-black bg-opacity-40" : "bg-transparent" }`}
-	onClick={handleOutsideClick}>
-		<div id="notebook-modal" 
-	  	className={ `pointer-events-auto trans-ease flex w-full h-[19rem] top-0 left-0 rounded-b-3xl bg-[#2f2f2f] ${ status ? "translate-y-[0%]" : "-translate-y-[100%]" }` }
-	  	onClick={handlePreventingEventPropagation}>
+	<div 
+	 id="notebook-modal-container" 
+	 className={`
+	 	pointer-events-none trans-ease fixed flex justify-center z-modal left-0 top-0 w-full h-full 
+		${ status ? "bg-black bg-opacity-40" : "bg-transparent" }
+	 `}
+	 onClick={handleOutsideClick}
+	>
+		<div 
+		 id="notebook-modal" 
+	  	 className={`
+			pointer-events-auto trans-ease flex w-full h-[19rem] top-0 left-0 rounded-b-3xl bg-[#2f2f2f] 
+			${ status ? "translate-y-[0%]" : "-translate-y-[100%]" }
+		 `}
+	  	 onClick={handlePreventingEventPropagation}
+		>
 
 	  	<NotebookModalContext.Provider value={NOTEBOOK_MODAL_STATE}>
 	  		<ExitModalContext.Provider value={[exitModal]}>

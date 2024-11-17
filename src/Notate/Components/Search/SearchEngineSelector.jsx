@@ -60,7 +60,7 @@ export default function SearchEngineSelector({  }) {
     		<div id="search-engine-selector" 
 		className={`trans-ease flex items-center ${ searchBarStatus ? "bg-[#333333]" : "bg-[#595959]" } rounded-r-full px-2`}>
       			<button id="search-engine-btn" 
-			className="flex items-center bg-transparent border-none cursor-pointer" 
+			className="flex items-center bg-transparent border-none rounded-full overflow-hidden  cursor-pointer" 
 			onClick={handleClick}>
         			<img id="search-engine-favicon" 
 				className="w-6 h-6" 

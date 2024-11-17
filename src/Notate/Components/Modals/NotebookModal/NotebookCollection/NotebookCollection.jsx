@@ -56,15 +56,27 @@ export default function NotebookCollection() {
 		setNotes(getNotesById(collection))	
 	},[collection])
 
+	React.useEffect(()=> {
+		setCollection(notebook.collection)
+	},[notebook])
+
+
+
+
 
 
 	return (
 		<div id="notebook-collection" className="flex flex-col flex-grow space-y-4">
 			
-			<div id="note-card-collection" 
-			className="flex  space-x-[1.25rem] items-center  flex-grow px-3 py-1 overflow-x-auto overflow-y-visible flex-nowrap"
-			onDragOver={handleDragOver}
-			onDrop={handleNoteDrop}>
+			<div 
+			 id="note-card-collection" 
+			 className={`
+				flex space-x-[1.25rem] items-center 
+				flex-grow px-3 py-1 overflow-x-auto overflow-y-visible flex-nowrap
+			`}
+			 onDragOver={handleDragOver}
+			 onDrop={handleNoteDrop}
+			>
 				{
 					notes.map((note, id)=>{
 						return (

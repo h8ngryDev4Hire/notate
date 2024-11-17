@@ -79,14 +79,26 @@ export default class CoreService {
 			
 				switch (target) {
 					case NOTATE_DB:
+						if (typeof this.databases.notatedb !== 'object') {
+							await this.initializeDatabase(NOTATE_DB)
+						}
+
 						db = this.databases.notatedb 
 						break;
 	
 					case ERROR_LOGGING_DB:
+						if (typeof this.databases.errorloggingdb !== 'object') {
+							await this.initializeDatabase(ERROR_LOGGING_DB)
+						}
+
 						db = this.databases.errorloggingdb
 						break;
 	
 					case USER_CONFIGURATION_DB:
+						if (typeof this.databases.userconfigurationdb !== 'object') {
+							await this.initializeDatabase(USER_CONFIGURATION_DB)
+						}
+
 						db = this.databases.userconfigurationdb
 						break;
 				}	
@@ -133,7 +145,6 @@ export default class CoreService {
 								this.sendMessage(payload, port)
 	
 							} else {
-								console.log('insertData failed both checks for some reason...')
 								await this.initializeDatabase(target)
 								await insertOperation()
 							}
@@ -167,7 +178,6 @@ export default class CoreService {
 
 								this.sendMessage(payload, port)
 							} else {
-								console.log('deleteData failed both checks for some reason...')
 								await this.initializeDatabase(target)
 								await deleteOperation()
 							}
@@ -198,6 +208,13 @@ export default class CoreService {
 					"\nmessages are expected to have '.type', '.content', and '.content.database' fields.")
 			}
 		} catch (error) {
+			const insert = 'insertData'
+			const remove = 'deleteData'
+
+			if ( error.message.includes(insert) || error.message.includes(remove) ) {
+				console.log('current DB: ', this.databases.notatedb)
+			}
+
 			await this.generateErrorLog(error, { function: 'databaseRequest' })
 		}
 	}
@@ -237,7 +254,6 @@ export default class CoreService {
 				!this.databases?.userconfigurationdb?.inventory ||
 				!this.databases?.userconfigurationdb
 			) {
-				console.log('userconfigurationdb was not loaded. reloading now...')
 				try {
 					await this.initializeDatabase(USER_CONFIGURATION_DB)
 				} catch(e) {}
@@ -245,12 +261,10 @@ export default class CoreService {
 			}
 	
 			if (typeof launchBehavior === 'undefined' ) {
-				console.log('unable to set up background env variables. retrying in 500ms...')
 				setTimeout(()=> this.updateBackgroundEnvVariables(), 500)
 			}
 	
 			if (launchBehavior) {
-				console.log('env variables initialized. Updating high priority env variables...')
 				
 				setHighPriorityVariables(this.env.important)
 			} 

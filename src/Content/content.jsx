@@ -61,6 +61,11 @@ const ContentScript = () => {
 		MODAL_STATE_CONTEXT: React.useState(false),
 		SHADOW_ROOT_ELEMENT: React.useState(shadow),
 		CONTEXT_MENU_CONTEXT: React.useState(false),
+		RELATED_NOTES_CONTEXT: React.useState(false),
+		TEXT_BUFFER_CONTEXT: React.useState({ 
+			title: '' , 
+			content: '' 
+		}),
 		DARK_MODE_CONTEXT: React.useState(window.matchMedia('(prefers-color-scheme: dark)').matches)
 	}
 

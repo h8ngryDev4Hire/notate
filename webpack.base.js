@@ -9,8 +9,8 @@ module.exports = {
 	},
 	plugins: [
     		new HTMLWebpackPlugin({
-			template: path.resolve(__dirname, 'src', 'Notate', 'index.html'),
-      			filename: 'index.html',
+			template: path.resolve(__dirname, 'src', 'Notate', 'notate.html'),
+      			filename: 'notate.html',
       			chunks: []
     		})
   	],

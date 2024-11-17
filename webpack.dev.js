@@ -36,7 +36,10 @@ module.exports = (env) => {
 				scripts: {
 					onAfterEmit: [{
 						script: './scripts/build/webpack/mv-manifest.sh',
-						args: [ browser, buildTarget]
+						args: [ browser, buildTarget ]
+					},{
+						script: './scripts/build/webpack/tailwindcss.sh',
+						args: [ browser ]
 					}]
 				},
 				shell: 'bash',

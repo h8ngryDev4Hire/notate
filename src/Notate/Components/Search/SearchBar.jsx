@@ -54,7 +54,7 @@ export default function SearchBar({ onSearch }) {
   return (
 	<div 
 	 id="search-bar-container" 
-	 className="relative max-w-[50rem] w-[50rem] self-center"
+	 className="relative w-[50vw] self-center"
 	 onClick={handleSearchBarActiveState}
 	>
 

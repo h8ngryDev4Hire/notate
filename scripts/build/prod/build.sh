@@ -2,7 +2,9 @@
 
 SRC=$(dirname $BASH_SOURCE)
 PROJ_ROOT=$HOME/Projects/Web-Extensions/Quick-Notes/current
-DESTINATION=./dist/chrome
+TARGET=chrome
+PROD=$PROJ_ROOT/dist
+DESTINATION=$PROD/$TARGET
 BINARY_PATH=./bin
 WEBPACK_CONF=./webpack.prod.js
 TAILWIND_INPUT=./src/Assets/tailwind.css
@@ -50,15 +52,26 @@ fi
 
 
 # creates bin directory for .crx binary
-if ! ls $BINARY_PATH > /dev/null 2>&1; then 
-	mkdir $BINARY_PATH
-fi
+#if ! ls $BINARY_PATH > /dev/null 2>&1; then 
+#	mkdir $BINARY_PATH
+#fi
 
 
 # run crx build script. exits script upon failure
-if ! node $SRC/crx.js; then
-	echo 'ERROR:  crx build script failed. exitting...'
+#if ! node $SRC/crx.js; then
+#	echo 'ERROR:  crx build script failed. exitting...'
+#	exit 1
+#fi
+
+
+# Zip up 'dist' subdirs
+echo "Zipping emitted builds..."
+
+if ! zip -r $PROD/chrome.zip $DESTINATION; then 
+	echo 'ERROR: zip packing failed. exitting...'
 	exit 1
 fi
 
+
+echo "Production build successful."
 

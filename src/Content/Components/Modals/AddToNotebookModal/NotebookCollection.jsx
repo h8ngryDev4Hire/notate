@@ -45,7 +45,6 @@ export default function NotebookCollection() {
 	},[notatedb])
 
 	React.useEffect(()=>{
-		console.log('is empty? ', notebooks.length <= 0)
 		setIsEmpty(notebooks.length <= 0)
 	},[notebooks])
 

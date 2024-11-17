@@ -6,6 +6,9 @@ import NewNoteButton from './Buttons/NewNoteButton.jsx'
 import AddToNotebookModal from '@content/Components/Modals/AddToNotebookModal/AddToNotebookModal.jsx'
 import AddToNotebookSVG from '@assets/Designs/Buttons/save-to-logo.svg'
 
+import SettingsModal from '@content/Components/Modals/SettingsModal/SettingsModal.jsx'
+import SettingsCogWheel from '@assets/Designs/settings-cog-wheel.svg'
+
 
 /**
  * Root component for the content script's Context Menu. Stores
@@ -18,6 +21,12 @@ export default function ContextMenu(){
 		desc: 'Add to your Notebooks',
 		modal: (<AddToNotebookModal/>),
 		icon: (<AddToNotebookSVG/>),
+	},{
+		name: 'settings',
+		desc: 'Settings',
+		modal: (<SettingsModal/>),
+		icon: (<SettingsCogWheel className={`fill-white`}/>)
+
 	}]
 
 	const { CONTEXT_MENU_CONTEXT } = React.useContext(ContextMenuHoverRegionContext)
@@ -32,6 +41,9 @@ export default function ContextMenu(){
 			flex flex-col items-center space-y-[1.5rem] 
 			${ contextMenuState ? "translate-x-[0%]" : "translate-x-[200%]" }
 		`}>
+
+		<NewNoteButton/>
+
 		{items.map( (item, key) => {
 			return (
 				<
@@ -44,7 +56,6 @@ export default function ContextMenu(){
 				/>	
 			)
 		})}
-			<NewNoteButton/>
 		</div>	
 	)
 }

@@ -3,7 +3,7 @@
   "name": "Notate",
   "description": "",
   "version": "1.0",
-  "permissions": ["storage", "tabs", "activeTab", "history" ],
+  "permissions": ["storage", "tabs", "activeTab" ],
   "action": {
 	  "default_title": "Open Notate"
   },
@@ -20,6 +20,7 @@
 	"css":["content.fonts.css"],
 	"run_at": "document_end"
   }],
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkd917ZfNydcpJZK94dtvNqqDt1c49s38OJV3yx1sqLxY1NnOujBUogwPhXJMljSMnZvvf4V+98nVzve0/m904eLUYRycEQy/1K/HziXIKvJuYLhSrCJ4CVnOyrm2Oi7UbWDhToJWzBV+Ma1l/QbJ3LiCwFDBnpgi08WnWLsNPNUM08rPxZxdjUhJWPqKIUFxrVqP8/S6SThQ0VFc3Dw6zWX6J3XqBm3FXynh/2ZyJD9QKBsXWcj9mHPrNzjI6ahsEkQZkrUFjRUaWnivAILYI9+pP/Pyzq79tqWCkBr/XfX+1j6qNm36u19Oz3EP+VEK/3BsMJTNTdkbq5bDaQvbQQIDAQAB",
   "web_accessible_resources": [
 	{
 		"resources":["/Fonts/*/*.ttf", "/Designs/*"],

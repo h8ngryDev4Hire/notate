@@ -27,7 +27,6 @@ export default function TextInput() {
 
 		const content = target.innerHTML;
 		const findLinks = Format.links(content)
-		console.log('findLinks results: ', findLinks)
 		setText(findLinks);
 	};
 
@@ -57,7 +56,6 @@ export default function TextInput() {
 
 		debugger
     		if (htmlData && plainTextData.startsWith('img-')) {
-			console.log('existing img found')
 
         		// Handle existing image reposition
         		const parser = new DOMParser();
@@ -126,6 +124,13 @@ export default function TextInput() {
     		setText(event.target.innerHTML);
 	};
 
+	const handlePaste = (event) => {
+		event.preventDefault()
+		const pastedPlainText = event.clipboardData.getData('text/plain')
+
+		document.execCommand('insertText', false, pastedPlainText)
+	}
+
 
 	const initializeTextInput = React.useCallback( ()=> {
 		if (!root) return	
@@ -162,6 +167,7 @@ export default function TextInput() {
         		 contentEditable
 			 suppressContentEditableWarning
         		 onInput={handleChange}
+			 onPaste={handlePaste}
 			 onKeyDown={handleKeyDown}
 			 onDragOver={handleDragOver}
 			 onDragStart={handleDragStart}

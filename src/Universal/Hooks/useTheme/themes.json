@@ -35,7 +35,7 @@
       "h1": "text-black",
       "h2": "text-gray-800",
       "h3": "text-gray-700",
-      "sub": "text-gray-600"
+      "sub": "text-gray-800"
     },
     "accent": {}
   },

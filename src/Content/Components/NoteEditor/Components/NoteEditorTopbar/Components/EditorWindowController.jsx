@@ -13,8 +13,9 @@ export default function EditorWindowController() {
 	const MAXIMIZED = true
 	const MINIMIZED = false
 
-	const { NOTE_WINDOW_CONTEXT } = React.useContext(WebContentContext)
+	const { NOTE_WINDOW_CONTEXT, NOTE_CONTEXT  } = React.useContext(WebContentContext)
 	const [ noteWindowState, updateNoteWindowState ] = NOTE_WINDOW_CONTEXT
+	const [ note, setNote ] = NOTE_CONTEXT
 
 	const [ displayState, updateDisplayState ] = React.useContext(NoteEditorWindowDisplayContext)
 
@@ -30,19 +31,24 @@ export default function EditorWindowController() {
 		updateDisplayState(MINIMIZED)
 	}
 
+	React.useEffect(()=>{
+		if (!noteWindowState) {
+			setNote(false)
+		}
+	},[noteWindowState])
 
 	return (
 		<div id="editor-window-ctrl-center"
-			className="flex px-2 items-center">	
+			className="flex px-2 items-center pointer-events-auto">	
 				
 			<MinimizeBtn
-				className="trans-ease size-8 rounded fill-yellow-700 cursor-pointer hover:fill-yellow-600"
+				className="trans-ease size-8 rounded fill-black opacity-35 cursor-pointer hover:opacity-50"
 				onClick={runMinimizeWindow}/>
 			<MaximizeBtn
-				className="trans-ease size-8 rounded fill-yellow-700 cursor-pointer hover:fill-yellow-600"
+				className="trans-ease size-8 rounded fill-black opacity-35 cursor-pointer hover:opacity-50"
 				onClick={runMaximizeWindow}/>
 			<CloseBtn 
-				className="trans-ease size-8 rounded fill-yellow-700 cursor-pointer hover:fill-red-400"
+				className="trans-ease size-8 rounded fill-black opacity-35 cursor-pointer hover:fill-red-400 hover:opacity-100"
 				onClick={runCloseWindow}/>
 		</div>
 	)

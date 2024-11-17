@@ -15,7 +15,7 @@ export default function SettingsTopBar() {
 		<header id="settings-top-bar"
 		className="w-full flex py-5 justify-between">
 			
-			<h1 id="settings-title" className={`text-2xl playfair-bold`}>Settings</h1>
+			<h1 id="settings-title" className={`text-2xl text-white playfair-bold`}>Settings</h1>
 
 			<button 
 			 id="exit-settings-button"

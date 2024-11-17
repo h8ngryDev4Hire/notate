@@ -17,6 +17,7 @@ Notate's goal is to create the most intuitive and seamless browser-based note-ta
 - [ ] Cloud synchronization ❓
 - [ ] Advanced search functionality
 - [ ] Rich text editor improvements
+- [ ] Migration to Typescript
 - [ ] Performance optimization
 
 ### Phase 3: Expansion 
@@ -42,6 +43,11 @@ Notate's goal is to create the most intuitive and seamless browser-based note-ta
 - PWA implementation
 - Real-time collaboration infrastructure
 - Cloud architecture design
+
+## Feature Roadmap
+
+> List of features to be added soon.
+
 
 
 
