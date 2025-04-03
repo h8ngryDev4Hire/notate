@@ -66,7 +66,8 @@ const ContentScript = () => {
 			title: '' , 
 			content: '' 
 		}),
-		DARK_MODE_CONTEXT: React.useState(window.matchMedia('(prefers-color-scheme: dark)').matches)
+		DARK_MODE_CONTEXT: React.useState(window.matchMedia('(prefers-color-scheme: dark)').matches),
+		MENU_DISMISSED_CONTEXT: React.useState(false)
 	}
 
 	const [ noteWindowState, updateNoteWindowState ] = CONTENT_SCRIPT_CONTEXT.NOTE_WINDOW_CONTEXT 

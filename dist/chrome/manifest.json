@@ -3,7 +3,7 @@
   "name": "Notate",
   "description": "",
   "version": "1.0",
-  "permissions": ["storage", "tabs", "activeTab" ],
+  "permissions": ["storage", "tabs", "activeTab", "search" ],
   "action": {
 	  "default_title": "Open Notate"
   },
@@ -13,6 +13,9 @@
  "background": {
 	"service_worker": "background.pack.js",
 	"type": "module"
+  },
+  "chrome_url_overrides": {
+	"newtab": "notate.html"
   },
   "content_scripts": [{
 	"matches": ["<all_urls>"],

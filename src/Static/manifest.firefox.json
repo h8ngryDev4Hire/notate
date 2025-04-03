@@ -5,7 +5,7 @@
   "version": "1.0",
   "browser_specific_settings": {
     "gecko": {
-      "id": "notate@example.com",
+      "id": "monkeydev4hire@proton.me",
       "strict_min_version": "109.0"
     }
   },
@@ -13,6 +13,7 @@
     "storage",
     "tabs", 
     "activeTab",
+    "search",
     "history"
   ],
   "action": {
@@ -38,7 +39,7 @@
         "Designs/*"
       ],
       "matches": ["<all_urls>"],
-      "extension_ids": ["notate@example.com"]
+      "extension_ids": ["monkeydev4hire@proton.me"]
     }
   ]
 }

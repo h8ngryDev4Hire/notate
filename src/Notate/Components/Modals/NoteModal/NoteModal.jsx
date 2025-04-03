@@ -1,5 +1,6 @@
 import React from 'react';
 import { NotateContext  } from '@notate/Notate.jsx';
+import useError from '@universal/Hooks/useError/useError.jsx';
 
 import NoteModalTopbar from './Topbar.jsx'
 import NoteModalBottombar from './Bottombar.jsx'
@@ -11,6 +12,8 @@ export const NoteModalContext = React.createContext()
 
 
 export default function NoteModal() {
+	const logError = useError();
+	
 	const { NOTE_CONTEXT,
 		RECENT_NOTES_STATE_CONTEXT,
 		NOTATE_DB_CONTEXT,
@@ -53,21 +56,40 @@ export default function NoteModal() {
 	};
 
 	const exitModal = async () => {
-		setTransition(false)
-		await new Promise(resolve => setTimeout(resolve, 300))
-		setScrollState(true)
-		setModalState(false)
-		triggerRecentNotesUpdateState(true)
+		try {
+			setTransition(false)
+			await new Promise(resolve => setTimeout(resolve, 300))
+			setScrollState(true)
+			setModalState(false)
+			triggerRecentNotesUpdateState(true)
+		} catch (error) {
+			logError(error, {
+				component: 'NoteModal',
+				action: 'exitModal',
+				note: note?.id
+			});
+			// Still attempt to close the modal even if an error occurs
+			setScrollState(true)
+			setModalState(false)
+		}
 	}
 
 
 	const handlePreventingEventPropagation = (e) => { e.stopPropagation() }
 
 
-  	React.useEffect(()=>{
-		if (note) setTransition(true)
-		setScrollState(false)
-	},[note])
+  	React.useEffect(() => {
+		try {
+			if (note) setTransition(true)
+			setScrollState(false)
+		} catch (error) {
+			logError(error, {
+				component: 'NoteModal',
+				action: 'useEffect-initialization',
+				noteId: note?.id
+			});
+		}
+	}, [note])
 
 
 	return (

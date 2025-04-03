@@ -163,20 +163,37 @@ export default function Notate(){
 
 	  /* Component */
 	  return (
-		<div id="app" className="w-full h-screen flex  flex-col flex-grow">
+		<div 
+		  id="app" 
+		  className="w-full h-screen flex  flex-col flex-grow"
+		>
 		  	<NotateContext.Provider value={NOTATE_CONTEXT}>
-		  	<div id="wallpaper-theme" 
-		  	className={`min-w-full flex flex-col flex-grow top-0 left-0 ${ theme.background || "" }`}>
+		  	<div 
+		  	 id="wallpaper-theme" 
+		  	 className={`
+				 min-w-full flex flex-col flex-grow top-0 left-0 
+				 ${ theme.background || "" }
+			`}>
 					<ShadeComponent direction={"top"}/>
-		  			<main id="notate" className="w-full h-full flex flex-col flex-grow mb-32 py-10 px-24">
-						<header id="page-header" 
-		  				className="text-center my-[1rem]">
-						        <h1 id="page-title" 
-		  					className={`text-[3rem]  garamond-bold mb-2 ${theme.text.h1 || ""} `}>Notate</h1>
+		  			<main 
+		  			 id="notate" 
+		  			 className="w-full h-full flex flex-col flex-grow mb-32 py-10 px-24"
+		  			>
+						<header 
+		  				 id="page-header" 
+		  				 className="text-center my-[1rem]"
+		  				>
+						        <h1 
+		  					 id="page-title" 
+		  					 className={`
+								 text-[3rem]  garamond-bold mb-2 
+								 ${theme.text.h1 || ""} 
+							`}>Notate</h1>
 							        <p 
 		  						 id="page-subtitle" 
-		  						 className={`text-lg playfair-bold ${theme.text.sub || ""}`}
-		  						> Combining The Worlds of Searches &amp; Note Taking
+		  						 className={`
+									 text-lg playfair-bold ${theme.text.sub || ""}
+								`}>Combining The Worlds of Searches &amp; Note Taking
 		  						</p>
 						</header>
 					  	

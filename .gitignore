@@ -16,3 +16,6 @@ node_modules/
 
 # env file
 .env
+
+# misc
+agent/

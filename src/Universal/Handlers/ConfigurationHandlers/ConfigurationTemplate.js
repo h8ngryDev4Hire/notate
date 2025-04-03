@@ -15,12 +15,12 @@ export const ConfigurationTemplate = {
 			}
 		},
 		page: {
-			pageOpenBehavior: {
-				value: "onNewTab",
-				description: "Sets default page to open up when clicking the New Tab Button.",
-				options: ["onNewTab", "onClickPopup", "false"],
-				enabled: true
-			},
+//			pageOpenBehavior: {
+//				value: "onNewTab",
+//				description: "Sets default page to open up when clicking the New Tab Button.",
+//				options: ["onNewTab", "onClickPopup", "false"],
+//				enabled: true
+//			},
 			backgroundWallpaper: {
 				value: "notePaper",
 				description:"Sets wallpaper for Notate.",

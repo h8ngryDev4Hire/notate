@@ -1,6 +1,8 @@
 import React from 'react';
 import * as Format from './InputFormatters.js'
 import { TextInputContext, ShadowRootContext } from '../../TextEditor.jsx';
+import { BROWSER_TYPE } from '@background/Utils/browserType.js'
+import GhostEditor from './firefox.jsx';
 
 
 export const TEXT_EDITOR_ID = 'input-text-display'
@@ -9,7 +11,6 @@ export const TEXT_EDITOR_ID = 'input-text-display'
 
 
 export default function TextInput() {
-
 	const [text, setText] = React.useContext(TextInputContext);
 	const [shadowRootElement] = React.useContext(ShadowRootContext);
 
@@ -17,11 +18,11 @@ export default function TextInput() {
 
 
 	const textDisplayRef = React.useRef(null);
+	const ghostEditorRef = React.useRef(null)
 
 
 	const handleChange = (event) => {
 		const target = event.target
-
 
 		Format.textContent(target)
 
@@ -54,7 +55,6 @@ export default function TextInput() {
 		const target = event.target
 
 
-		debugger
     		if (htmlData && plainTextData.startsWith('img-')) {
 
         		// Handle existing image reposition
@@ -114,9 +114,28 @@ export default function TextInput() {
     		} else if (event.ctrlKey && event.key === 'y') {
       			event.preventDefault();
  			document.execCommand('redo', false, null);
-    	//	} else if (event.key === 'Backspace') {
-	//		event.preventDefault()
-	//		document.execCommand('delete')
+    		} else if (event.key === 'Backspace' 
+			&& BROWSER_TYPE === 'firefox' 
+			&& root == shadowRootElement ) {
+     			 event.preventDefault();
+     			 
+    		   // Get cursor position from current editor
+ 		   const selection = window.getSelection();
+ 		   const cursorInfo = {
+ 		     node: selection.anchorNode,
+ 		     offset: selection.anchorOffset
+ 		   };
+ 		   
+ 		   // Send content and cursor info to ghost editor
+ 		   ghostEditorRef.current.setContent(textDisplayRef.current.innerHTML);
+ 		   const newContent = ghostEditorRef.current.performDelete(cursorInfo);
+ 		   
+ 		   if (newContent) {
+ 		     textDisplayRef.current.innerHTML = newContent;
+ 		     setText(newContent);
+ 		   }
+		   textDisplayRef.current.focus()
+
 		} else {
 			event.stopPropagation()
     		}
@@ -172,9 +191,56 @@ export default function TextInput() {
 			 onDragOver={handleDragOver}
 			 onDragStart={handleDragStart}
 			 onDrop={handleDrop}
-		  	>
-      			</div>
-
+		  	/>
 		</>
 	);
 }
+
+
+//			const selection = document.getSelection()
+//
+//			if ( selection ) {
+//				const node = selection.anchorNode
+//				//const prevSibling = selection.anchorNode.previousSibling
+//
+//				if (node instanceof Text &&
+//				 !(node instanceof Element)) {
+//					console.log('Text Node focused.')
+//
+//					if (node.textContent.length > 0) {
+//						const text = node.textContent
+//						const offset = selection.focusOffset - 1
+//
+//						const alteredText = Array.from(text).filter( (char,id) => !(id === offset) ) 
+//
+//						node.textContent = alteredText.join('')
+//
+//						const restoredRange = document.createRange()
+//						restoredRange.setStart(node, offset)
+//						restoredRange.setEnd(node, offset)
+//
+//						selection.removeAllRanges()
+//						selection.addRange(restoredRange)
+//					} else {
+//						//TODO: ignore for now we will work on it once finished w element handling
+//						debugger
+//						//event.target.remove(node)
+//					}
+//
+//				} else if (node instanceof Element && 
+//				 !(node instanceof Text)) {
+//					console.log('Element Node focused.')
+//					const prevNode = node.previousSibling
+//					const offset = prevNode.textContent.length - 1
+//					console.log('offset: ', offset)
+//
+//					event.target.removeChild(node)
+//
+//					const restoredRange = document.createRange()
+//					restoredRange.setStart(prevNode, offset)
+//					restoredRange.setEnd(prevNode, offset)
+//
+//					selection.removeAllRanges()
+//					selection.addRange(restoredRange)
+//				}
+//			}

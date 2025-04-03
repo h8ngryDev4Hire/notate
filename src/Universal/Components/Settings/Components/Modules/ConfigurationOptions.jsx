@@ -61,10 +61,11 @@ export default function ConfigurationOptions({options}) {
 				<label 
 				className="flex justify-center items-center">
 					<input
-					type="checkbox"
-					value={(selectedOption)}
-					checked={JSON.parse(selectedOption)}
-					onChange={handleOptionChange}/>
+					 type="checkbox"
+					 value={(selectedOption)}
+					 checked={JSON.parse(selectedOption)}
+					 onChange={handleOptionChange}
+					/>
 
 				</label>
 			)

@@ -2,6 +2,7 @@ import React from 'react'
 import { ContextMenuHoverRegionContext } from '@content/Components/HoverRegions/ContextMenuHoverRegion.jsx'
 import ContextItem from './ContextItem.jsx'
 import NewNoteButton from './Buttons/NewNoteButton.jsx' 
+import DismissButton from './Buttons/DismissButton.jsx'
 
 import AddToNotebookModal from '@content/Components/Modals/AddToNotebookModal/AddToNotebookModal.jsx'
 import AddToNotebookSVG from '@assets/Designs/Buttons/save-to-logo.svg'
@@ -56,6 +57,11 @@ export default function ContextMenu(){
 				/>	
 			)
 		})}
+
+		{/* Add the DismissButton at the bottom of the context menu with some spacing */}
+		<div className="mt-6 mb-4">
+			<DismissButton />
+		</div>
 		</div>	
 	)
 }

@@ -1,6 +1,5 @@
 import React from 'react';
-import SearchEngineSelector, { SelectedEngineIndexContext } from './SearchEngineSelector.jsx';
-import { searchEngineProviders } from './searchEngineProviders.js';
+import browser from 'webextension-polyfill'
 
 export const BarStatusContext = React.createContext()
 
@@ -21,14 +20,19 @@ export default function SearchBar({ onSearch }) {
     }
   };
 
-  const performSearch = () => {
-    const currentSearchEngine = searchEngineProviders[selectedEngineIndex];
+ // const performSearch = () => {
+ //   const currentSearchEngine = searchEngineProviders[selectedEngineIndex];
 
-    if (searchTerm !== '') {
-      const URL = currentSearchEngine.URLPrefix + encodeURIComponent(searchTerm);
-      window.location.href = URL;
-    }
-  };
+ //   if (searchTerm !== '') {
+ //     const URL = currentSearchEngine.URLPrefix + encodeURIComponent(searchTerm);
+ //     window.location.href = URL;
+ //   }
+ // };
+	const performSearch = () => {
+		if (searchTerm !== '') {
+			browser.search.query( { text: searchTerm } )
+		}
+	}
 
 
 	const handleSearchBarActiveState = () => {
@@ -75,7 +79,7 @@ export default function SearchBar({ onSearch }) {
 			 type="text"
 		         id="searchInput"
 		 	 className={`
-				 trans-ease flex-grow px-4 py-3 text-base rounded-l-full 
+				 trans-ease flex-grow px-4 py-3 text-base rounded-full 
 				 placeholder:playfair-regular placeholder:font-mono  
 				 ${barActiveStatus 
 						 ? "bg-[#333333]" 
@@ -89,9 +93,6 @@ export default function SearchBar({ onSearch }) {
 		  	/>
 	
 			  <BarStatusContext.Provider value={[ barActiveStatus ]}>
-				<SelectedEngineIndexContext.Provider value={[selectedEngineIndex, setSelectedEngineIndex]}>
-		      		<SearchEngineSelector/>
-		  		</SelectedEngineIndexContext.Provider>
 			  </BarStatusContext.Provider>
 	
 		</div>

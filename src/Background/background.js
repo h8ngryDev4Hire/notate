@@ -68,18 +68,6 @@ browser.runtime.onInstalled.addListener(async ()=> {
 
 /*
 EVENT LISTENER:
-	Fires and runs the spawnTab() function on new tab if user 
-	configuration has 'onNewTab' enabled.
-*/
-browser.tabs.onCreated.addListener(async ()=> {
-	const launchBehavior = env.variables.important.launchBehavior 
-	if (launchBehavior === 'onNewTab')  spawnNotateTab(launchBehavior)
-})
-
-
-
-/*
-EVENT LISTENER:
 	Fires and runs spawnTab() function when user clicks Notate
 	popup
 */
@@ -106,3 +94,14 @@ browser.runtime.onConnect.addListener((port) => {
 });
 
 
+// DEPRECATED
+
+/*
+EVENT LISTENER:
+	Fires and runs the spawnTab() function on new tab if user 
+	configuration has 'onNewTab' enabled.
+*/
+//browser.tabs.onCreated.addListener(async ()=> {
+//	const launchBehavior = env.variables.important.launchBehavior 
+//	if (launchBehavior === 'onNewTab')  spawnNotateTab(launchBehavior)
+//})

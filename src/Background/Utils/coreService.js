@@ -240,12 +240,11 @@ export default class CoreService {
 
 		try {
 			await this.databases.userconfigurationdb.inventory
-
 	
-			this.env.important.launchBehavior = this.databases.
-				userconfigurationdb.inventory.USER_CONFIGURATION[0].Notate.page.pageOpenBehavior.value	
+		//	this.env.important.launchBehavior = this.databases.
+		//		userconfigurationdb.inventory.USER_CONFIGURATION[0].Notate.page.pageOpenBehavior.value	
 
-			launchBehavior = this.env.important.launchBehavior 
+		//	launchBehavior = this.env.important.launchBehavior 
 
 		} catch (error) {
 			await this.generateErrorLog(error, {function: "updateBackgroundEnvVariables"})
@@ -260,14 +259,14 @@ export default class CoreService {
 				await this.updateBackgroundEnvVariables()
 			}
 	
-			if (typeof launchBehavior === 'undefined' ) {
-				setTimeout(()=> this.updateBackgroundEnvVariables(), 500)
-			}
+		//	if (typeof launchBehavior === 'undefined' ) {
+		//		setTimeout(()=> this.updateBackgroundEnvVariables(), 500)
+		//	}
 	
-			if (launchBehavior) {
-				
-				setHighPriorityVariables(this.env.important)
-			} 
+		//	if (launchBehavior) {
+		//		
+		//		setHighPriorityVariables(this.env.important)
+		//	} 
 		}
 	}
 
