@@ -30,27 +30,23 @@ export default function DismissButton() {
     // Reset extra buttons when context menu is hidden
     React.useEffect(() => {
         if (!contextMenuState && showExtraButtons) {
-            console.log('🔄 Context menu closed, resetting dismiss button state');
             setShowExtraButtons(false);
             setIsTextVisible(false);
         }
     }, [contextMenuState]);
     
     const handleDismissClick = () => {
-        console.log(`🔘 Dismiss menu button clicked, toggling extra buttons: ${!showExtraButtons ? 'show' : 'hide'}`);
         setShowExtraButtons(!showExtraButtons);
     };
     
     // Dismissal handlers
     const handleDismissUntilReload = () => {
-        console.log('🔘 "Dismiss Until Reload" button clicked');
         // Just hide the menu UI without setting the global dismissed state
         setIsMenuDismissed(true);
     };
     
     const handleDismissForSite = async () => {
         const currentSite = window.location.hostname;
-        console.log(`🔘 "Dismiss For Site" button clicked for: ${currentSite}`);
         
         // First update the UI immediately
         setContextMenuState(false);
@@ -58,19 +54,15 @@ export default function DismissButton() {
         
         // Use session storage instead of database storage
         dismissForSession();
-        console.log('🚫 Menu dismissed for this session instead of site-specific storage');
     };
     
     const handleDismissForSession = () => {
-        console.log('🔘 "Dismiss For Session" button clicked');
-        
         // First update the UI immediately
         setContextMenuState(false);
         setIsMenuDismissed(true);
         
         // Then update the session storage
         dismissForSession();
-        console.log('🚫 Menu dismissed for this session');
     };
     
     const ExtraButton = ({ icon, title, onClick }) => {

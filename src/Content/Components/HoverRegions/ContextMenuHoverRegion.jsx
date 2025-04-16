@@ -48,9 +48,7 @@ export default function ContextMenuHoverRegion() {
 		}
 	}
 
-	React.useEffect(()=>{
-		console.log('🔍 Dismissal status:', isMenuDismissed)
-	},[isMenuDismissed])
+	// Removed console.log useEffect
 
 
 	// Check dismissal status when component mounts
@@ -75,7 +73,7 @@ export default function ContextMenuHoverRegion() {
 					setIsMenuDismissed(false);
 				}
 			} catch (error) {
-				console.error('❌ Error checking dismissal status:', error);
+				// Removed console.error
 			}
 		};
 		

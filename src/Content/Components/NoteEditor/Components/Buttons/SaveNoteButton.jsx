@@ -39,7 +39,6 @@ export default function SaveNoteButton() {
 			setNotification(notification.showInfo('Note Saved!'))
 			updateWindowState(false)
 		} catch (e) {
-			console.error('Error saving new note: ', e)
 			setNotification(notification.showError(`Error saving note: ${e.message}`))
 		}
 	}

@@ -72,10 +72,6 @@ export const getNoteSuggestion = (database, termList) => {
 		let highConfidenceThreshold = averageMatches + 2 * standardDeviation
 		let lowConfidenceThreshold = averageMatches - 2 * standardDeviation
 
-		//console.log('standardDeviation: ', standardDeviation)
-		//console.log('highConfidenceThreshold: ', highConfidenceThreshold)
-		//console.log('lowConfidenceThreshold: ', lowConfidenceThreshold)
-
 		// Check if highConfidenceThreshold is lower than lowConfidenceThreshold
 		if (highConfidenceThreshold <= lowConfidenceThreshold) {
 			const zeroCheck = highConfidenceThreshold === 0 ? 2 : 1

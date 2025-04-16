@@ -24,7 +24,7 @@ export const RelatedNotesContext = React.createContext()
 
 export default function RelatedNotesHeader() {
 
-	const { NOTATE_DB_CONTEXT, RELATED_NOTES_CONTEXT } = React.useContext(WebContentContext)
+	const { NOTATE_DB_CONTEXT, RELATED_NOTES_CONTEXT, MENU_DISMISSED_CONTEXT } = React.useContext(WebContentContext)
 
 	const NOTE_VIEWER_CONTEXT = {
 		NAV_STATE: React.useState(false),
@@ -42,9 +42,11 @@ export default function RelatedNotesHeader() {
 	const [ view, setView ] = NOTE_VIEWER_CONTEXT.VIEW_STATE 
 	const [ position, setPosition ] = NOTE_VIEWER_CONTEXT.NAV_POS_STATE
 	const [ endReached, setEndReached ] = NOTE_VIEWER_CONTEXT.END_REACHED
+	const [ isMenuDismissed ] = MENU_DISMISSED_CONTEXT
 
 
-	const [ enabled, setEnabled ] = React.useState(false)
+	const [ viewNavEnabled, setViewNavEnabled ] = React.useState(false)
+	const [ enabled, setEnabled ] = React.useState(true)
 
 	const viewerLengthRef = React.useRef(null)
 
@@ -67,10 +69,12 @@ export default function RelatedNotesHeader() {
 		} 
 	}
 
-
-
-
-
+	// Effect for when menu is dismissed, also dismiss the related notes viewer
+	React.useEffect(() => {
+		if (isMenuDismissed) {
+			setEnabled(false)
+		}
+	}, [isMenuDismissed])
 
 	React.useEffect(()=>{
 		if (headerState) {
@@ -88,10 +92,10 @@ export default function RelatedNotesHeader() {
 
 
 	React.useEffect(()=>{
-		if (!enabled) {
+		if (!viewNavEnabled) {
 			setPosition(0)
 		}
-	},[enabled])
+	},[viewNavEnabled])
 
 
 
@@ -100,7 +104,7 @@ export default function RelatedNotesHeader() {
 
 		if (viewer) {
 			const intersectionObserver = new IntersectionObserver( ([entry]) => {
-				setEnabled(!entry.isIntersecting)
+				setViewNavEnabled(!entry.isIntersecting)
 			},{
 				root: null,
 				rootMargin: '0px',
@@ -114,7 +118,8 @@ export default function RelatedNotesHeader() {
 
 	},[viewerLengthRef.current])
 
-
+	if (!enabled) return null
+	
 	return (
 		<div 
 		 id="related-notes-hover-region"
@@ -134,7 +139,7 @@ export default function RelatedNotesHeader() {
 					/>
 				)}
 
-				{ enabled && <ViewNavigator/>}
+				{ viewNavEnabled && <ViewNavigator/>}
 
 			</RelatedNotesContext.Provider>
 		</div>

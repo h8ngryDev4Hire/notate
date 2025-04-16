@@ -26,19 +26,14 @@ export default function RelatedNotesProcessor({database, view }) {
 	
 
 	const termList = React.useMemo(()=> extractTermListFromURL(), [window.location.href])
-	//console.log('termList: ', termList)
 	
 	const relatedContentFromHtml = React.useMemo( () => extractTextContentFromHTML(termList), [window.location.href])
-	//console.log('relatedContentFromHtml: ', relatedContentFromHtml)
 
 	const relatedNotesByURL = React.useMemo(()=> getNoteURLComparison(database), [database, window.location.href])
-	//console.log('relatedNotesByURL: ', relatedNotesByURL)
 
 	const suggestedNoteList = React.useMemo(()=> getNoteSuggestion(database, relatedContentFromHtml), [database, termList])
-	//console.log('suggestedNoteList: ', suggestedNoteList)
 
 	const notesRelatedByNotebook = React.useMemo(()=> getNotesGroupedByNotebook(database),[database])
-	//console.log('notesRelatedByNotebook: ', notesRelatedByNotebook)
 	
 
 	React.useEffect( ()=> {
