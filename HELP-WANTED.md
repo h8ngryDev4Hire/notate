@@ -42,7 +42,7 @@
 ## Getting Started
 
 1. Review our [CONTRIBUTING.md](CONTRIBUTING.md) guidelines
-2. Check [Issues](https://github.com/h8ngrydev4hire/notate/issues) labeled with `help-wanted`
+2. Check [Issues](https://github.com/Liquidbuiltit/notate/issues) labeled with `help-wanted`
 3. Join our development discussions
 
 ## Contact
