@@ -65,7 +65,7 @@ Notate is a powerful browser extension that seamlessly integrates note-taking an
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/h8ngrydev4hire/notate.git
+   git clone https://github.com/Liquidbuiltit/notate.git
    ```
 2. Navigate to your browser's extensions page:
    - Chrome: `chrome://extensions`
@@ -166,7 +166,7 @@ This is a React.js project that was originally supposed to be written using JQue
 
 ## Browser Support
 
-This project was written originally for Chromium-based Web Browsers, but also has active development for Gecko-based (Firefox) Browsers. Please review our [HELP-WANTED.md](https://github.com/h8ngryDev4Hire/notate/blob/main/HELP-WANTED.md) for Firefox's current development status.
+This project was written originally for Chromium-based Web Browsers, but also has active development for Gecko-based (Firefox) Browsers. Please review our [HELP-WANTED.md](https://github.com/Liquidbuiltit/notate/blob/main/HELP-WANTED.md) for Firefox's current development status.
 
 ## Contributing
 
